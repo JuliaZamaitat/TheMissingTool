@@ -1,0 +1,10 @@
+
+<!-- Goes through all our card entries that exist in the local database and prints some of their properties -->
+<div class="card-columns row">
+  <% cards.forEach(c => { %>
+  <div class="card">
+      <h3><%= c.text %></h3>
+      <p><%= c.backgroundColor %></p>
+  </div>
+  <% }); %>
+</div>
