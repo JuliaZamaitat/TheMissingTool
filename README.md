@@ -6,4 +6,4 @@ run with nodemom:
 
 seed the Database with
 
-`node seeds.js
+`node seeds.js`
