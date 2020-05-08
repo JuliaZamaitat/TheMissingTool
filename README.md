@@ -2,8 +2,8 @@
 
 run with nodemom:
 
-npm start
+`npm start`
 
 seed the Database with
 
-node seeds.js
+`node seeds.js
