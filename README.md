@@ -1,6 +1,6 @@
 # TheMissingTool
 
-run with nodemom:
+run with nodemon:
 
 `npm start`
 
