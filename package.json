@@ -4,7 +4,8 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon main.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,12 @@
   "bugs": {
     "url": "https://github.com/JuliaZamaitat/TheMissingTool/issues"
   },
-  "homepage": "https://github.com/JuliaZamaitat/TheMissingTool#readme"
+  "homepage": "https://github.com/JuliaZamaitat/TheMissingTool#readme",
+  "dependencies": {
+    "ejs": "^3.1.2",
+    "express": "^4.17.1",
+    "express-ejs-layouts": "^2.5.0",
+    "mongodb": "^3.5.7",
+    "mongoose": "^5.9.12"
+  }
 }
