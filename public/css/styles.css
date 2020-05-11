@@ -40,9 +40,9 @@ body, html {
 }
 textarea:hover {
     cursor: pointer;
-    -moz-box-shadow: 0 0 5px skyblue;
-    -webkit-box-shadow: 0 0 5px skyblue;
-    box-shadow: 0 0 5px skyblue;
+    -moz-box-shadow: 0 0 5px rgb(0, 168, 235);
+    -webkit-box-shadow: 0 0 5px rgb(0, 168, 235);
+    box-shadow: 0 0 5px rgb(0, 168, 235);
 }
 #myCanvas {
     cursor: crosshair;
