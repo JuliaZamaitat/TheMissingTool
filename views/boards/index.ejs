@@ -1,10 +1,21 @@
+<div id="canvas-wrap">
+  <canvas id="myCanvas">
+      Sorry, your browser does not support HTML5 canvas technology.
+  </canvas>
+  <div id="overlay"></div>
+</div>
+
+<button type="button" class="btn btn-success" id="plus" alt="plus" onClick="createNewItem()">
+  <i class="fa fa-plus-circle" aria-hidden="true"></i>
+ Add a card
+</button>
 
 <!-- Goes through all our card entries that exist in the local database and prints some of their properties -->
-<div class="card-columns row">
-  <% cards.forEach(c => { %>
-  <div class="card">
-      <h3><%= c.text %></h3>
-      <p><%= c.backgroundColor %></p>
+<!-- <% cards.forEach(c => { %>
+  <div class="item" style="background-color:<%= c.backgroundColor %>;">
+      <p><%= c.text %></p>
   </div>
-  <% }); %>
-</div>
+  <% }); %> -->
+
+<script type="text/javascript" src="/script/items.js"></script>
+<script type="text/JavaScript" src="/script/whiteboard.js"></script>

@@ -43,6 +43,9 @@ app.set("port", process.env.PORT || 4000);
 
 //Routes
 app.get("/", boardsController.getAllCards);
+// app.get('/', (req,res) => {
+//   res.sendFile(__dirname + '/index.html')
+// })
 
 
 //Start listening to the PORT
