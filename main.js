@@ -7,6 +7,9 @@ const express = require("express"),
   boardsController = require("./controllers/boardsController"),
   mongoose = require("mongoose");
 
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+
 //Tell node to use promises with mongoose
 mongoose.Promise = global.Promise;
 
@@ -41,6 +44,10 @@ app.use(express.static("public"));
 app.set("view engine", "ejs");
 app.set("port", process.env.PORT || 4000);
 
+var bodyParser = require('body-parser')
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}))
+
 //Routes
 app.get("/", boardsController.getAllCards);
 // app.get('/', (req,res) => {
@@ -48,9 +55,11 @@ app.get("/", boardsController.getAllCards);
 // })
 
 
+app.get("/cards", boardsController.get_card);
 app.post("/", boardsController.save_card);
 
 //Start listening to the PORT
 app.listen(app.get("port"), () => {
   console.log(`Server running at http://localhost:${app.get("port")}`);
 });
+

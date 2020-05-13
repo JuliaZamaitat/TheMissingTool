@@ -1,6 +1,14 @@
 "use strict";
 
+const app = require("../main");
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
 const Card = require("../models/card");
+
+io.on('connection', () => {
+    console.log('A new user is connected')
+
+});
 
 // Returns all Card that are in our db
 exports.getAllCards = (req, res) => {
@@ -20,21 +28,34 @@ exports.getAllCards = (req, res) => {
   });
 };
 
-exports.save_card = (req, res) => {
-  console.log("In controller");
-  console.log(req.body);
-
-  /*
-  * exports.saveCard = (req, res) => {
-  *
-  var card = new Card(req.body);
-  message.save((err) =>{
-    if(err)
-      sendStatus(500);
-    io.emit('message', req.body);
-    res.sendStatus(200);
+exports.get_card = (req, res) => {
+  Card.find({},(err, card)=> {
+    res.send(card);
   })
-})*/
 };
+
+exports.save_card =(req, res) => {
+  const card = new Card(
+      {
+        backgroundColor: req.body.color,
+        position: {
+          left: null,
+          top: null
+        },
+        text: null,
+        fontSize: 24
+      }
+  );
+
+  card.save((err) =>{
+    if(err)
+        io.emit('message', card);
+        res.sendStatus(200);
+
+  })
+};
+
+
+
 
 
