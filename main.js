@@ -17,13 +17,13 @@ db.once("open", () => {
 });
 
 app.set("view engine", "ejs");
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(layouts);
 app.use(express.static("public"));
 app.set("port", process.env.PORT || 4000);
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({extended: false}))
 
 app.get("/", (req, res) => {
     Card.find({})
@@ -63,22 +63,22 @@ app.post("/", (req, res) => {
 
     card.save((err) => {
         if (err)
-            io.emit('message', card);
+            sendStatus(500);
+        io.emit('card', JSON.stringify(card));
         res.sendStatus(200);
 
     })
 });
 
 io.on('connection', () => {
-    console.log('A new user is connected')
+    console.log('a user is connected')
 });
 
 mongoose.connect(
     process.env.MONGODB_URI || "mongodb://localhost:27017/board_db",
-    { useNewUrlParser: true, useFindAndModify: false }
+    {useNewUrlParser: true, useFindAndModify: false}
 );
 
-//Start listening to the PORT
 server.listen(app.get("port"), () => {
     console.log(`Server running at http://localhost:${app.get("port")}`);
 });
