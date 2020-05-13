@@ -7,8 +7,9 @@ const express = require("express"),
   boardsController = require("./controllers/boardsController"),
   mongoose = require("mongoose");
 
-const http = require('http').Server(app);
-const io = require('socket.io')(http);
+  const http = require('http');
+const server = http.createServer(app);
+const io = require('socket.io').listen(server);
 
 //Tell node to use promises with mongoose
 mongoose.Promise = global.Promise;
@@ -59,7 +60,7 @@ app.get("/cards", boardsController.get_card);
 app.post("/", boardsController.save_card);
 
 //Start listening to the PORT
-app.listen(app.get("port"), () => {
+server.listen(app.get("port"), () => {
   console.log(`Server running at http://localhost:${app.get("port")}`);
 });
 
