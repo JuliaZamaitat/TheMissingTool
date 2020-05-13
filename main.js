@@ -1,65 +1,90 @@
-"use strict";
+var express = require('express');
+var bodyParser = require('body-parser');
+var app = express();
+var layouts = require("express-ejs-layouts");
+var mongoose = require("mongoose");
+var Card = require("./models/card");
 
-//Require the necessary modules
-const express = require("express"),
-  app = express(),
-  layouts = require("express-ejs-layouts"),
-  boardsController = require("./controllers/boardsController"),
-  mongoose = require("mongoose");
+var http = require('http');
+var server = http.createServer(app);
+var io = require('socket.io').listen(server);
 
-const http = require('http').Server(app);
-const io = require('socket.io')(http);
-
-//Tell node to use promises with mongoose
 mongoose.Promise = global.Promise;
 
-//Connects either to the procution database or our local database
-mongoose.connect(
-  process.env.MONGODB_URI || "mongodb://localhost:27017/board_db",
-  { useNewUrlParser: true, useFindAndModify: false }
-);
-
-//Get a db instance to work with
 const db = mongoose.connection;
-
-//Notfication when connection to db was successfull
 db.once("open", () => {
-  console.log("Connected to MongoDB");
+    console.log("Connected to MongoDB");
 });
 
-//In order to parse JSON for our application
-app.use(
-  express.urlencoded({
-    extended: true
-  })
-);
+app.set("view engine", "ejs");
+app.use(express.urlencoded({extended: true}));
 app.use(express.json());
-
-
-//Tell node to use layouts and to look in the public folder for static files
 app.use(layouts);
 app.use(express.static("public"));
-
-//Sets the necessary variables
-app.set("view engine", "ejs");
 app.set("port", process.env.PORT || 4000);
-
-var bodyParser = require('body-parser')
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}))
 
-//Routes
-app.get("/", boardsController.getAllCards);
-// app.get('/', (req,res) => {
-//   res.sendFile(__dirname + '/index.html')
-// })
-
-
-app.get("/cards", boardsController.get_card);
-app.post("/", boardsController.save_card);
-
-//Start listening to the PORT
-app.listen(app.get("port"), () => {
-  console.log(`Server running at http://localhost:${app.get("port")}`);
+app.get("/", (req, res) => {
+    Card.find({})
+        .exec()
+        .then((cards) => {
+            res.render("boards/index", {
+                cards: cards,
+            });
+        })
+        .catch((error) => {
+            console.log(error.message);
+            return [];
+        })
+        .then(() => {
+            console.log("promise complete");
+        });
 });
+
+app.get("/cards", (req, res) => {
+    Card.find({}, (err, card) => {
+        res.send(card);
+    })
+});
+
+app.post("/", (req, res) => {
+    const card = new Card(
+        {
+            backgroundColor: req.body.color,
+            position: {
+                left: null,
+                top: null
+            },
+            text: null,
+            fontSize: 24
+        }
+    );
+
+    card.save((err) => {
+        if (err)
+            io.emit('message', card);
+        res.sendStatus(200);
+
+    })
+});
+
+io.on('connection', () => {
+    console.log('A new user is connected')
+});
+
+mongoose.connect(
+    process.env.MONGODB_URI || "mongodb://localhost:27017/board_db",
+    {useNewUrlParser: true, useFindAndModify: false}
+);
+
+app.listen(app.get("port"), () => {
+    console.log(`Server running at http://localhost:${app.get("port")}`);
+});
+
+
+
+
+
+
 
