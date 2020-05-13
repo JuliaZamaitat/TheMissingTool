@@ -1,13 +1,13 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var app = express();
-var layouts = require("express-ejs-layouts");
-var mongoose = require("mongoose");
-var Card = require("./models/card");
+const express = require('express'),
+    bodyParser = require('body-parser'),
+    app = express(),
+    layouts = require("express-ejs-layouts"),
+    mongoose = require("mongoose"),
+    Card = require("./models/card"),
 
-var http = require('http');
-var server = http.createServer(app);
-var io = require('socket.io').listen(server);
+    http = require('http'),
+    server = http.createServer(app),
+    io = require('socket.io').listen(server);
 
 mongoose.Promise = global.Promise;
 
@@ -17,13 +17,13 @@ db.once("open", () => {
 });
 
 app.set("view engine", "ejs");
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(layouts);
 app.use(express.static("public"));
 app.set("port", process.env.PORT || 4000);
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.urlencoded({ extended: false }))
 
 app.get("/", (req, res) => {
     Card.find({})
@@ -75,12 +75,12 @@ io.on('connection', () => {
 
 mongoose.connect(
     process.env.MONGODB_URI || "mongodb://localhost:27017/board_db",
-    {useNewUrlParser: true, useFindAndModify: false}
+    { useNewUrlParser: true, useFindAndModify: false }
 );
 
 //Start listening to the PORT
 server.listen(app.get("port"), () => {
-  console.log(`Server running at http://localhost:${app.get("port")}`);
+    console.log(`Server running at http://localhost:${app.get("port")}`);
 });
 
 
