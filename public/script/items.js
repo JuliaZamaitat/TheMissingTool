@@ -7,50 +7,70 @@ function getRandomColor() {
     return color;
 }
 
-function createNewItem() {
-    const div = document.createElement('div');
-    div.className = 'item animate';
-    div.style.backgroundColor = getRandomColor();
-    div.innerHTML = "<textarea type='text' value=''></textarea>";
-    div.addEventListener('mousedown', function (event) {
+$(() => {
+    $("#plus").click(() => {
 
-        const item = div;
+        const card = document.createElement('div');
+        card.className = 'item animate';
+        card.style.backgroundColor = getRandomColor();
+        card.innerHTML = "<textarea type='text' value=''></textarea>";
+        card.addEventListener('mousedown', function (event) {
 
-        // Remove entrance animation
-        item.classList.remove("animate");
+            // Remove entrance animation
+            card.classList.remove("animate");
 
-        let shiftX = event.clientX - item.getBoundingClientRect().left;
-        let shiftY = event.clientY - item.getBoundingClientRect().top;
+            let shiftX = event.clientX - card.getBoundingClientRect().left;
+            let shiftY = event.clientY - card.getBoundingClientRect().top;
 
-        item.style.position = "absolute";
-        item.style.zIndex = 1000;
-        document.getElementById('overlay').append(item);
+            card.style.position = "absolute";
+            card.style.zIndex = 1000;
+            document.getElementById('overlay').append(card);
 
-        moveAt(event.pageX, event.pageY);
-
-        function moveAt(pageX, pageY) {
-            item.style.left = pageX - shiftX + 'px';
-            item.style.top = pageY - shiftY + 'px';
-        }
-
-        function onMouseMove(event) {
             moveAt(event.pageX, event.pageY);
-        }
 
-        document.addEventListener('mousemove', onMouseMove);
+            function moveAt(pageX, pageY) {
+                card.style.left = pageX - shiftX + 'px';
+                card.style.top = pageY - shiftY + 'px';
+            }
 
-        item.onmouseup = function () {
-            document.removeEventListener('mousemove', onMouseMove);
-            item.onmouseup = null;
-        };
+            function onMouseMove(event) {
+                moveAt(event.pageX, event.pageY);
+            }
 
-        item.ondragstart = function () {
-            return false;
-        };
+            document.addEventListener('mousemove', onMouseMove);
+
+            card.onmouseup = function () {
+                document.removeEventListener('mousemove', onMouseMove);
+                card.onmouseup = null;
+            };
+
+            card.ondragstart = function () {
+                return false;
+            };
+        });
+
+        sendCard({
+            color: card.style.backgroundColor,
+        });
+        getCards();
+
     });
 
-    document.getElementById('overlay').appendChild(div);
-}
+    function addCards(message) {
+        $('#overlay').appendChild(message)
+    }
+
+    function getCards() {
+        $.get('http://localhost:4000/', (data) => {
+            data.forEach(addCards);
+        })
+    }
+
+    function sendCard(message) {
+        console.log(message);
+        $.post('http://localhost:4000/', message)
+    }
+});
 
 
 

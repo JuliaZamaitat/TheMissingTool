@@ -19,3 +19,22 @@ exports.getAllCards = (req, res) => {
     console.log("promise complete");
   });
 };
+
+exports.save_card = (req, res) => {
+  console.log("In controller");
+  console.log(req.body);
+
+  /*
+  * exports.saveCard = (req, res) => {
+  *
+  var card = new Card(req.body);
+  message.save((err) =>{
+    if(err)
+      sendStatus(500);
+    io.emit('message', req.body);
+    res.sendStatus(200);
+  })
+})*/
+};
+
+

@@ -48,6 +48,8 @@ app.get("/", boardsController.getAllCards);
 // })
 
 
+app.post("/", boardsController.save_card);
+
 //Start listening to the PORT
 app.listen(app.get("port"), () => {
   console.log(`Server running at http://localhost:${app.get("port")}`);
