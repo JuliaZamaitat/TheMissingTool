@@ -53,13 +53,8 @@ app.get("/cards", (req, res) => {
 
 app.post("/card-update", (req, res) => {
 
-    console.log("REQ: " + JSON.stringify(req.body));
-
     const filter = { _id: mongoose.Types.ObjectId(req.body._id) };
     const update = { position: {left: req.body.position.left , top: req.body.position.top }};
-
-
-    console.log("FILTER: " + JSON.stringify(filter));
 
     // Card.findOneAndUpdate(filter, update,
     //     function(err){

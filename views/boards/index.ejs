@@ -16,6 +16,7 @@
             function createDiv(rawCard) {
                 const card = document.createElement('div');
                 card.className = 'item animate';
+                card.innerHTML = "<textarea type='text' value=''></textarea>";
                 addListeners(card);
 
                 card.id = rawCard._id;
@@ -118,6 +119,7 @@
 
             const card = document.createElement('div');
             card.className = 'item animate';
+            card.innerHTML = "<textarea type='text' value=''></textarea>";
 
             addListeners(card);
 
@@ -131,7 +133,6 @@
         }
 
         $("#plus").click(() => {
-
             const card = document.createElement('div');
             card.className = 'item animate';
             card.style.backgroundColor = getRandomColor();

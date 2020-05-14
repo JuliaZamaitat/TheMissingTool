@@ -6,6 +6,7 @@ body, html {
     height: 100%;
     font-size: 15px;
 }
+
 #plus {
     left: 0;
     top: 0;
@@ -15,6 +16,13 @@ body, html {
 #plus i {
     margin-right: .3rem;
 }
+
+#remove {
+     background-color: red;
+     width: 30px;
+     height: 30px;
+ }
+
 .item {
     position: absolute;
     width: 150px;
