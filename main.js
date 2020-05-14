@@ -5,11 +5,14 @@ const express = require('express'),
     mongoose = require("mongoose"),
     Card = require("./models/card"),
 
+
     http = require('http'),
     server = http.createServer(app),
     io = require('socket.io').listen(server);
 
 mongoose.Promise = global.Promise;
+
+const ObjectId = require('mongoose').Types.ObjectId;
 
 const db = mongoose.connection;
 db.once("open", () => {
@@ -48,9 +51,37 @@ app.get("/cards", (req, res) => {
     })
 });
 
+app.post("/card-update", (req, res) => {
+
+    console.log("REQ: " + JSON.stringify(req.body));
+
+    const filter = { _id: mongoose.Types.ObjectId(req.body._id) };
+    const update = { position: {left: req.body.position.left , top: req.body.position.top }};
+
+
+    console.log("FILTER: " + JSON.stringify(filter));
+
+    // Card.findOneAndUpdate(filter, update,
+    //     function(err){
+    //         if(err){
+    //             console.log("Something wrong when updating data!");
+    //         }});
+
+    const returnCard = {
+        _id: req.body._id,
+        position: {
+            left: req.body.position.left,
+            top: req.body.position.top
+        }
+    };
+
+    io.emit('card-update', JSON.stringify(returnCard));
+});
+
 app.post("/", (req, res) => {
     const card = new Card(
         {
+            _id: new mongoose.mongo.ObjectId(),
             backgroundColor: req.body.color,
             position: {
                 left: null,
@@ -60,7 +91,6 @@ app.post("/", (req, res) => {
             fontSize: 24
         }
     );
-
     card.save((err) => {
         if (err)
             sendStatus(500);

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose"),
     cardSchema = mongoose.Schema({
+        _id: mongoose.Types.ObjectId,
         backgroundColor: String,
         position: {
             left: Number,
