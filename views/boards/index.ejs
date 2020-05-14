@@ -1,54 +1,65 @@
 <div id="canvas-wrap">
     <div id="overlay"></div>
 </div>
-
 <button type="button" class="btn btn-success" id="plus">
     <i class="fa fa-plus-circle" aria-hidden="true"></i>
     Add a card
 </button>
-
 <script src="http://localhost:4000/socket.io/socket.io.js"></script>
 <script type="text/javascript" charset="utf-8">
     $(() => {
+        var socket = io();
+
         window.onload = function () {
-            getCards()
-
-            function createDiv(rawCard) {
-                const card = document.createElement('div');
-                card.className = 'item animate';
-                card.innerHTML = "<textarea type='text' value=''></textarea>";
-                addListeners(card);
-
-                card.id = rawCard._id;
-                card.style.left = rawCard.position.left;
-                card.style.top = rawCard.position.top;
-                card.style.fontSize = rawCard.fontSize;
-                card.style.backgroundColor = rawCard.backgroundColor;
-
-                document.getElementById('overlay').appendChild(card)
-            }
-
-            function getCards() {
-                $.get('http://localhost:4000/cards', (data) => {
-                    data.forEach(createDiv);
-                })
-            }
+            $.get('http://localhost:4000/data', (data) => {
+                data.forEach(createCard);
+            })
         }
 
-        function getRandomColor() {
-            var letters = '0123456789ABCDEF';
-            var color = '#';
-            for (var i = 0; i < 6; i++) {
-                color += letters[Math.floor(Math.random() * 16)];
-            }
-            return color;
+        socket.on('new-card', parseAndCreate)
+
+        function parseAndCreate(data) {
+            const obj = JSON.parse(data);
+            createCard(obj)
+        }
+
+        function createCard(data) {
+            const card = document.createElement('div');
+            card.className = 'item animate';
+            card.innerHTML = "<textarea type='text' value=''></textarea>";
+            addListeners(card);
+
+            card.id = data._id;
+            card.style.left = data.position.left;
+            card.style.top = data.position.top;
+            card.style.fontSize = data.fontSize;
+            card.style.backgroundColor = data.backgroundColor;
+
+            document.getElementById('overlay').appendChild(card)
+        }
+
+        socket.on('pos-update', changePosition)
+
+        function changePosition(data) {
+            const card = JSON.parse(data);
+            let cardById = document.getElementById(card._id);
+            cardById.style.left = card.position.left;
+            cardById.style.top = card.position.top;
+            console.log("Position changed")
+        }
+
+        $("#plus").click(() => {
+            newCard({
+                color: getRandomColor()
+            });
+        });
+
+        function newCard(card) {
+            $.post('http://localhost:4000/', card)
         }
 
         function addListeners(card) {
             card.addEventListener('mousedown', function (event) {
-
-                // Remove entrance animation
-                card.classList.remove("animate");
 
                 let shiftX = event.clientX - card.getBoundingClientRect().left;
                 let shiftY = event.clientY - card.getBoundingClientRect().top;
@@ -68,28 +79,24 @@
                     moveAt(event.pageX, event.pageY);
                 }
 
-                function sendCardUpdate(update) {
-                    console.log(update);
-                    $.post('http://localhost:4000/card-update', update)
-                }
-
-
                 document.addEventListener('mousemove', onMouseMove);
 
                 card.onmouseup = function () {
-                    console.log(card)
-                    sendCardUpdate({
-
+                    sendPosChange({
                         _id: card.id,
                         position: {
                             left: card.style.left,
                             top: card.style.top,
                         }
-
                     });
                     document.removeEventListener('mousemove', onMouseMove);
                     card.onmouseup = null;
                 };
+
+                function sendPosChange(update) {
+                    console.log(update);
+                    $.post('http://localhost:4000/update-pos', update)
+                }
 
                 card.ondragstart = function () {
                     return false;
@@ -97,54 +104,13 @@
             });
         }
 
-        var socket = io();
-        socket.on('card', createDivSpecial)
-
-        socket.on('card-update', changePosition)
-
-        function changePosition(rawCard) {
-
-            var cardObj = JSON.parse(rawCard);
-
-            let cardById = document.getElementById(cardObj._id);
-            cardById.style.left = cardObj.position.left;
-            cardById.style.top = cardObj.position.top;
-
-            console.log("Position changed")
-        }
-
-        function createDivSpecial(rawCard) {
-
-            var cardObj = JSON.parse(rawCard);
-
-            const card = document.createElement('div');
-            card.className = 'item animate';
-            card.innerHTML = "<textarea type='text' value=''></textarea>";
-
-            addListeners(card);
-
-            card.id = cardObj._id;
-            card.style.left = cardObj.position.left;
-            card.style.top = cardObj.position.top;
-            card.style.fontSize = cardObj.fontSize;
-            card.style.backgroundColor = cardObj.backgroundColor;
-
-            document.getElementById('overlay').appendChild(card)
-        }
-
-        $("#plus").click(() => {
-            const card = document.createElement('div');
-            card.className = 'item animate';
-            card.style.backgroundColor = getRandomColor();
-            card.innerHTML = "<textarea type='text' value=''></textarea>";
-            addListeners(card);
-            sendCard({
-                color: card.style.backgroundColor
-            });
-        });
-
-        function sendCard(card) {
-            $.post('http://localhost:4000/', card)
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
         }
     });
 </script>

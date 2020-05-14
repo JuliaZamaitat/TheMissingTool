@@ -3,21 +3,10 @@ const express = require('express'),
     app = express(),
     layouts = require("express-ejs-layouts"),
     mongoose = require("mongoose"),
-    Card = require("./models/card"),
-
-
     http = require('http'),
     server = http.createServer(app),
-    io = require('socket.io').listen(server);
-
-mongoose.Promise = global.Promise;
-
-const ObjectId = require('mongoose').Types.ObjectId;
-
-const db = mongoose.connection;
-db.once("open", () => {
-    console.log("Connected to MongoDB");
-});
+    io = require('socket.io').listen(server),
+    Card = require('./models/card');
 
 app.set("view engine", "ejs");
 app.use(express.urlencoded({extended: true}));
@@ -26,54 +15,37 @@ app.use(layouts);
 app.use(express.static("public"));
 app.set("port", process.env.PORT || 4000);
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.urlencoded({extended: false}));
 
-app.get("/", (req, res) => {
-    Card.find({})
-        .exec()
-        .then((cards) => {
-            res.render("boards/index", {
-                cards: cards,
-            });
-        })
-        .catch((error) => {
-            console.log(error.message);
-            return [];
-        })
-        .then(() => {
-            console.log("promise complete");
-        });
+mongoose.Promise = global.Promise;
+const db = mongoose.connection;
+db.once("open", () => {
+    console.log("Connected to MongoDB");
 });
 
-app.get("/cards", (req, res) => {
-    Card.find({}, (err, card) => {
-        res.send(card);
-    })
+mongoose.connect(
+    process.env.MONGODB_URI || "mongodb://localhost:27017/board_db",
+    {useNewUrlParser: true, useFindAndModify: false}
+);
+
+io.on('connection', () => {
+    console.log('A new user is connected')
 });
 
-app.post("/card-update", (req, res) => {
-
-    const filter = { _id: mongoose.Types.ObjectId(req.body._id) };
-    const update = { position: {left: req.body.position.left , top: req.body.position.top }};
-
-    // Card.findOneAndUpdate(filter, update,
-    //     function(err){
-    //         if(err){
-    //             console.log("Something wrong when updating data!");
-    //         }});
-
-    const returnCard = {
-        _id: req.body._id,
-        position: {
-            left: req.body.position.left,
-            top: req.body.position.top
-        }
-    };
-
-    io.emit('card-update', JSON.stringify(returnCard));
+server.listen(app.get("port"), () => {
+    console.log(`Server running at http://localhost:${app.get("port")}`);
 });
 
-app.post("/", (req, res) => {
+
+// Routes
+app.get("/", get_cards);
+app.get("/data", get_cards_data);
+app.post("/update-pos", update_card);
+app.post("/", save_card);
+
+
+// Controller
+function save_card(req, res) {
     const card = new Card(
         {
             _id: new mongoose.mongo.ObjectId(),
@@ -82,35 +54,44 @@ app.post("/", (req, res) => {
                 left: null,
                 top: null
             },
-            text: null,
-            fontSize: 24
         }
     );
     card.save((err) => {
         if (err)
             sendStatus(500);
-        io.emit('card', JSON.stringify(card));
+        io.emit('new-card', JSON.stringify(card));
         res.sendStatus(200);
 
     })
-});
+}
 
-io.on('connection', () => {
-    console.log('a user is connected')
-});
+function get_cards_data(req, res) {
+    Card.find({}, (err, card) => {
+        res.send(card);
+    })
+}
 
-mongoose.connect(
-    process.env.MONGODB_URI || "mongodb://localhost:27017/board_db",
-    {useNewUrlParser: true, useFindAndModify: false}
-);
+function update_card(req, res) {
 
-server.listen(app.get("port"), () => {
-    console.log(`Server running at http://localhost:${app.get("port")}`);
-});
+    /* const filter = {_id: mongoose.Types.ObjectId(req.body._id)};
+     const update = {position: {left: req.body.position.left, top: req.body.position.top}};
 
+     Card.updateOne(filter, update,
+         function (err) {
+             if (err) {
+                 console.log("Something wrong when updating data!");
+             }
+         });
+ */
+    io.emit('pos-update', JSON.stringify({
+        _id: req.body._id,
+        position: {
+            left: req.body.position.left,
+            top: req.body.position.top
+        }
+    }));
+}
 
-
-
-
-
-
+function get_cards(req, res) {
+    res.render("boards/index");
+}
