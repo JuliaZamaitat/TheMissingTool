@@ -8,14 +8,22 @@ const express = require('express'),
     io = require('socket.io').listen(server),
     Card = require('./models/card');
 
-app.set("view engine", "ejs");
-app.use(express.urlencoded({extended: true}));
+//In order to parse JSON for our application
+app.use(
+    express.urlencoded({
+        extended: true
+    })
+);
 app.use(express.json());
+
+//Tell node to use layouts and to look in the public folder for static files
 app.use(layouts);
 app.use(express.static("public"));
+
+//Sets the necessary variables
+app.set("view engine", "ejs");
 app.set("port", process.env.PORT || 4000);
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
 
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
@@ -36,15 +44,14 @@ server.listen(app.get("port"), () => {
     console.log(`Server running at http://localhost:${app.get("port")}`);
 });
 
-
 // Routes
 app.get("/", get_cards);
 app.get("/data", get_cards_data);
 app.post("/update-pos", update_card);
 app.post("/", save_card);
 
-
 // Controller
+// TODO: export with socket.io
 function save_card(req, res) {
     const card = new Card(
         {

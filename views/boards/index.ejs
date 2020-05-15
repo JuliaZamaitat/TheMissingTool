@@ -30,12 +30,12 @@
             addListeners(card);
 
             card.id = data._id;
-            card.style.left = data.position.left;
-            card.style.top = data.position.top;
+            card.style.left = data.position.left + 'px';
+            card.style.top = data.position.top + 'px';
             card.style.fontSize = data.fontSize;
             card.style.backgroundColor = data.backgroundColor;
-
             document.getElementById('overlay').appendChild(card)
+
         }
 
         socket.on('pos-update', changePosition)
@@ -45,7 +45,6 @@
             let cardById = document.getElementById(card._id);
             cardById.style.left = card.position.left;
             cardById.style.top = card.position.top;
-            console.log("Position changed")
         }
 
         $("#plus").click(() => {

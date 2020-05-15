@@ -12,6 +12,7 @@ mongoose.connect(
 //Create seed Data
 Card.deleteMany({}).then(() => {
     return Card.create({
+        "_id": new mongoose.Types.ObjectId,
         "backgroundColor": "blue",
         "position": {
             "left": 450,
@@ -23,6 +24,7 @@ Card.deleteMany({}).then(() => {
     });
 }).then(card => console.log(card.text)).then(() => {
     return Card.create({
+        "_id": new mongoose.Types.ObjectId,
         "backgroundColor": "red",
         "position": {
             "left": 250,
@@ -34,6 +36,7 @@ Card.deleteMany({}).then(() => {
     });
 }).then(card => console.log(card.text)).then(() => {
     return Card.create({
+        "_id": new mongoose.Types.ObjectId,
         "backgroundColor": "green",
         "position": {
             "left": 222,
