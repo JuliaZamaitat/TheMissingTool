@@ -43,8 +43,8 @@
         function changePosition(data) {
             const card = JSON.parse(data);
             let cardById = document.getElementById(card._id);
-            cardById.style.left = card.position.left;
-            cardById.style.top = card.position.top;
+            cardById.style.left = card.position.left + 'px';
+            cardById.style.top = card.position.top + 'px';
         }
 
         $("#plus").click(() => {
@@ -84,8 +84,8 @@
                     sendPosChange({
                         _id: card.id,
                         position: {
-                            left: card.style.left,
-                            top: card.style.top,
+                            left: card.style.left.replace(/\D/g, ''),
+                            top: card.style.top.replace(/\D/g, ''),
                         }
                     });
                     document.removeEventListener('mousemove', onMouseMove);
@@ -93,7 +93,6 @@
                 };
 
                 function sendPosChange(update) {
-                    console.log(update);
                     $.post('http://localhost:4000/update-pos', update)
                 }
 

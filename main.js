@@ -80,16 +80,16 @@ function get_cards_data(req, res) {
 
 function update_card(req, res) {
 
-    /* const filter = {_id: mongoose.Types.ObjectId(req.body._id)};
-     const update = {position: {left: req.body.position.left, top: req.body.position.top}};
+    const filter = {_id: mongoose.Types.ObjectId(req.body._id)};
+    const update = {position: {left: req.body.position.left, top: req.body.position.top}};
 
-     Card.updateOne(filter, update,
-         function (err) {
-             if (err) {
-                 console.log("Something wrong when updating data!");
-             }
-         });
- */
+    Card.findOneAndUpdate(filter, update, {new: true},
+        function (err) {
+            if (err) {
+                console.log("Something wrong when updating data!");
+            }
+        });
+
     io.emit('pos-update', JSON.stringify({
         _id: req.body._id,
         position: {
