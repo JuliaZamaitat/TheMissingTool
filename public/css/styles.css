@@ -6,6 +6,7 @@ body, html {
     height: 100%;
     font-size: 15px;
 }
+
 #plus {
     left: 0;
     top: 0;
@@ -15,7 +16,15 @@ body, html {
 #plus i {
     margin-right: .3rem;
 }
+
+#remove {
+     background-color: red;
+     width: 30px;
+     height: 30px;
+ }
+
 .item {
+    position: absolute;
     width: 150px;
     height: 150px;
     -webkit-animation-name: fadeIn;
@@ -40,9 +49,9 @@ body, html {
 }
 textarea:hover {
     cursor: pointer;
-    -moz-box-shadow: 0 0 5px skyblue;
-    -webkit-box-shadow: 0 0 5px skyblue;
-    box-shadow: 0 0 5px skyblue;
+    -moz-box-shadow: 0 0 5px rgb(0, 168, 235);
+    -webkit-box-shadow: 0 0 5px rgb(0, 168, 235);
+    box-shadow: 0 0 5px rgb(0, 168, 235);
 }
 #myCanvas {
     cursor: crosshair;

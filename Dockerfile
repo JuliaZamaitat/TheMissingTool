@@ -5,3 +5,4 @@ COPY package*.json ./
 RUN npm install
 EXPOSE 3034
 CMD ["npm", "start"]
+
