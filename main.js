@@ -12,7 +12,7 @@ mongoose.Promise = global.Promise;
 
 //Connects either to the procution database or our local database
 mongoose.connect(
-  process.env.MONGODB_URI || "mongodb://localhost:27017/board_db",
+  process.env.MONGODB_URI || "mongodb://mongo:27017/board_db", //use  mongodb://mongo:27018 ??
   { useNewUrlParser: true, useFindAndModify: false }
 );
 
@@ -39,7 +39,7 @@ app.use(express.static("public"));
 
 //Sets the necessary variables
 app.set("view engine", "ejs");
-app.set("port", process.env.PORT || 4000);
+app.set("port", process.env.PORT || 8080);
 
 //Routes
 app.get("/", boardsController.getAllCards);

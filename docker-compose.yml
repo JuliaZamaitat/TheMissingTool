@@ -1,0 +1,23 @@
+version: "3"
+services:
+  app:
+    container_name: themissingtool
+    restart: always
+    build: .
+    ports:
+      - "8080:80"
+    links:
+      - mongo
+  mongo:
+    image: library/mongo:4.2-bionic
+    container_name: 'themissingtool-mongo'
+    environment:
+      - MONGO_INITDB_DATABASE=
+      - MONGO_INITDB_ROOT_USERNAME=
+      - MONGO_INITDB_ROOT_PASSWORD=
+    volumes:
+      - ./mongo/data:/data/db
+      - ./mongo/seed:/data/seed
+      - ./mongo/config:/data/configdb
+    ports:
+      - 27017-27019:27017-27019
