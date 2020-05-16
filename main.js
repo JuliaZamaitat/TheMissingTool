@@ -49,6 +49,7 @@ app.get("/", get_cards);
 app.get("/data", get_cards_data);
 app.post("/update-pos", update_card);
 app.post("/", save_card);
+app.post("/delete-card", delete_card);
 
 // Controller
 // TODO: export with socket.io
@@ -101,4 +102,20 @@ function update_card(req, res) {
 
 function get_cards(req, res) {
     res.render("boards/index");
+}
+
+function delete_card(req, res) {
+
+    const filter = {_id: mongoose.Types.ObjectId(req.body._id)};
+
+    Card.deleteOne(filter,
+        function (err) {
+            if (err) {
+                console.log("Something wrong when deleting data!");
+            }
+        });
+
+    io.emit('delete-card', JSON.stringify({
+        _id: req.body._id
+    }));
 }
