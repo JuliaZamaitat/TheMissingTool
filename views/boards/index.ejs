@@ -75,11 +75,11 @@
 
             function cardMouseDown(e) {
                 card.classList.remove("animate");
-                pos3 = e.clientX;
-                pos4 = e.clientY;
                 card.style.position = "absolute";
                 card.style.zIndex = 1000;
                 document.getElementById('overlay').append(card);
+                pos3 = e.clientX;
+                pos4 = e.clientY;
                 document.onmouseup = closeDragCard;
                 document.onmousemove = dragCard;
             }
