@@ -8,10 +8,11 @@
 <script src="http://localhost:4000/socket.io/socket.io.js"></script>
 <script type="text/javascript" charset="utf-8">
     $(() => {
+        let path = 'http://localhost:4000/';
         var socket = io();
 
         window.onload = function () {
-            $.get('http://localhost:4000/data', (data) => {
+            $.get(path + 'data', (data) => {
                 data.forEach(createCard);
             })
         }
@@ -58,7 +59,7 @@
         });
 
         function newCard(card) {
-            $.post('http://localhost:4000/', card)
+            $.post(path, card)
         }
 
         socket.on('delete-card', deleteCard)
@@ -69,56 +70,58 @@
         }
 
         function addListeners(card) {
-
             card.querySelector('.deleteBtn').addEventListener('mousedown', function (event) {
                 event.stopPropagation();  //prevent bubbling process so the whole card doesn't start dragging
                 const cardToDelete = {_id: event.currentTarget.parentElement.id};
-                $.post('http://localhost:4000/delete-card', cardToDelete) //send card ID over for deletion
+                $.post(path + 'delete-card', cardToDelete) //send card ID over for deletion
             });
 
 
-            dragCard(card);
+            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            card.onmousedown = cardMouseDown;
 
-            function dragCard(card) {
-                let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-                card.onmousedown = cardMouseDown;
 
-                function cardMouseDown(e) {
-                    e.preventDefault();
-                    pos3 = e.clientX;
-                    pos4 = e.clientY;
-                    document.onmouseup = closeDragCard;
-                    document.onmousemove = dragCard;
-                }
-
-                function dragCard(e) {
-                    e.preventDefault();
-                    pos1 = pos3 - e.clientX;
-                    pos2 = pos4 - e.clientY;
-                    pos3 = e.clientX;
-                    pos4 = e.clientY;
-                    card.style.top = (card.offsetTop - pos2) + "px";
-                    card.style.left = (card.offsetLeft - pos1) + "px";
-                }
-
-                function closeDragCard() {
-                    sendPosChange({
-                        _id: card.id,
-                        position: {
-                            left: card.style.left.replace(/\D/g, ''),
-                            top: card.style.top.replace(/\D/g, ''),
-                        }
-                    });
-                    document.onmouseup = null;
-                    document.onmousemove = null;
-
-                }
-
-                function sendPosChange(update) {
-                    $.post('http://localhost:4000/update-pos', update)
-                }
+            function cardMouseDown(e) {
+                e.preventDefault();
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                card.style.position = "absolute";
+                card.style.zIndex = 1000;
+                document.getElementById('overlay').append(card);
+                document.onmouseup = closeDragCard;
+                document.onmousemove = dragCard;
             }
 
+            function dragCard(e) {
+                e.preventDefault();
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                card.style.top = (card.offsetTop - pos2) + "px";
+                card.style.left = (card.offsetLeft - pos1) + "px";
+            }
+
+            function closeDragCard() {
+                sendPosChange({
+                    _id: card.id,
+                    position: {
+                        left: card.style.left.replace(/\D/g, ''),
+                        top: card.style.top.replace(/\D/g, ''),
+                    }
+                });
+                document.onmouseup = null;
+                document.onmousemove = null;
+
+            }
+
+            function sendPosChange(update) {
+                $.post(path + 'update-pos', update)
+            }
+
+            card.ondragstart = function () {
+                return false;
+            };
         }
 
         function getRandomColor() {
