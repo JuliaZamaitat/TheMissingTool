@@ -65,38 +65,43 @@
 
         function deleteCard(data) {
             const card = JSON.parse(data);
-            $('#'+card._id).remove(); //remove the card element by its ID
+            $('#' + card._id).remove(); //remove the card element by its ID
         }
 
         function addListeners(card) {
-            card.querySelector('.deleteBtn').addEventListener('mousedown', function(event) {
+
+            card.querySelector('.deleteBtn').addEventListener('mousedown', function (event) {
                 event.stopPropagation();  //prevent bubbling process so the whole card doesn't start dragging
-                const cardToDelete = { _id: event.currentTarget.parentElement.id };
+                const cardToDelete = {_id: event.currentTarget.parentElement.id};
                 $.post('http://localhost:4000/delete-card', cardToDelete) //send card ID over for deletion
             });
 
-            card.addEventListener('mousedown', function (event) {
-                let shiftX = event.clientX - card.getBoundingClientRect().left;
-                let shiftY = event.clientY - card.getBoundingClientRect().top;
 
-                card.style.position = "absolute";
-                card.style.zIndex = 1000;
-                document.getElementById('overlay').append(card);
+            dragCard(card);
 
-                moveAt(event.pageX, event.pageY);
+            function dragCard(card) {
+                let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+                card.onmousedown = cardMouseDown;
 
-                function moveAt(pageX, pageY) {
-                    card.style.left = pageX - shiftX + 'px';
-                    card.style.top = pageY - shiftY + 'px';
+                function cardMouseDown(e) {
+                    e.preventDefault();
+                    pos3 = e.clientX;
+                    pos4 = e.clientY;
+                    document.onmouseup = closeDragCard;
+                    document.onmousemove = dragCard;
                 }
 
-                function onMouseMove(event) {
-                    moveAt(event.pageX, event.pageY);
+                function dragCard(e) {
+                    e.preventDefault();
+                    pos1 = pos3 - e.clientX;
+                    pos2 = pos4 - e.clientY;
+                    pos3 = e.clientX;
+                    pos4 = e.clientY;
+                    card.style.top = (card.offsetTop - pos2) + "px";
+                    card.style.left = (card.offsetLeft - pos1) + "px";
                 }
 
-                document.addEventListener('mousemove', onMouseMove);
-
-                card.onmouseup = function () {
+                function closeDragCard() {
                     sendPosChange({
                         _id: card.id,
                         position: {
@@ -104,18 +109,16 @@
                             top: card.style.top.replace(/\D/g, ''),
                         }
                     });
-                    document.removeEventListener('mousemove', onMouseMove);
-                    card.onmouseup = null;
-                };
+                    document.onmouseup = null;
+                    document.onmousemove = null;
+
+                }
 
                 function sendPosChange(update) {
                     $.post('http://localhost:4000/update-pos', update)
                 }
+            }
 
-                card.ondragstart = function () {
-                    return false;
-                };
-            });
         }
 
         function getRandomColor() {
