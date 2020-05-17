@@ -74,7 +74,6 @@
             card.onmousedown = cardMouseDown;
 
             function cardMouseDown(e) {
-                e.preventDefault();
                 card.classList.remove("animate");
                 pos3 = e.clientX;
                 pos4 = e.clientY;
@@ -121,6 +120,8 @@
                 const cardToDelete = {_id: event.currentTarget.parentElement.id};
                 $.post(path + 'delete-card', cardToDelete) //send card ID over for deletion
             });
+
+
         }
 
         function getRandomColor() {
