@@ -70,19 +70,12 @@
         }
 
         function addListeners(card) {
-            card.querySelector('.deleteBtn').addEventListener('mousedown', function (event) {
-                event.stopPropagation();  //prevent bubbling process so the whole card doesn't start dragging
-                const cardToDelete = {_id: event.currentTarget.parentElement.id};
-                $.post(path + 'delete-card', cardToDelete) //send card ID over for deletion
-            });
-
-
             let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
             card.onmousedown = cardMouseDown;
 
-
             function cardMouseDown(e) {
                 e.preventDefault();
+                card.classList.remove("animate");
                 pos3 = e.clientX;
                 pos4 = e.clientY;
                 card.style.position = "absolute";
@@ -122,6 +115,12 @@
             card.ondragstart = function () {
                 return false;
             };
+
+            card.querySelector('.deleteBtn').addEventListener('mousedown', function (event) {
+                event.stopPropagation();  //prevent bubbling process so the whole card doesn't start dragging
+                const cardToDelete = {_id: event.currentTarget.parentElement.id};
+                $.post(path + 'delete-card', cardToDelete) //send card ID over for deletion
+            });
         }
 
         function getRandomColor() {
