@@ -42,7 +42,7 @@ app.use(express.static("public"));
 //Sets the necessary variables
 app.set("view engine", "ejs");
 
-app.set("port", process.env.NODEPORT || 8081);
+app.set("port", process.env.NODEPORT || process.env.PORT || 8081);
 app.use(bodyParser.json());
 
 
