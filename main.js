@@ -107,7 +107,7 @@ function get_cards(req, res) {
 function delete_card(req, res) {
     const filter = {_id: mongoose.Types.ObjectId(req.body._id)};
 
-    Card.deleteMany(filter,
+    Card.deleteOne(filter,
         function (err) {
             if (err) {
                 console.log("Something wrong when deleting data!");
