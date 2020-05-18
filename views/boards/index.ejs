@@ -26,7 +26,11 @@
         function createCard(data) {
             const card = document.createElement('div');
             card.className = 'item animate';
-            card.innerHTML = "<textarea type='text' value=''></textarea>";
+            card.innerHTML = "<span type='button' class='deleteBtn rounded'><i class='fa fa-trash-o'></i></span><textarea type='text' value=''></textarea>";
+
+            // const closeBtn = document.createElement('div');
+            // closeBtn.className = 'closeBtn';
+            // closeBtn.innerHTML = "x";
             addListeners(card);
 
             card.id = data._id;
@@ -57,9 +61,21 @@
             $.post('http://localhost:4000/', card)
         }
 
-        function addListeners(card) {
-            card.addEventListener('mousedown', function (event) {
+        socket.on('delete-card', deleteCard)
 
+        function deleteCard(data) {
+            const card = JSON.parse(data);
+            $('#'+card._id).remove(); //remove the card element by its ID
+        }
+
+        function addListeners(card) {
+            card.querySelector('.deleteBtn').addEventListener('mousedown', function(event) {
+                event.stopPropagation();  //prevent bubbling process so the whole card doesn't start dragging
+                const cardToDelete = { _id: event.currentTarget.parentElement.id };
+                $.post('http://localhost:4000/delete-card', cardToDelete) //send card ID over for deletion
+            });
+
+            card.addEventListener('mousedown', function (event) {
                 let shiftX = event.clientX - card.getBoundingClientRect().left;
                 let shiftY = event.clientY - card.getBoundingClientRect().top;
 

@@ -101,3 +101,25 @@ textarea:hover {
         height: 150px;
       }
   }
+
+.deleteBtn {
+    display: none;
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    cursor:pointer;
+    line-height: 0px;
+    padding: 4px; 
+    color: red;
+    background-color: #ffffff;
+    border: 1px solid red;
+}
+
+.item:hover > .deleteBtn {
+    display: inline-block;
+}
+
+.deleteBtn:hover {
+    color: #ffffff;
+    background-color: red;
+}
