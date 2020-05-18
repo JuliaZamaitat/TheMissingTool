@@ -115,10 +115,8 @@
                 const cardToDelete = {_id: event.currentTarget.parentElement.id};
                 $.post('/delete-card', cardToDelete) //send card ID over for deletion
             });
-
-
         }
-
+        
         function getRandomColor() {
             var letters = '0123456789ABCDEF';
             var color = '#';
