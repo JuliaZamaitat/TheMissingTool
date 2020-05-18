@@ -95,26 +95,29 @@ function update_card (req, res) {
 	const filter = {_id: mongoose.Types.ObjectId(req.body._id)};
 	const update = {position: {left: req.body.position.left, top: req.body.position.top}};
 
-	Card.findOneAndUpdate (filter, update, {new: true},
-		function (err) {
-			if (err) console.log("Something wrong when updating data!");
-		});
 
-	io.emit("pos-update", JSON.stringify({
-		_id: req.body._id,
-		position: {
-			left: req.body.position.left,
-			top: req.body.position.top
-		}
-	}));
-};
+    Card.findOneAndUpdate(filter, update, {new: true},
+        function (err) {
+            if (err) {
+                console.log("Something wrong when updating data!");
+            }
+            io.emit('pos-update', JSON.stringify({
+                _id: req.body._id,
+                position: {
+                    left: req.body.position.left,
+                    top: req.body.position.top
+                }
+            }));
+            res.sendStatus(200);
+        });
+}
+
 
 function get_cards (req, res) {
 	res.render("boards/index");
 };
 
 function delete_card(req, res) {
-
     const filter = {_id: mongoose.Types.ObjectId(req.body._id)};
 
     Card.deleteOne(filter,
@@ -122,9 +125,10 @@ function delete_card(req, res) {
             if (err) {
                 console.log("Something wrong when deleting data!");
             }
+            io.emit('delete-card', JSON.stringify({
+                _id: req.body._id
+            }));
+            res.sendStatus(200);
         });
+}
 
-    io.emit("delete-card", JSON.stringify({
-        _id: req.body._id
-    }));
-};

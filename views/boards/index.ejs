@@ -28,9 +28,6 @@
             card.className = 'item animate';
             card.innerHTML = "<span type='button' class='deleteBtn rounded'><i class='fa fa-trash-o'></i></span><textarea type='text' value=''></textarea>";
 
-            // const closeBtn = document.createElement('div');
-            // closeBtn.className = 'closeBtn';
-            // closeBtn.innerHTML = "x";
             addListeners(card);
 
             card.id = data._id;
@@ -39,7 +36,6 @@
             card.style.fontSize = data.fontSize;
             card.style.backgroundColor = data.backgroundColor;
             document.getElementById('overlay').appendChild(card)
-
         }
 
         socket.on('pos-update', changePosition)
@@ -65,59 +61,62 @@
 
         function deleteCard(data) {
             const card = JSON.parse(data);
-            $('#'+card._id).remove(); //remove the card element by its ID
+            $('#' + card._id).remove(); //remove the card element by its ID
         }
 
         function addListeners(card) {
-            card.querySelector('.deleteBtn').addEventListener('mousedown', function(event) {
-                event.stopPropagation();  //prevent bubbling process so the whole card doesn't start dragging
-                const cardToDelete = { _id: event.currentTarget.parentElement.id };
-                $.post('/delete-card', cardToDelete) //send card ID over for deletion
-            });
+            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            card.onmousedown = cardMouseDown;
 
-            card.addEventListener('mousedown', function (event) {
-                let shiftX = event.clientX - card.getBoundingClientRect().left;
-                let shiftY = event.clientY - card.getBoundingClientRect().top;
-
+            function cardMouseDown(e) {
+                card.classList.remove("animate");
                 card.style.position = "absolute";
                 card.style.zIndex = 1000;
                 document.getElementById('overlay').append(card);
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragCard;
+                document.onmousemove = dragCard;
+            }
 
-                moveAt(event.pageX, event.pageY);
+            function dragCard(e) {
+                e.preventDefault();
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                card.style.top = (card.offsetTop - pos2) + "px";
+                card.style.left = (card.offsetLeft - pos1) + "px";
+            }
 
-                function moveAt(pageX, pageY) {
-                    card.style.left = pageX - shiftX + 'px';
-                    card.style.top = pageY - shiftY + 'px';
-                }
+            function closeDragCard() {
+                sendPosChange({
+                    _id: card.id,
+                    position: {
+                        left: card.style.left.replace(/\D/g, ''),
+                        top: card.style.top.replace(/\D/g, ''),
+                    }
+                });
+                document.onmouseup = null;
+                document.onmousemove = null;
 
-                function onMouseMove(event) {
-                    moveAt(event.pageX, event.pageY);
-                }
+            }
 
-                document.addEventListener('mousemove', onMouseMove);
+            function sendPosChange(update) {
+                $.post('/update-pos', update)
+            }
 
-                card.onmouseup = function () {
-                    sendPosChange({
-                        _id: card.id,
-                        position: {
-                            left: card.style.left.replace(/\D/g, ''),
-                            top: card.style.top.replace(/\D/g, ''),
-                        }
-                    });
-                    document.removeEventListener('mousemove', onMouseMove);
-                    card.onmouseup = null;
-                };
+            card.ondragstart = function () {
+                return false;
+            };
 
-                function sendPosChange(update) {
-                    $.post('/update-pos', update)
-                }
-
-                card.ondragstart = function () {
-                    return false;
-                };
+            card.querySelector('.deleteBtn').addEventListener('mousedown', function (event) {
+                event.stopPropagation();  //prevent bubbling process so the whole card doesn't start dragging
+                const cardToDelete = {_id: event.currentTarget.parentElement.id};
+                $.post('/delete-card', cardToDelete) //send card ID over for deletion
             });
         }
-
+        
         function getRandomColor() {
             var letters = '0123456789ABCDEF';
             var color = '#';
