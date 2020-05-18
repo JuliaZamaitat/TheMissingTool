@@ -5,13 +5,13 @@
     <i class="fa fa-plus-circle" aria-hidden="true"></i>
     Add a card
 </button>
-<script src="http://localhost:4000/socket.io/socket.io.js"></script>
+<script src="/socket.io/socket.io.js"></script>
 <script type="text/javascript" charset="utf-8">
     $(() => {
         var socket = io();
 
         window.onload = function () {
-            $.get('http://localhost:4000/data', (data) => {
+            $.get('/data', (data) => {
                 data.forEach(createCard);
             })
         }
@@ -58,7 +58,7 @@
         });
 
         function newCard(card) {
-            $.post('http://localhost:4000/', card)
+            $.post('/', card)
         }
 
         socket.on('delete-card', deleteCard)
@@ -72,7 +72,7 @@
             card.querySelector('.deleteBtn').addEventListener('mousedown', function(event) {
                 event.stopPropagation();  //prevent bubbling process so the whole card doesn't start dragging
                 const cardToDelete = { _id: event.currentTarget.parentElement.id };
-                $.post('http://localhost:4000/delete-card', cardToDelete) //send card ID over for deletion
+                $.post('/delete-card', cardToDelete) //send card ID over for deletion
             });
 
             card.addEventListener('mousedown', function (event) {
@@ -109,7 +109,7 @@
                 };
 
                 function sendPosChange(update) {
-                    $.post('http://localhost:4000/update-pos', update)
+                    $.post('/update-pos', update)
                 }
 
                 card.ondragstart = function () {

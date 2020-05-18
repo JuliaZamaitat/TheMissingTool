@@ -7,9 +7,11 @@ const express = require("express"),
 	mongoose = require("mongoose"),
 	bodyParser = require("body-parser"),
 	http = require("http"),
-	server = http.createServer(app),
-	io = require("socket.io").listen(server),
+	server = http.Server(app),
+	io = require("socket.io")(server),
 	Card = require("./models/card");
+
+
 
 //Connects either to the procution database, docker db or our local database
 mongoose.connect(
@@ -43,11 +45,10 @@ app.set("view engine", "ejs");
 app.set("port", process.env.NODEPORT || 8081);
 app.use(bodyParser.json());
 
-//Start listening to the PORT
-app.listen(app.get("port"), () => {
+
+server.listen(app.get("port"), () => {
 	console.log(`Server running at http://localhost:${app.get("port")}`);
 });
-
 
 io.on("connection", () => {
 	console.log("A new user is connected");
@@ -59,6 +60,8 @@ app.get("/data", get_cards_data);
 app.post("/update-pos", update_card);
 app.post("/", save_card);
 app.post("/delete-card", delete_card);
+
+module.exports = app;
 
 // Controller
 // TODO: export with socket.io
@@ -85,7 +88,7 @@ function get_cards_data (req, res) {
 	Card.find({}, (err, card) => {
 		res.send(card);
 	});
-}
+};
 
 function update_card (req, res) {
 
@@ -104,11 +107,11 @@ function update_card (req, res) {
 			top: req.body.position.top
 		}
 	}));
-}
+};
 
 function get_cards (req, res) {
 	res.render("boards/index");
-}
+};
 
 function delete_card(req, res) {
 
@@ -121,7 +124,7 @@ function delete_card(req, res) {
             }
         });
 
-    io.emit('delete-card', JSON.stringify({
+    io.emit("delete-card", JSON.stringify({
         _id: req.body._id
     }));
-}
+};
