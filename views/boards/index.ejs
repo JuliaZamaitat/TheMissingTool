@@ -29,9 +29,6 @@
             card.className = 'item animate';
             card.innerHTML = "<span type='button' class='deleteBtn rounded'><i class='fa fa-trash-o'></i></span><textarea type='text' value=''></textarea>";
 
-            // const closeBtn = document.createElement('div');
-            // closeBtn.className = 'closeBtn';
-            // closeBtn.innerHTML = "x";
             addListeners(card);
 
             card.id = data._id;
@@ -40,7 +37,6 @@
             card.style.fontSize = data.fontSize;
             card.style.backgroundColor = data.backgroundColor;
             document.getElementById('overlay').appendChild(card)
-
         }
 
         socket.on('pos-update', changePosition)
