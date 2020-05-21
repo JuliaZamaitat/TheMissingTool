@@ -35,6 +35,9 @@
             card.style.top = data.position.top + 'px';
             card.style.fontSize = data.fontSize;
             card.style.backgroundColor = data.backgroundColor;
+            if (data.text != null) {
+                card.querySelector("textarea").value = data.text; //Show the card text if defined
+            }
             document.getElementById('overlay').appendChild(card)
         }
 
@@ -115,7 +118,31 @@
                 const cardToDelete = {_id: event.currentTarget.parentElement.id};
                 $.post('/delete-card', cardToDelete) //send card ID over for deletion
             });
+            
+            //Update the text on textarea change
+            //TODO socket io
+
+            card.querySelector('textarea').addEventListener('input', function(event) {
+                sendTextChange({
+                    _id: event.currentTarget.parentElement.id,
+                    text: event.currentTarget.value
+                })
+            })
+
+            function sendTextChange(update) {
+                $.post('/update-text', update);
+            }
         }
+
+        function updateText(data) {
+            const object = JSON.parse(data);
+            console.log(object)
+            let card = $('#' + object._id);
+            console.log(object.text)
+            card.find('textarea').val(object.text);
+        }
+
+        socket.on('text-update', updateText)
         
         function getRandomColor() {
             var letters = '0123456789ABCDEF';
