@@ -35,7 +35,9 @@
             card.style.top = data.position.top + 'px';
             card.style.fontSize = data.fontSize;
             card.style.backgroundColor = data.backgroundColor;
-            card.querySelector("textarea").value = data.text; //Show the card text
+            if (data.text != null) {
+                card.querySelector("textarea").value = data.text; //Show the card text if defined
+            }
             document.getElementById('overlay').appendChild(card)
         }
 
