@@ -20,7 +20,8 @@ Card.deleteMany({}).then(() => {
 		},
 		"text": "Ich bin eine tolle Karte",
 		"fontSize": 12,
-		"shape": "ELLIPSE"
+		"shape": "ELLIPSE",
+		"boardId": 142,
 	});
 }).then(card => console.log(card.text)).then(() => {
 	return Card.create({
@@ -32,7 +33,8 @@ Card.deleteMany({}).then(() => {
 		},
 		"text": "Ich bin eine noch tollere Karte",
 		"fontSize": 14,
-		"shape": "CIRCLE"
+		"shape": "CIRCLE",
+		"boardId": 142
 	});
 }).then(card => console.log(card.text)).then(() => {
 	return Card.create({
@@ -44,7 +46,8 @@ Card.deleteMany({}).then(() => {
 		},
 		"text": "Ich bin die beste Karte",
 		"fontSize": 16,
-		"shape": "RECTANGLE"
+		"shape": "RECTANGLE",
+		"boardId": 142
 	});
 }).then(card => console.log(card.text)).catch(error => console.log(error.message)).then(() => {
 	console.log("DONE");
