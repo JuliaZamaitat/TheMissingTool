@@ -58,6 +58,7 @@ io.on("connection", () => {
 app.get("/", get_cards);
 app.get("/data", get_cards_data);
 app.post("/update-pos", update_card);
+app.post("/update-text", update_text); //or maybe PUT?
 app.post("/", save_card);
 app.post("/delete-card", delete_card);
 
@@ -84,51 +85,69 @@ function save_card(req, res) {
 	});
 }
 
-function get_cards_data (req, res) {
+function get_cards_data(req, res) {
 	Card.find({}, (err, card) => {
 		res.send(card);
 	});
-};
+}
 
-function update_card (req, res) {
+function update_card(req, res) {
 
 	const filter = {_id: mongoose.Types.ObjectId(req.body._id)};
 	const update = {position: {left: req.body.position.left, top: req.body.position.top}};
 
-
-    Card.findOneAndUpdate(filter, update, {new: true},
-        function (err) {
-            if (err) {
-                console.log("Something wrong when updating data!");
-            }
-            io.emit('pos-update', JSON.stringify({
-                _id: req.body._id,
-                position: {
-                    left: req.body.position.left,
-                    top: req.body.position.top
-                }
-            }));
-            res.sendStatus(200);
-        });
+	Card.findOneAndUpdate(filter, update, {new: true},
+		function (err) {
+			if (err) {
+				console.log("Something wrong when updating data!");
+			}
+			io.emit("pos-update", JSON.stringify({
+				_id: req.body._id,
+				position: {
+					left: req.body.position.left,
+					top: req.body.position.top
+				}
+			}));
+			res.sendStatus(200);
+		}
+	);
 }
 
+function update_text(req, res) {
+	const filter = {_id: mongoose.Types.ObjectId(req.body._id)};
+	const update = {text: req.body.text};
 
-function get_cards (req, res) {
+	Card.findOneAndUpdate(filter, update, {new:true},
+		function (err) {
+			if (err) {
+				console.log("Something wrong when updating data!");
+			}
+			io.emit("text-update", JSON.stringify( {
+				_id: req.body._id,
+				text: req.body.text
+			}));
+			res.sendStatus(200);
+		}
+	);
+}
+
+function get_cards(req, res) {
 	res.render("boards/index");
-};
+}
 
 function delete_card(req, res) {
-    const filter = {_id: mongoose.Types.ObjectId(req.body._id)};
+	const filter = {_id: mongoose.Types.ObjectId(req.body._id)};
 
-    Card.deleteOne(filter,
-        function (err) {
-            if (err) {
-                console.log("Something wrong when deleting data!");
-            }
-            io.emit('delete-card', JSON.stringify({
-                _id: req.body._id
-            }));
-            res.sendStatus(200);
-        });
+	Card.deleteOne(filter,
+		function (err) {
+			if (err) {
+				console.log("Something wrong when deleting data!");
+			}
+			io.emit("delete-card", JSON.stringify({
+				_id: req.body._id
+			}));
+			res.sendStatus(200);
+		}
+	);
 }
 
