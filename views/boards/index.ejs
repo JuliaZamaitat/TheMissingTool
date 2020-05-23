@@ -5,6 +5,25 @@
     <i class="fa fa-plus-circle" aria-hidden="true"></i>
     Add a card
 </button>
+<div id="chatWindow" class="card">
+    <div id="chatHeader" class="card-header px-2 py-1 font-weight-bold">Chat</div>
+    <div id="chatBody" class="card-body p-0">
+        <div id="chatContent" class="p-1">
+            <div class="msg">
+                The chat is scrollable. Starts at the bottom.
+            </div>
+            <div class="msg">
+                New messages will appear here.<br>
+                Press <i>Enter</i> to send your message.<br>
+                Press <i>Shift+Enter</i> for a new line.<br>
+                <br><br><br><br><br><br><br><br><br><br><br>
+            </div>
+        </div>
+    </div>
+    <div id="chatInputContainer" class="card-footer input-group p-1">
+        <textarea id="chatInput" class="form-control" rows="1" placeholder="Enter a message..."></textarea>
+    </div>
+</div>
 <script src="/socket.io/socket.io.js"></script>
 <script type="text/javascript" charset="utf-8">
     $(() => {
@@ -152,5 +171,33 @@
             }
             return color;
         }
+
+                //Adjust chat content height, in case input height changes and scroll to bottom
+                const rescaleChatContent = () => {        
+            $('#chatContent').css('height', 'calc(100% - ' + $('#chatInputContainer').outerHeight() + 'px)');      
+        };
+
+        //Chat window's open/close mechanism
+        $('#chatHeader').click(() => {
+            $('#chatInputContainer').fadeToggle(300);
+            $('#chatBody').slideToggle();
+            rescaleChatContent();
+            $('#chatContent').scrollTop(chatContent.scrollHeight); //Scroll to bottom
+        });
+
+        //Listens for chat keyboard input
+        $('#chatInput').on('input keydown', function(e) {
+            if((e.keyCode == 10 || e.keyCode == 13)) { //If Enter is pressed
+                if (!e.shiftKey) { //If Shift is not pressed
+                    //Prevent new line and send the message
+                    e.preventDefault();
+                    //Send message here...
+                }
+            }
+
+            //Rescale textarea
+            $(this).css('height', 'unset').height(this.scrollHeight-10);
+            rescaleChatContent();
+        });
     });
 </script>
