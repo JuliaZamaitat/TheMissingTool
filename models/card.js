@@ -12,9 +12,8 @@ const mongoose = require("mongoose"),
             type: String,
             enum: ["RECTANGLE", "CIRCLE", "TRIANGLE", "ELLIPSE"],
             default: "RECTANGLE"
-        }
-        // TODO LATER "boardId": [{type: mongoose.Schema.Types.ObjectId, ref:"Board"}]
+        },
+        boardId: [{type: Number, ref: "Board"}]
     });
-
 
 module.exports = mongoose.model("Card", cardSchema);
