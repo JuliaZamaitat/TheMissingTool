@@ -1,12 +1,9 @@
-let socketId;
 let url = window.location.href;
 let windowBoardId = url.substr(url.lastIndexOf("/") + 1);
-const socket = io();
+var socket = io('localhost:3034');
+socket.emit("join", windowBoardId);
 
 window.onload = function () {
-    socket.on('connect', function () {
-        socketId = socket.io.engine.id;
-    });
     $.get('/board/' + windowBoardId, (cards) => {
         cards.forEach(createCard);
     })
@@ -29,7 +26,6 @@ function createCard(data) {
 }
 
 function addListeners(card) {
-
     // Moving card listener
     let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
     card.onmousedown = cardMouseDown;
@@ -61,8 +57,7 @@ function addListeners(card) {
             position: {
                 left: card.style.left.replace(/\D/g, ''),
                 top: card.style.top.replace(/\D/g, ''),
-            },
-            boardId: windowBoardId
+            }
         });
         document.onmouseup = null;
         document.onmousemove = null;
@@ -70,7 +65,7 @@ function addListeners(card) {
     }
 
     function sendPosChange(update) {
-        $.post('/update-pos', update)
+        socket.emit('update-pos', update);
     }
 
     card.ondragstart = function () {
@@ -80,76 +75,49 @@ function addListeners(card) {
     // Delete card listener
     card.querySelector('.deleteBtn').addEventListener('mousedown', function (event) {
         event.stopPropagation();  //prevent bubbling process so the whole card doesn't start dragging
-        const cardToDelete = {_id: event.currentTarget.parentElement.id, boardId: windowBoardId};
-        $.post('/delete-card', cardToDelete) //send card ID over for deletion
+        const cardToDelete = {_id: event.currentTarget.parentElement.id};
+        socket.emit('delete-card', cardToDelete);
     });
 
     // Change text of card listener
     card.querySelector('textarea').addEventListener('input', function (event) {
-        sendTextChange({
+        socket.emit('update-text', {
             _id: event.currentTarget.parentElement.id,
-            text: event.currentTarget.value,
-            boardId: windowBoardId
+            text: event.currentTarget.value
         })
     });
-
-    function sendTextChange(update) {
-        $.post('/update-text', update);
-    }
 }
 
 // event listener for plus button
 $("#plus").click(() => {
-    newCard({
-        color: getRandomColor(),
-        boardId: windowBoardId
+    socket.emit('save-card', {
+        color: getRandomColor()
     });
 });
 
-function newCard(card) {
-    $.post('/', card)
-}
-
 // listening to web-sockets
-socket.on('new-card', parseAndCreate);
-
-function parseAndCreate(data) {
+socket.on('new-card', (data) => {
     const card = JSON.parse(data);
-    if (isRightBoard(card)) {
-        createCard(card)
-    }
-}
+    createCard(card)
+});
 
-socket.on('pos-update', changePosition);
-
-function changePosition(data) {
+socket.on('pos-update', (data) => {
     const card = JSON.parse(data);
-    if (isRightBoard(card)) {
-        let cardById = document.getElementById(card._id);
-        cardById.style.left = card.position.left + 'px';
-        cardById.style.top = card.position.top + 'px';
-    }
-}
+    let cardById = document.getElementById(card._id);
+    cardById.style.left = card.position.left + 'px';
+    cardById.style.top = card.position.top + 'px';
+});
 
-socket.on('text-update', updateText);
-
-function updateText(data) {
+socket.on('text-update', (data) => {
     const card = JSON.parse(data);
-    if (isRightBoard(card)) {
-        $('#' + card._id).find('textarea').val(card.text);
-    }
-}
+    $('#' + card._id).find('textarea').val(card.text);
+});
 
-socket.on('delete-card', deleteCard);
-
-function deleteCard(data) {
+socket.on('delete-card', (data) => {
     const card = JSON.parse(data);
-    if (isRightBoard(card)) {
-        $('#' + card._id).remove(); //remove the card element by its ID
-    }
-}
+    $('#' + card._id).remove(); //remove the card element by its ID
+});
 
-// utils functions
 function getRandomColor() {
     var letters = '0123456789ABCDEF';
     var color = '#';
@@ -158,13 +126,3 @@ function getRandomColor() {
     }
     return color;
 }
-
-function isRightBoard(card) {
-    let boardId = card.boardId;
-    if (Array.isArray(boardId)) {
-        return boardId[0].toString() === windowBoardId;
-    } else {
-        return boardId.toString() === windowBoardId;
-    }
-}
-
