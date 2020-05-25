@@ -121,3 +121,42 @@ textarea:hover {
     color: #ffffff;
     background-color: red;
 }
+
+#chatWindow {
+    position: absolute;
+    right: 1vw;
+    bottom: 0px;
+    width: 30vw;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    z-index: 10000000;
+    border-bottom: none;
+}
+
+#chatHeader {
+    cursor: pointer;
+}
+
+#chatBody {
+    display: none;
+    height: 55vh;
+}
+
+#chatContent {
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+#chatInputContainer {
+    display: none;
+    position: absolute;
+    bottom: 0px;
+}
+
+#chatInput {
+    resize: none;
+    box-sizing: border-box;
+    cursor: text;
+    overflow: hidden;
+}
