@@ -4,9 +4,12 @@ var socket = io('localhost:3034');
 socket.emit("join", windowBoardId);
 
 window.onload = function () {
-    $.get('/board/' + windowBoardId, (cards) => {
+    $.get('/board/' + windowBoardId + '/name', (boardName) => {
+        $('#board-name_input').val(boardName);
+    });
+    $.get('/board/' + windowBoardId + '/cards', (cards) => {
         cards.forEach(createCard);
-    })
+    });
 };
 
 function createCard(data) {
@@ -14,8 +17,13 @@ function createCard(data) {
     card.className = 'item animate';
     card.innerHTML = "<span type='button' class='deleteBtn rounded'><i class='fa fa-trash-o'></i></span><textarea type='text' value=''></textarea>";
     card.id = data._id;
-    card.style.left = data.position.left + 'px';
-    card.style.top = data.position.top + 'px';
+    if (data.position.left != null && data.position.right != null) {
+        card.style.left = data.position.left + 'px';
+        card.style.top = data.position.top + 'px';
+    } else {
+        card.style.left = 200 + 'px';
+        card.style.top = 200 + 'px';
+    }
     card.style.fontSize = data.fontSize;
     card.style.backgroundColor = data.backgroundColor;
     if (data.text != null) {
@@ -88,6 +96,14 @@ function addListeners(card) {
     });
 }
 
+// On board name input
+$('#board-name_input').on("input", function(event) {
+    socket.emit('update-board-name', {
+        _id: windowBoardId,
+        name: event.currentTarget.value 
+    })
+})
+
 // event listener for plus button
 $("#plus").click(() => {
     socket.emit('save-card', {
@@ -117,6 +133,11 @@ socket.on('delete-card', (data) => {
     const card = JSON.parse(data);
     $('#' + card._id).remove(); //remove the card element by its ID
 });
+
+socket.on('board-name-update', (data) => {
+    $('#board-name_input').val(JSON.parse(data).name);
+})
+
 
 function getRandomColor() {
     var letters = '0123456789ABCDEF';

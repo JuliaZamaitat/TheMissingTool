@@ -9,7 +9,8 @@ const express = require("express"),
     http = require("http"),
     server = http.Server(app),
     io = require("socket.io")(server),
-    Card = require("./models/card");
+    Card = require("./models/card"),
+    Board = require("./models/board");
 
 //Connects either to the procution database, docker db or our local database
 mongoose.connect(
@@ -46,12 +47,44 @@ server.listen(app.get("port"), () => {
 });
 
 // Routes
-app.get("/:boardId", get_board);
-app.get("/board/:boardId", get_cards);
+app.get("/", get_index);
+app.post("/:boardId", create_board);
+app.get("/board/:boardId", get_board);
+app.get("/board/:boardId/name", get_name);
+app.get("/board/:boardId/cards", get_cards);
 
 // Controller
+function get_index(req, res) {
+    res.render("landing");
+}
+
+function create_board(req, res) {
+    let boardId = req.params.boardId;
+    var newBoard = new Board({_id: boardId, name: "The nicest board"});
+    newBoard.save((err) => {
+        if (err){
+            console.log("Cannot create a new board with this ID");
+        } else {
+            console.log("A new board with ID " + boardId + " was created.");
+        }
+    })
+}
+
 function get_board(req, res) {
     res.render("boards/index");
+}
+
+function get_name(req, res) {
+    let boardId = req.params.boardId;
+    var boardName;
+    Board.find({boardId: boardId}, (err, boardInUse) => {
+        if (boardInUse.name != null) {
+            boardName = boardInUse.name;
+        } else {
+            boardName = 'The coolest board';
+        }
+        res.send(boardName);
+    });
 }
 
 function get_cards(req, res) {
@@ -60,7 +93,6 @@ function get_cards(req, res) {
         res.send(cards);
     });
 }
-
 module.exports = app;
 
 io.on('connection', function (socket) {
@@ -142,6 +174,22 @@ io.on('connection', function (socket) {
                 }));
             }
         );
+    });
+
+    socket.on('update-board-name', function(req) {
+        const filter = {_id: req._id};
+        const update = {name: req.name};
+        
+        Board.findOneAndUpdate(filter, update, {new: true},
+            function (err) {
+                if (err) {
+                    console.log("Something wrong when updating board!");
+                }
+                io.to(board).emit("board-name-update", JSON.stringify({
+                    name: req.name
+                }));
+            }
+        )
     });
 });
 

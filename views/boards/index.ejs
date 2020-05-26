@@ -1,12 +1,37 @@
 <body>
 <div id="overlay"></div>
-<button type="button" class="btn btn-success" id="plus">
-    <i class="fa fa-plus-circle" aria-hidden="true"></i>
-    Add a card
-</button>
+
+<div id="board-name">
+    <input id="board-name_input" type="text" value="">
+</div>
+<!-- Left toolbar -->
+<div id="toolbar">
+    <button type="button" class="btn btn-success toolbar-btn" id="plus">
+        <i class="fa fa-plus-circle" aria-hidden="true"></i><span>Add a card</span>
+    </button>
+</div>
+
+<!-- Top menubar -->
+<div id="menubar">
+    <span id="hamburger-bars"><i class="fa fa-bars"></i></span>
+    <button type="button" class="btn btn-outline-success menu-btn" id="create-board">
+        <i class="fa fa-file"></i>
+    </button>
+    <button type="button" class="btn btn-outline-primary menu-btn" id="share-board">
+        <i class="fa fa-share-alt"></i>
+    </button>
+    <button type="button" class="btn btn-outline-danger menu-btn" id="delete-board">
+        <i class="fa fa-trash"></i>
+    </button>
+    <button type="button" class="btn btn-outline-warning menu-btn" id="export-board">
+        <i class="fa fa-cloud-download"></i>
+    </button>
+</div>
+
 <!-- Chat window -->
 <%- include('../partials/chat') %>
 
 <script src="/socket.io/socket.io.js"></script>
+<script type="text/javascript" src="/script/board.js"></script>
 <script type="text/javascript" src="/script/web_sockets.js"></script>
 </body>
