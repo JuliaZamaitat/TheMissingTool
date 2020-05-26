@@ -61,6 +61,7 @@ function get_cards(req, res) {
     });
 }
 
+
 module.exports = app;
 
 io.on('connection', function (socket) {
@@ -143,5 +144,26 @@ io.on('connection', function (socket) {
             }
         );
     });
+
+    //event calls func to get boardId and link to it
+    //find card and query boardID
+
+    socket.on('link-to-board', function (req) {
+        const filter = {_id: mongoose.Types.ObjectId(req._id)}
+        const boardId = { boardID: req.boardId }
+
+        Card.findOne(filter, boardId,
+            function (err) {
+                if (err) {
+                    console.log("something goes wrong");
+                }
+                io.to(board).emit('link-to-board', JSON.stringify({
+                    _id: req._id,
+                    boardId: req.boardId
+                }));
+            }
+        );
+    });
+
 });
 

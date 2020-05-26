@@ -113,6 +113,20 @@ textarea:hover {
     border: 1px solid red;
 }
 
+.linkBtn {
+    display: none;
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    cursor:pointer;
+    line-height: 0px;
+    padding: 4px; 
+    color: lawngreen;
+    background-color: #ffffff;
+    border: 1px solid red;
+
+}
+
 .item:hover > .deleteBtn {
     display: inline-block;
 }
@@ -120,6 +134,11 @@ textarea:hover {
 .deleteBtn:hover {
     color: #ffffff;
     background-color: red;
+}
+
+.linkBtn:hover {
+    color: #ffffff;
+    background-color: chartreuse;
 }
 
 #chatWindow {

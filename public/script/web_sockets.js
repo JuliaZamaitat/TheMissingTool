@@ -12,7 +12,7 @@ window.onload = function () {
 function createCard(data) {
     const card = document.createElement('div');
     card.className = 'item animate';
-    card.innerHTML = "<span type='button' class='deleteBtn rounded'><i class='fa fa-trash-o'></i></span><textarea type='text' value=''></textarea>";
+    card.innerHTML = "<span type='button' class='deleteBtn rounded'><i class='fa fa-trash-o'></i></span><span type='button' class='linkBtn'><i class='fas fa-link'></i></span><textarea type='text' value=''></textarea>";
     card.id = data._id;
     card.style.left = data.position.left + 'px';
     card.style.top = data.position.top + 'px';
