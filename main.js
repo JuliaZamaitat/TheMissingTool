@@ -48,7 +48,7 @@ server.listen(app.get("port"), () => {
 
 // Routes
 app.get("/", get_index);
-app.post("/:boardId", create_board);
+app.post("/", create_board);
 app.get("/board/:boardId", get_board);
 app.get("/board/:boardId/name", get_name);
 app.get("/board/:boardId/cards", get_cards);
@@ -59,19 +59,26 @@ function get_index(req, res) {
 }
 
 function create_board(req, res) {
-    let boardId = req.params.boardId;
-    var newBoard = new Board({_id: boardId, name: "The nicest board"});
+    var newBoard =
+        new Board({
+            _id: new mongoose.mongo.ObjectId(),
+            name: "The nicest board"
+        });
     newBoard.save((err) => {
-        if (err){
+        if (err) {
             console.log("Cannot create a new board with this ID");
         } else {
-            console.log("A new board with ID " + boardId + " was created.");
+            res.send(newBoard._id);
         }
     })
 }
 
+
 function get_board(req, res) {
-    res.render("boards/index");
+    const filter = {_id: mongoose.Types.ObjectId(req.params.boardId)};
+    Board.find(filter, (err, savedBoard) => {
+        res.render("boards/index", {board: savedBoard});
+    });
 }
 
 function get_name(req, res) {
@@ -93,6 +100,7 @@ function get_cards(req, res) {
         res.send(cards);
     });
 }
+
 module.exports = app;
 
 io.on('connection', function (socket) {
@@ -176,10 +184,10 @@ io.on('connection', function (socket) {
         );
     });
 
-    socket.on('update-board-name', function(req) {
+    socket.on('update-board-name', function (req) {
         const filter = {_id: req._id};
         const update = {name: req.name};
-        
+
         Board.findOneAndUpdate(filter, update, {new: true},
             function (err) {
                 if (err) {
