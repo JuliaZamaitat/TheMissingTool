@@ -50,7 +50,6 @@ server.listen(app.get("port"), () => {
 app.get("/", get_index);
 app.post("/", create_board);
 app.get("/board/:boardId", get_board);
-app.get("/board/:boardId/name", get_name);
 app.get("/board/:boardId/cards", get_cards);
 
 // Controller
@@ -62,7 +61,7 @@ function create_board(req, res) {
     var newBoard =
         new Board({
             _id: new mongoose.mongo.ObjectId(),
-            name: "The nicest board"
+            name: "The coolest board"
         });
     newBoard.save((err) => {
         if (err) {
@@ -73,30 +72,16 @@ function create_board(req, res) {
     })
 }
 
-
 function get_board(req, res) {
     const filter = {_id: mongoose.Types.ObjectId(req.params.boardId)};
-    Board.find(filter, (err, savedBoard) => {
+    Board.findOne(filter, (err, savedBoard) => {
         res.render("boards/index", {board: savedBoard});
     });
 }
 
-function get_name(req, res) {
-    let boardId = req.params.boardId;
-    var boardName;
-    Board.find({boardId: boardId}, (err, boardInUse) => {
-        if (boardInUse.name != null) {
-            boardName = boardInUse.name;
-        } else {
-            boardName = 'The coolest board';
-        }
-        res.send(boardName);
-    });
-}
-
 function get_cards(req, res) {
-    let boardId = req.params.boardId;
-    Card.find({boardId: boardId}, (err, cards) => {
+    const filter = {boardId: mongoose.Types.ObjectId(req.params.boardId)};
+    Card.find(filter, (err, cards) => {
         res.send(cards);
     });
 }
@@ -122,11 +107,13 @@ io.on('connection', function (socket) {
                     left: null,
                     top: null
                 },
-                boardId: board
+                boardId: mongoose.Types.ObjectId(board)
             });
         card.save((err) => {
             if (err) {
                 console.log("Something wrong saving card");
+            } else {
+                console.log(card._id, card.boardId);
             }
             io.to(board).emit("new-card", JSON.stringify(card));
         });
@@ -185,7 +172,7 @@ io.on('connection', function (socket) {
     });
 
     socket.on('update-board-name', function (req) {
-        const filter = {_id: req._id};
+        const filter = {_id: mongoose.Types.ObjectId(req._id)};
         const update = {name: req.name};
 
         Board.findOneAndUpdate(filter, update, {new: true},
@@ -199,5 +186,24 @@ io.on('connection', function (socket) {
             }
         )
     });
+
+    socket.on('delete-board', function(req) {
+        const card_filter = {boardId: mongoose.Types.ObjectId(req._id)};
+        const board_filter = {_id: mongoose.Types.ObjectId(req._id)};
+        
+        Card.deleteMany(card_filter, function(err) {
+            if (err) {
+                console.log("Cannot delete the cards in this board");
+            }
+        });
+        
+        Board.deleteOne(board_filter, function(err) {
+            if (err) {
+                console.log("Cannot delete this board");
+            }
+            io.to(board).emit("board-deleted");
+        });
+    });
+
 });
 

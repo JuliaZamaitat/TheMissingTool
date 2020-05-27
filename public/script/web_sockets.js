@@ -3,14 +3,15 @@ let windowBoardId = url.substr(url.lastIndexOf("/") + 1);
 var socket = io('localhost:3034');
 socket.emit("join", windowBoardId);
 
-window.onload = function () {
-    $.get('/board/' + windowBoardId + '/name', (boardName) => {
-        $('#board-name_input').val(boardName);
-    });
-    $.get('/board/' + windowBoardId + '/cards', (cards) => {
-        cards.forEach(createCard);
-    });
-};
+// window.onload = function () {
+//     $.get('/board/' + windowBoardId + '/cards', (cards) => {
+//         cards.forEach(createCard);
+//     });
+// };
+
+$.get('/board/' + windowBoardId + '/cards', (cards) => {
+    cards.forEach(createCard);
+});
 
 function createCard(data) {
     const card = document.createElement('div');
@@ -96,15 +97,31 @@ function addListeners(card) {
     });
 }
 
-// On board name input
-$('#board-name_input').on("input", function (event) {
+// event listeners for board
+$('#board-name').on("input", function (event) {
     socket.emit('update-board-name', {
         _id: windowBoardId,
         name: event.currentTarget.value
     })
 })
 
-// event listener for plus button
+$("#share-board").on("click", shareBoard);
+$("#delete-board").on("click", deleteBoard);
+$("#export-board").on("click", exportBoard);
+
+function shareBoard() {
+    // TODO
+}
+
+function deleteBoard() {
+    socket.emit("delete-board", {_id: windowBoardId});
+}
+
+function exportBoard() {
+    // TODO
+}
+
+// event listener for toolbar buttons
 $("#plus").click(() => {
     socket.emit('save-card', {
         color: getRandomColor()
@@ -135,9 +152,16 @@ socket.on('delete-card', (data) => {
 });
 
 socket.on('board-name-update', (data) => {
-    $('#board-name_input').val(JSON.parse(data).name);
+    const name = JSON.parse(data).name;
+    $('#board-name').val(name);
+    $('#board-name').css('width', name.length/1.5 + "rem");
+
 })
 
+socket.on('board-deleted', (data) => {
+    alert("Board deleted");
+    location.href = "/";
+})
 
 function getRandomColor() {
     var letters = '0123456789ABCDEF';
