@@ -8,7 +8,6 @@ window.onload = function () {
         $('#board-name_input').val(boardName);
     });
     $.get('/board/' + windowBoardId + '/cards', (cards) => {
-        console.log(cards)
         cards.forEach(createCard);
     });
 };
@@ -18,7 +17,6 @@ function createCard(data) {
     card.className = 'item animate';
     card.innerHTML = "<span type='button' class='deleteBtn rounded'><i class='fa fa-trash-o'></i></span><textarea type='text' value=''></textarea>";
     card.id = data._id;
-    console.log(data.position.left !== null)
     if (data.position.left !== null && data.position.right !== null) {
         card.style.left = data.position.left + 'px';
         card.style.top = data.position.top + 'px';

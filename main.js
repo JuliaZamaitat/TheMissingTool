@@ -66,7 +66,7 @@ function create_board(req, res) {
         });
     newBoard.save((err) => {
         if (err) {
-            console.log("Cannot create a new board with this ID");
+            console.log("Error creating board");
         } else {
             res.send(newBoard._id);
         }
