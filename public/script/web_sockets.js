@@ -13,6 +13,7 @@ $.get('/board/' + windowBoardId + '/cards', (cards) => {
     cards.forEach(createCard);
 });
 
+
 function createCard(data) {
     const card = document.createElement('div');
     card.className = 'item animate';
@@ -35,6 +36,7 @@ function createCard(data) {
 }
 
 function addListeners(card) {
+
     // Moving card listener
     let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
     card.onmousedown = cardMouseDown;
@@ -95,6 +97,16 @@ function addListeners(card) {
             text: event.currentTarget.value
         })
     });
+
+    // On click card event
+    //if (card.type === "LINK") {
+    card.onmousedown = linkToNewBoard
+
+    function linkToNewBoard() {
+        $.get('/board-by-card/' + card.id);
+        //window.location = "/board/5ece8916bf2f9000aa775953"
+    }
+    //}
 }
 
 // event listeners for board
@@ -154,7 +166,7 @@ socket.on('delete-card', (data) => {
 socket.on('board-name-update', (data) => {
     const name = JSON.parse(data).name;
     $('#board-name').val(name);
-    $('#board-name').css('width', name.length/1.5 + "rem");
+    $('#board-name').css('width', name.length / 1.5 + "rem");
 
 })
 
