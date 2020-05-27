@@ -23,7 +23,8 @@ const mongoose = require("mongoose"),
         },
         type: {
             type: String,
-            enum: ["LINK", "NORMAL"]
+            enum: ["LINK", "NORMAL"],
+            default: "LINK"
         },
     });
 

@@ -31,8 +31,26 @@ function createCard(data) {
     if (data.text != null) {
         card.querySelector("textarea").value = data.text; //Show the card text if defined
     }
+
+    let type = data.type;
+
+    if (type === "LINK") addLinkListeners(card);
+
     addListeners(card);
     document.getElementById('overlay').appendChild(card)
+}
+
+function addLinkListeners(card) {
+// On click card eventk
+//if (card.type === "LINK") {
+    card.onmousedown = linkToNewBoard;
+
+    function linkToNewBoard() {
+        $.get('/board-by-card/' + card.id);
+        //window.location = "/board/5ece8916bf2f9000aa775953"
+    }
+
+//}
 }
 
 function addListeners(card) {
@@ -97,16 +115,6 @@ function addListeners(card) {
             text: event.currentTarget.value
         })
     });
-
-    // On click card event
-    //if (card.type === "LINK") {
-    card.onmousedown = linkToNewBoard
-
-    function linkToNewBoard() {
-        $.get('/board-by-card/' + card.id);
-        //window.location = "/board/5ece8916bf2f9000aa775953"
-    }
-    //}
 }
 
 // event listeners for board
