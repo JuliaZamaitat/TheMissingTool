@@ -7,23 +7,11 @@ body, html {
     height: 100%;
     font-size: 15px;
 }
-
-#plus {
-    left: 0;
-    top: 0;
-    position: absolute;
-    margin: 1rem;
-}
-#plus i {
-    margin-right: .3rem;
+body {
+    background-color: #eee !important;
 }
 
-#remove {
-     background-color: red;
-     width: 30px;
-     height: 30px;
- }
-
+/* CARDS */
 .item {
     position: absolute;
     width: 150px;
@@ -55,19 +43,121 @@ textarea:hover {
     -webkit-box-shadow: 0 0 5px rgb(0, 168, 235);
     box-shadow: 0 0 5px rgb(0, 168, 235);
 }
-#myCanvas {
-    cursor: crosshair;
-    position: fixed;
+#remove {
+     background-color: red;
+     width: 30px;
+     height: 30px;
+ }
+#overlay {
+    position: relative;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
 }
 
-#overlay {
+#board-name {
     position: absolute;
-    top: 2rem;
-    left: 2rem;
+    top: 1rem;
+    left: 1rem;
+    height: 3rem;
+    background-color: rgba(255,0,0,.2);
+    border-radius: 5px;
+    box-shadow: 1px 1px 3px rgba(0,0,0,.3); 
+    padding: 1rem;
+    border: none;
+    text-transform: uppercase;
+}
+
+#board-name:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(0,170,255,.7); 
+}
+
+/* MENUBAR */
+#menubar {
+    position: absolute;
+    top: 1rem;
+    right: -220px;
+    height: 60px;
+    background: rgba(255,255,255,.9);
+    padding: 10px 20px 10px 10px;
+    border-radius: 5px;
+    transition: ease-in-out .3s;
+    box-shadow: 1px 1px 3px rgba(0,0,0,.3);
+    overflow: hidden;
+}
+#menubar .menu-btn {
+    opacity: 0;
+    transition: ease-in-out .3s;
+}
+#menubar:hover {
+    right: -10px;
+    cursor: pointer;
+}
+#menubar:hover #hamburger-bars {
+    left: 50px;
+    opacity: 0;
+}
+#menubar:hover .menu-btn {
+    opacity: 1;
+}
+#hamburger-bars, .menu-btn i {
+    font-size: 2rem;
+}
+#hamburger-bars {
+    position: absolute;
+    left: 20px;
+    top: 8px;
+    opacity: 1;
+    transition: ease-in-out .3s;
+}
+.menu-btn {
+    border: none !important;
+    margin: 0 5px 15px 5px;
+}
+
+/* TOOLBAR */
+#toolbar {
+    position: absolute;
+    left: -50px;
+    top: 200px;
+    background: rgba(255,255,255,.9);
+    padding: 20px 10px 20px 20px;
+    height: auto;
+    width: 70px;
+    border-radius: 5px;
+    overflow: visible;
+    transition: ease-in-out .3s;
+    box-shadow: 1px 1px 3px rgba(0,0,0,.3);
+}
+#toolbar:hover {
+    left: -10px;
+    cursor: pointer;
+}
+.toolbar-btn {
+    width: 35px;
+    height: 35px;
+    overflow: hidden;
+    position: relative;
+    transition: ease-in-out .3s !important;
+}
+.toolbar-btn i {
+    position: absolute;
+    left: 10px;
+    top: 9px;
+}
+.toolbar-btn span {
+    position: absolute;
+    top: 5px;
+    left: 30px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: ease-in-out .5s;
+}
+.toolbar-btn:hover {
+    width: 120px;
+}
+.toolbar-btn:hover span {
+    opacity: 1;
 }
 
 /* From animate.css */

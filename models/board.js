@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 const boardSchema = new Schema({
-    _id: Number,
+    _id: mongoose.ObjectId,
     name: {type: String, required: true, max: 200}
 });
 

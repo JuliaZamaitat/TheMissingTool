@@ -3,19 +3,28 @@ let windowBoardId = url.substr(url.lastIndexOf("/") + 1);
 var socket = io('localhost:3034');
 socket.emit("join", windowBoardId);
 
-window.onload = function () {
-    $.get('/board/' + windowBoardId, (cards) => {
-        cards.forEach(createCard);
-    })
-};
+// window.onload = function () {
+//     $.get('/board/' + windowBoardId + '/cards', (cards) => {
+//         cards.forEach(createCard);
+//     });
+// };
+
+$.get('/board/' + windowBoardId + '/cards', (cards) => {
+    cards.forEach(createCard);
+});
 
 function createCard(data) {
     const card = document.createElement('div');
     card.className = 'item animate';
     card.innerHTML = "<span type='button' class='deleteBtn rounded'><i class='fa fa-trash-o'></i></span><textarea type='text' value=''></textarea>";
     card.id = data._id;
-    card.style.left = data.position.left + 'px';
-    card.style.top = data.position.top + 'px';
+    if (data.position.left !== null && data.position.right !== null) {
+        card.style.left = data.position.left + 'px';
+        card.style.top = data.position.top + 'px';
+    } else {
+        card.style.left = 200 + 'px';
+        card.style.top = 200 + 'px';
+    }
     card.style.fontSize = data.fontSize;
     card.style.backgroundColor = data.backgroundColor;
     if (data.text != null) {
@@ -88,7 +97,31 @@ function addListeners(card) {
     });
 }
 
-// event listener for plus button
+// event listeners for board
+$('#board-name').on("input", function (event) {
+    socket.emit('update-board-name', {
+        _id: windowBoardId,
+        name: event.currentTarget.value
+    })
+})
+
+$("#share-board").on("click", shareBoard);
+$("#delete-board").on("click", deleteBoard);
+$("#export-board").on("click", exportBoard);
+
+function shareBoard() {
+    // TODO
+}
+
+function deleteBoard() {
+    socket.emit("delete-board", {_id: windowBoardId});
+}
+
+function exportBoard() {
+    // TODO
+}
+
+// event listener for toolbar buttons
 $("#plus").click(() => {
     socket.emit('save-card', {
         color: getRandomColor()
@@ -117,6 +150,18 @@ socket.on('delete-card', (data) => {
     const card = JSON.parse(data);
     $('#' + card._id).remove(); //remove the card element by its ID
 });
+
+socket.on('board-name-update', (data) => {
+    const name = JSON.parse(data).name;
+    $('#board-name').val(name);
+    $('#board-name').css('width', name.length/1.5 + "rem");
+
+})
+
+socket.on('board-deleted', (data) => {
+    alert("Board deleted");
+    location.href = "/";
+})
 
 function getRandomColor() {
     var letters = '0123456789ABCDEF';
