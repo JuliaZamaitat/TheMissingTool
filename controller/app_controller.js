@@ -1,7 +1,8 @@
-var app = require('../main');
+var app = require("../main"),
+	faker = require("faker");
 
 exports.get_port = function() {
-    return app.get("port");
+	return app.get("port");
 };
 
 exports.set_username = (req, res) => {
@@ -9,23 +10,20 @@ exports.set_username = (req, res) => {
 	res.cookie("username", newName);
 	res.locals.username = newName;
 	res.json( {status: "200", username: newName});
-}
+};
 
 exports.get_username = (req, res, next) => {
-	console.log("In get_username");
 	console.log("Cookies: ", req.cookies);
 	generateUsername(req, res);
 	next();
-}
+};
 
 function generateUsername(req, res){
-	var userNames = ["Hase", "Esel", "Adler", "Steinbock", "Pferd", "Schlange", "Mops", "Igel", "Fisch"];
 	var cookie = req.cookies.username;
 	if (cookie === undefined) {
-		userNames = shuffle(userNames)
-		var username = userNames[1];
-		res.cookie("username", username);
-		console.log("cookie created successfully");
+		cookie = faker.name.findName();
+		res.cookie("username", cookie);
+		req.cookies.username = cookie;
 	}
 	else {
 		console.log("cookie exists", cookie);

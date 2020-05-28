@@ -3,7 +3,7 @@ let windowBoardId = url.substr(url.lastIndexOf("/") + 1);
 let port;
 
 $.get( "/port", function( data ) { //set the port dynamically
-	port = data
+	port = data;
 });
 
 var socket = io(port);
@@ -17,13 +17,6 @@ socket.emit("join", windowBoardId);
 
 $.get("/board/" + windowBoardId + "/cards", (cards) => {
 	cards.forEach(createCard);
-});
-
-$("#user-name").on("focusout", function (event) {
-	var name = event.currentTarget.value
-	$.get("/username", {username: name, credentials: 'same-origin'}, function(data){
-		alert(data.username);
-	});
 });
 
 function createCard(data) {
@@ -172,7 +165,11 @@ socket.on("board-name-update", (data) => {
 	const name = JSON.parse(data).name;
 	$("#board-name").val(name);
 	$("#board-name").css("width", name.length/1.5 + "rem");
+});
 
+$("#user-name").on("focusout", function (event) {
+	var name = event.currentTarget.value;
+	$.get("/username", {username: name, credentials: "same-origin"});
 });
 
 socket.on("board-deleted", (data) => {

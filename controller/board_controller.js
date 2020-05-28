@@ -2,6 +2,7 @@ const mongoose = require("mongoose"),
 	Card = require("../models/card"),
 	Board = require("../models/board");
 
+
 exports.create_board = function (req, res) {
 	var newBoard =
         new Board({
