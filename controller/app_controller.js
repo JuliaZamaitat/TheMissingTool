@@ -5,12 +5,8 @@ exports.get_port = function() {
 };
 
 exports.set_username = (req, res) => {
-	console.log("In set_username");
-	//res.clearCookie("username");
 	var newName = req.query.username;
-	console.log("Neuer Name: "+ newName);
-	res.cookie("username", newName); //NEEDS TO BE SEND
-	//console.log(req.cookies.username);
+	res.cookie("username", newName);
 	res.locals.username = newName;
 	res.json( {status: "200", username: newName});
 }
@@ -32,7 +28,6 @@ function generateUsername(req, res){
 		console.log("cookie created successfully");
 	}
 	else {
-		// yes, cookie was already present
 		console.log("cookie exists", cookie);
 	}
 	res.locals.username = cookie;

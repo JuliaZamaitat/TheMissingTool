@@ -32,6 +32,7 @@
     "http": "0.0.1-security",
     "jest": "^26.0.1",
     "jquery": "^3.5.1",
+    "keygenerator": "^1.0.4",
     "mongodb": "^3.5.7",
     "mongoose": "^5.9.12",
     "nodemon": "^2.0.3",

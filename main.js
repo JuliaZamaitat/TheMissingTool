@@ -11,7 +11,8 @@ const express = require("express"),
 	io = require("socket.io")(server),
 	indexRouter = require("./routes"),
 	expressSession = require("express-session"),
-	cookieParser = require("cookie-parser");
+	cookieParser = require("cookie-parser"),
+	keygen = require("keygenerator");
 
 
 //Connects either to the procution database, docker db or our local database
@@ -44,10 +45,10 @@ app.use(express.static("public"));
 //Sets the necessary variables
 app.set("view engine", "ejs");
 app.set("port", process.env.NODEPORT || process.env.PORT || 8080);
-
-app.use(cookieParser("secret_passcode")); // load the cookie-parsing middleware
+const key = keygen.session_id();
+app.use(cookieParser(key)); // load the cookie-parsing middleware
 app.use(expressSession({ //Configure express-session to use cookie-parser
-	secret: "secret_passcode",
+	secret: key,
 	cookie: {
 		maxAge: 4000000
 	},
