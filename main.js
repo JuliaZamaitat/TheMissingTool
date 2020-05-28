@@ -8,15 +8,8 @@ const express = require("express"),
 	bodyParser = require("body-parser"),
 	http = require("http"),
 	server = http.Server(app),
-	io = require("socket.io")(server);
-    app = express(),
-    layouts = require("express-ejs-layouts"),
-    mongoose = require("mongoose"),
-    bodyParser = require("body-parser"),
-    http = require("http"),
-    server = http.Server(app),
-    io = require("socket.io")(server),
-    indexRouter = require('./routes');
+	io = require("socket.io")(server),
+    	indexRouter = require('./routes');
 
 //Connects either to the procution database, docker db or our local database
 mongoose.connect(
