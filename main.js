@@ -9,7 +9,11 @@ const express = require("express"),
 	http = require("http"),
 	server = http.Server(app),
 	io = require("socket.io")(server),
-    	indexRouter = require('./routes');
+	indexRouter = require("./routes"),
+	expressSession = require("express-session"),
+	cookieParser = require("cookie-parser"),
+	keygen = require("keygenerator");
+
 
 //Connects either to the procution database, docker db or our local database
 mongoose.connect(
@@ -36,11 +40,23 @@ app.use(express.json());
 //Tell node to use layouts and to look in the public folder for static files
 app.use(layouts);
 app.use(express.static("public"));
-app.use('/', indexRouter);
+
 
 //Sets the necessary variables
 app.set("view engine", "ejs");
 app.set("port", process.env.NODEPORT || process.env.PORT || 8080);
+const key = keygen.session_id();
+app.use(cookieParser(key)); // load the cookie-parsing middleware
+app.use(expressSession({ //Configure express-session to use cookie-parser
+	secret: key,
+	cookie: {
+		maxAge: 4000000
+	},
+	resave: true,
+	saveUninitialized: false
+}));
+
+app.use("/", indexRouter);
 
 server.listen(app.get("port"), () => {
 	console.log(`Server running at http://localhost:${app.get("port")}`);
@@ -48,5 +64,5 @@ server.listen(app.get("port"), () => {
 
 module.exports = app;
 
-const socket = require('./server_sockets.js');
+const socket = require("./server_sockets.js");
 socket.start(io);

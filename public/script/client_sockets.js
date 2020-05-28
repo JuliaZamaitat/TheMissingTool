@@ -3,7 +3,7 @@ let windowBoardId = url.substr(url.lastIndexOf("/") + 1);
 let port;
 
 $.get( "/port", function( data ) { //set the port dynamically
-	port = data
+	port = data;
 });
 
 var socket = io(port);
@@ -105,11 +105,14 @@ function addListeners(card) {
 
 // event listeners for board
 $("#board-name").on("input", function (event) {
+	console.log("In Ajax ");
 	socket.emit("update-board-name", {
 		_id: windowBoardId,
 		name: event.currentTarget.value
 	});
 });
+
+
 
 $("#share-board").on("click", shareBoard);
 $("#delete-board").on("click", deleteBoard);
@@ -158,10 +161,15 @@ socket.on("delete-card", (data) => {
 });
 
 socket.on("board-name-update", (data) => {
+	console.log("Im Update");
 	const name = JSON.parse(data).name;
 	$("#board-name").val(name);
 	$("#board-name").css("width", name.length/1.5 + "rem");
+});
 
+$("#user-name").on("focusout", function (event) {
+	var name = event.currentTarget.value;
+	$.get("/username", {username: name, credentials: "same-origin"});
 });
 
 socket.on("board-deleted", (data) => {

@@ -55,13 +55,11 @@ textarea:hover {
 }
 
 #board-name {
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
+    /* position: absolute; */
     height: 3rem;
     background-color: rgba(255,0,0,.2);
     border-radius: 5px;
-    box-shadow: 1px 1px 3px rgba(0,0,0,.3); 
+    box-shadow: 1px 1px 3px rgba(0,0,0,.3);
     padding: 1rem;
     border: none;
     text-transform: uppercase;
@@ -69,7 +67,17 @@ textarea:hover {
 
 #board-name:focus {
     outline: none;
-    box-shadow: 0 0 5px rgba(0,170,255,.7); 
+    box-shadow: 0 0 5px rgba(0,170,255,.7);
+}
+
+#user-name {
+	height: 2rem;
+	background-color: rgba(0,0,255,.2);
+	border-radius: 5px;
+	box-shadow: 1px 1px 3px rgba(0,0,0,.3);
+	padding: 1rem;
+	border: none;
+	text-transform: uppercase;
 }
 
 /* MENUBAR */
@@ -197,7 +205,7 @@ textarea:hover {
     right: -15px;
     cursor:pointer;
     line-height: 0px;
-    padding: 4px; 
+    padding: 4px;
     color: red;
     background-color: #ffffff;
     border: 1px solid red;

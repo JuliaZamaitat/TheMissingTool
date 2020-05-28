@@ -1,33 +1,34 @@
 const mongoose = require("mongoose"),
-    Card = require("../models/card"),
-    Board = require("../models/board");
+	Card = require("../models/card"),
+	Board = require("../models/board");
+
 
 exports.create_board = function (req, res) {
-    var newBoard =
+	var newBoard =
         new Board({
-            _id: new mongoose.mongo.ObjectId(),
-            name: "The coolest board"
+        	_id: new mongoose.mongo.ObjectId(),
+        	name: "The coolest board"
         });
-    newBoard.save((err) => {
-        if (err) {
-            console.log("Error creating board");
-        } else {
-            res.send(newBoard._id);
-        }
-    })
+	newBoard.save((err) => {
+		if (err) {
+			console.log("Error creating board");
+		} else {
+			res.send(newBoard._id);
+		}
+	});
 };
 
 
 exports.get_board = function (req, res) {
-    const filter = {_id: mongoose.Types.ObjectId(req.params.boardId)};
-    Board.findOne(filter, (err, savedBoard) => {
-        res.render("boards/index", {board: savedBoard});
-    });
+	const filter = {_id: mongoose.Types.ObjectId(req.params.boardId)};
+	Board.findOne(filter, (err, savedBoard) => {
+		res.render("boards/index", {board: savedBoard});
+	});
 };
 
 exports.get_cards = function (req, res) {
-    const filter = {boardId: mongoose.Types.ObjectId(req.params.boardId)};
-    Card.find(filter, (err, cards) => {
-        res.send(cards);
-    });
+	const filter = {boardId: mongoose.Types.ObjectId(req.params.boardId)};
+	Card.find(filter, (err, cards) => {
+		res.send(cards);
+	});
 };
