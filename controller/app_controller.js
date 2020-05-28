@@ -9,9 +9,10 @@ exports.set_username = (req, res) => {
 	//res.clearCookie("username");
 	var newName = req.query.username;
 	console.log("Neuer Name: "+ newName);
-	res.cookie("username", newName); //NOT WORKING YET
-	console.log(req.cookies.username);
+	res.cookie("username", newName); //NEEDS TO BE SEND
+	//console.log(req.cookies.username);
 	res.locals.username = newName;
+	res.json( {status: "200", username: newName});
 }
 
 exports.get_username = (req, res, next) => {

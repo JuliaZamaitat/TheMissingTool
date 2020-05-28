@@ -22,7 +22,9 @@ $.get("/board/" + windowBoardId + "/cards", (cards) => {
 $("#user-name").on("focusout", function (event) {
 	var name = event.currentTarget.value
 	console.log("In Ajax");
-	$.get("/username", {username: name, credentials: 'same-origin'});
+	$.get("/username", {username: name, credentials: 'same-origin'}, function(data){
+		alert(data.username);
+	});
 });
 
 function createCard(data) {
