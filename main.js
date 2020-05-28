@@ -51,42 +51,9 @@ app.use(expressSession({ //Configure express-session to use cookie-parser
 	cookie: {
 		maxAge: 4000000
 	},
-	resave: false,
+	resave: true,
 	saveUninitialized: false
 }));
-
-app.use((req, res, next) => { //middleware to associate connectFlash to flashes on response
-	console.log("In middleware");
-	//res.cookie("name", "express").send("cookie set");
-	console.log("Cookies: ", req.cookies);
-	var userNames = ["Hase", "Esel", "Adler", "Steinbock", "Pferd", "Schlange", "Mops", "Igel", "Fisch"];
-
-	var cookie = req.cookies.username;
-	if (cookie === undefined) {
-		userNames = shuffle(userNames)
-		var username = userNames[1];
-		res.cookie("username", username);
-
-		console.log("cookie created successfully");
-	}
-	else {
-		// yes, cookie was already present
-		console.log("cookie exists", cookie);
-	}
-	res.locals.username = cookie;
-	next();
-
-});
-
-function shuffle(array){
-	for(let i = array.length - 1; i > 0; i--){
-	  const j = Math.floor(Math.random() * i);
-	  const temp = array[i];
-	  array[i] = array[j];
-	  array[j] = temp;
-	}
-	return array;
-}
 
 app.use("/", indexRouter);
 

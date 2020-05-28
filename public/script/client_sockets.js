@@ -19,6 +19,12 @@ $.get("/board/" + windowBoardId + "/cards", (cards) => {
 	cards.forEach(createCard);
 });
 
+$("#user-name").on("focusout", function (event) {
+	var name = event.currentTarget.value
+	console.log("In Ajax");
+	$.get("/username", {username: name, credentials: 'same-origin'});
+});
+
 function createCard(data) {
 	const card = document.createElement("div");
 	card.className = "item animate";
@@ -105,11 +111,14 @@ function addListeners(card) {
 
 // event listeners for board
 $("#board-name").on("input", function (event) {
+	console.log("In Ajax ");
 	socket.emit("update-board-name", {
 		_id: windowBoardId,
 		name: event.currentTarget.value
 	});
 });
+
+
 
 $("#share-board").on("click", shareBoard);
 $("#delete-board").on("click", deleteBoard);
@@ -158,6 +167,7 @@ socket.on("delete-card", (data) => {
 });
 
 socket.on("board-name-update", (data) => {
+	console.log("Im Update");
 	const name = JSON.parse(data).name;
 	$("#board-name").val(name);
 	$("#board-name").css("width", name.length/1.5 + "rem");
