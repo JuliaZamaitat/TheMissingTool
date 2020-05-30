@@ -13,7 +13,19 @@ const mongoose = require("mongoose"),
             enum: ["RECTANGLE", "CIRCLE", "TRIANGLE", "ELLIPSE"],
             default: "RECTANGLE"
         },
-        boardId: [{type: Number, ref: "Board"}]
+        boardId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Board"
+        },
+        linkId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Board"
+        },
+        type: {
+            type: String,
+            enum: ["LINK", "NORMAL"],
+            default: "NORMAL"
+        },
     });
 
 module.exports = mongoose.model("Card", cardSchema);
