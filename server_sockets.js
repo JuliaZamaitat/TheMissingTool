@@ -23,7 +23,8 @@ module.exports = {
 							left: null,
 							top: null
 						},
-						boardId: mongoose.Types.ObjectId(board)
+						boardId: mongoose.Types.ObjectId(board),
+						type: req.type
 					});
 				card.save((err) => {
 					if (err) {

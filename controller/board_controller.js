@@ -32,3 +32,11 @@ exports.get_cards = function (req, res) {
 		res.send(cards);
 	});
 };
+
+exports.get_linked_board = function (req, res) {
+
+	const filter = {_id: mongoose.Types.ObjectId(req.params.cardId)};
+	Card.findOne(filter, (err, savedCard) => {
+		res.send(savedCard.linkId);
+	});
+};
