@@ -121,6 +121,15 @@ module.exports = {
 				});
 			});
 
+			socket.on("message", function (message) {
+				let cookie = require("cookie");
+
+				//Attach username to the message
+				let username = cookie.parse(socket.request.headers.cookie).username;
+				message.username = username;
+
+				io.to(board).emit("message", message);
+			});
 		});
 	}
 };
