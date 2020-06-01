@@ -12,7 +12,9 @@ const express = require("express"),
 	indexRouter = require("./routes"),
 	expressSession = require("express-session"),
 	cookieParser = require("cookie-parser"),
-	keygen = require("keygenerator");
+    keygen = require("keygenerator"),
+    Card = require("./models/card"),
+    Board = require("./models/board")
 
 
 //Connects either to the procution database, docker db or our local database
@@ -62,10 +64,10 @@ server.listen(app.get("port"), () => {
 	console.log(`Server running at http://localhost:${app.get("port")}`);
 });
 
-<<<<<<< HEAD
 // Routes
 app.get("/:boardId", get_board);
 app.get("/board/:boardId", get_cards);
+app.get("/get-linked-board/:cardId", get_linked_board);
 
 // Controller
 function get_board(req, res) {
@@ -77,6 +79,13 @@ function get_cards(req, res) {
     Card.find({boardId: boardId}, (err, cards) => {
         res.send(cards);
     });
+}
+
+function get_linked_board(req, res) {
+    const filter = {_id: mongoose.Types.ObjectId(req.params.cardId)};
+	Card.findOne(filter, (err, savedCard) => {
+		res.send(savedCard.linkId);
+	});
 }
 
 
@@ -101,7 +110,9 @@ io.on('connection', function (socket) {
                     left: null,
                     top: null
                 },
-                boardId: board
+                boardId: board,
+                type: req.type,
+                linkId: req.linkId
             });
         card.save((err) => {
             if (err) {
@@ -162,32 +173,9 @@ io.on('connection', function (socket) {
             }
         );
     });
-
-    //event calls func to get boardId and link to it
-    //find card and query boardID
-
-    socket.on('link-to-board', function (req) {
-        const filter = {_id: mongoose.Types.ObjectId(req._id)}
-        const boardId = { boardID: req.boardId }
-
-        Card.findOne(filter, boardId,
-            function (err) {
-                if (err) {
-                    console.log("something goes wrong");
-                }
-                io.to(board).emit('link-to-board', JSON.stringify({
-                    _id: req._id,
-                    boardId: req.boardId
-                }));
-            }
-        );
-    });
-
 });
 
-=======
 module.exports = app;
 
 const socket = require("./server_sockets.js");
 socket.start(io);
->>>>>>> 595f834336a479b60256a10f3d9cbf3162d4086a

@@ -16,7 +16,6 @@ socket.emit("join", windowBoardId);
 // };
 
 $.get("/board/" + windowBoardId + "/cards", (cards) => {
-    console.log("IN CREATE")
     cards.forEach(createCard);
 });
 
@@ -40,6 +39,7 @@ function createCard(data) {
 
     console.log(data)
     if (data.type === "LINK") {
+        card.className = "item animate";
         card.innerHTML = "<div class='link'></div><span type='button' class='deleteBtn rounded'><i class='fa fa-trash-o'></i></span><textarea type='text' value=''></textarea>";
         addLinkListeners(card);
     }
@@ -55,8 +55,10 @@ function addLinkListeners(card) {
     console.log(querySelector)
     querySelector.addEventListener("mousedown",function (event) {
         $.get("/get-linked-board/" + card.id, function (data, status) {
+            console.log(data)
+
             if (data !== null && data !== "") {
-                location.href = "/board/" + data;
+                location.href = "/board/" + card.linkId;
             } else {
                 console.log("No boardId returned")
             }
@@ -97,7 +99,7 @@ function addListeners(card) {
                 left: card.style.left.replace(/\D/g, ""),
                 top: card.style.top.replace(/\D/g, ""),
             }
-        });
+        })
         document.onmouseup = null;
         document.onmousemove = null;
 
@@ -121,7 +123,7 @@ function addListeners(card) {
     // Change text of card listener
     card.querySelector("textarea").addEventListener("input", function (event) {
         socket.emit("update-text", {
-            _id: event.currentTarget.parentElement.id,
+            _id: event.currentTarget.parentElemlistenerent.id,
             text: event.currentTarget.value
         });
     });
@@ -163,12 +165,13 @@ $("#plus").click(() => {
 // event listener for toolbar buttons
 $("#plus-link").click(() => {
 
-
-
+    var linkId = prompt("please enter your link-id", "");
+    console.log("ID:", linkId);
 
     socket.emit("save-card", {
         color: getRandomColor(),
-        type: "LINK"
+        type: "LINK",
+        linkId: linkId
     });
 });
 

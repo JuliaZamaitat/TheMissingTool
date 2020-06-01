@@ -5,6 +5,7 @@ window.onload = function () {
 function createBoard() {
 	$.post("/",
 		function (data) {
+			console.log(data);
 			location.href = "/board/" + data;
 		});
 }

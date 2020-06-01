@@ -211,20 +211,6 @@ textarea:hover {
     border: 1px solid red;
 }
 
-<<<<<<< HEAD
-.linkBtn {
-    display: none;
-    position: absolute;
-    top: -15px;
-    right: -15px;
-    cursor:pointer;
-    line-height: 0px;
-    padding: 4px; 
-    color: lawngreen;
-    background-color: #ffffff;
-    border: 1px solid red;
-
-=======
 .link {
     position: absolute;
     top: 10px;
@@ -234,10 +220,9 @@ textarea:hover {
     cursor:pointer;
     line-height: 0px;
     padding: 4px;
-    color: #ff00a8;
-    background-color: #ff0063;
+    color: red;
+    background-color: #eee4eb;
     border: 1px solid #ff00a8;
->>>>>>> 595f834336a479b60256a10f3d9cbf3162d4086a
 }
 
 .item:hover > .deleteBtn {
