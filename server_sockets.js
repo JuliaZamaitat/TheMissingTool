@@ -24,7 +24,8 @@ module.exports = {
 							top: null
 						},
 						boardId: mongoose.Types.ObjectId(board),
-						type: req.type
+						type: req.type,
+						linkId: req.linkId
 					});
 				card.save((err) => {
 					if (err) {

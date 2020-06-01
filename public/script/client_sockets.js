@@ -37,7 +37,6 @@ function createCard(data) {
         card.querySelector("textarea").value = data.text; //Show the card text if defined
     }
 
-    console.log(data)
     if (data.type === "LINK") {
         card.className = "item animate";
         card.innerHTML = "<div class='link'></div><span type='button' class='deleteBtn rounded'><i class='fa fa-trash-o'></i></span><textarea type='text' value=''></textarea>";
@@ -52,13 +51,10 @@ function addLinkListeners(card) {
     // Add listener for forwarding to new board
 
     let querySelector = card.querySelector(".link");
-    console.log(querySelector)
     querySelector.addEventListener("mousedown",function (event) {
         $.get("/get-linked-board/" + card.id, function (data, status) {
-            console.log(data)
-
             if (data !== null && data !== "") {
-                location.href = "/board/" + card.linkId;
+                location.href = "/board/" + data;
             } else {
                 console.log("No boardId returned")
             }
@@ -164,10 +160,7 @@ $("#plus").click(() => {
 
 // event listener for toolbar buttons
 $("#plus-link").click(() => {
-
     var linkId = prompt("please enter your link-id", "");
-    console.log("ID:", linkId);
-
     socket.emit("save-card", {
         color: getRandomColor(),
         type: "LINK",
@@ -177,6 +170,7 @@ $("#plus-link").click(() => {
 
 // listening to web-sockets
 socket.on("new-card", (data) => {
+    console.log(data);
     const card = JSON.parse(data);
     createCard(card);
 });
@@ -199,7 +193,6 @@ socket.on("delete-card", (data) => {
 });
 
 socket.on("board-name-update", (data) => {
-    console.log("Im Update");
     const name = JSON.parse(data).name;
     $("#board-name").val(name);
     $("#board-name").css("width", name.length / 1.5 + "rem");
