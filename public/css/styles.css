@@ -37,17 +37,24 @@ body {
     -webkit-box-shadow: 0 0 5px rgba(33,33,33,.5);
     box-shadow: 0 0 5px rgba(33,33,33,.5);
 }
+
 textarea:hover {
+    cursor: pointer;
+}
+
+textarea:focus {
     cursor: pointer;
     -moz-box-shadow: 0 0 5px rgb(0, 168, 235);
     -webkit-box-shadow: 0 0 5px rgb(0, 168, 235);
     box-shadow: 0 0 5px rgb(0, 168, 235);
 }
+
 #remove {
-     background-color: red;
-     width: 30px;
-     height: 30px;
- }
+    background-color: red;
+    width: 30px;
+    height: 30px;
+}
+
 #overlay {
     position: relative;
     top: 0;
@@ -57,9 +64,9 @@ textarea:hover {
 #board-name {
     /* position: absolute; */
     height: 3rem;
-    background-color: rgba(255,0,0,.2);
+    background-color: rgba(255, 0, 0, .2);
     border-radius: 5px;
-    box-shadow: 1px 1px 3px rgba(0,0,0,.3);
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, .3);
     padding: 1rem;
     border: none;
     text-transform: uppercase;
@@ -67,17 +74,17 @@ textarea:hover {
 
 #board-name:focus {
     outline: none;
-    box-shadow: 0 0 5px rgba(0,170,255,.7);
+    box-shadow: 0 0 5px rgba(0, 170, 255, .7);
 }
 
 #user-name {
-	height: 2rem;
-	background-color: rgba(0,0,255,.2);
-	border-radius: 5px;
-	box-shadow: 1px 1px 3px rgba(0,0,0,.3);
-	padding: 1rem;
-	border: none;
-	text-transform: uppercase;
+    height: 2rem;
+    background-color: rgba(0, 0, 255, .2);
+    border-radius: 5px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, .3);
+    padding: 1rem;
+    border: none;
+    text-transform: uppercase;
 }
 
 /* MENUBAR */
@@ -86,31 +93,37 @@ textarea:hover {
     top: 1rem;
     right: -220px;
     height: 60px;
-    background: rgba(255,255,255,.9);
+    background: rgba(255, 255, 255, .9);
     padding: 10px 20px 10px 10px;
     border-radius: 5px;
     transition: ease-in-out .3s;
-    box-shadow: 1px 1px 3px rgba(0,0,0,.3);
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, .3);
     overflow: hidden;
 }
+
 #menubar .menu-btn {
     opacity: 0;
     transition: ease-in-out .3s;
 }
+
 #menubar:hover {
     right: -10px;
     cursor: pointer;
 }
+
 #menubar:hover #hamburger-bars {
     left: 50px;
     opacity: 0;
 }
+
 #menubar:hover .menu-btn {
     opacity: 1;
 }
+
 #hamburger-bars, .menu-btn i {
     font-size: 2rem;
 }
+
 #hamburger-bars {
     position: absolute;
     left: 20px;
@@ -118,6 +131,7 @@ textarea:hover {
     opacity: 1;
     transition: ease-in-out .3s;
 }
+
 .menu-btn {
     border: none !important;
     margin: 0 5px 15px 5px;
@@ -128,19 +142,21 @@ textarea:hover {
     position: absolute;
     left: -50px;
     top: 200px;
-    background: rgba(255,255,255,.9);
+    background: rgba(255, 255, 255, .9);
     padding: 20px 10px 20px 20px;
     height: auto;
     width: 70px;
     border-radius: 5px;
     overflow: visible;
     transition: ease-in-out .3s;
-    box-shadow: 1px 1px 3px rgba(0,0,0,.3);
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, .3);
 }
+
 #toolbar:hover {
     left: -10px;
     cursor: pointer;
 }
+
 .toolbar-btn {
     width: 35px;
     height: 35px;
@@ -148,11 +164,13 @@ textarea:hover {
     position: relative;
     transition: ease-in-out .3s !important;
 }
+
 .toolbar-btn i {
     position: absolute;
     left: 10px;
     top: 9px;
 }
+
 .toolbar-btn span {
     position: absolute;
     top: 5px;
@@ -161,9 +179,11 @@ textarea:hover {
     opacity: 0;
     transition: ease-in-out .5s;
 }
+
 .toolbar-btn:hover {
     width: 120px;
 }
+
 .toolbar-btn:hover span {
     opacity: 1;
 }
@@ -177,47 +197,66 @@ textarea:hover {
     animation-timing-function: cubic-bezier(0.3, 0, 0.5, 1.3);
     opacity: 0;
 }
+
 @-webkit-keyframes fadeIn {
-    from {
-      opacity: 0;
-      height: 0;
-    }
-    to {
-      opacity: 1;
-      height: 150px;
-    }
-  }
-  @keyframes fadeIn {
     from {
         opacity: 0;
         height: 0;
-      }
-      to {
+    }
+    to {
         opacity: 1;
         height: 150px;
-      }
-  }
-
-.deleteBtn {
-    display: none;
-    position: absolute;
-    top: -15px;
-    right: -15px;
-    cursor:pointer;
-    line-height: 0px;
-    padding: 4px;
-    color: red;
-    background-color: #ffffff;
-    border: 1px solid red;
+    }
 }
 
-.item:hover > .deleteBtn {
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        height: 0;
+    }
+    to {
+        opacity: 1;
+        height: 150px;
+    }
+}
+
+.deleteBtn {
+    left: 80px;
+    color: #ff0300;
+}
+
+.commentBtn {
+    left: 45px;
+    color: #8b00ff;
+}
+
+.deleteBtn, .commentBtn {
+    font-size: 18px;
+    display: none;
+    position: absolute;
+    top: -40px;
+    cursor: pointer;
+    line-height: 0;
+    padding: 7px;
+    background-color: white;
+}
+
+.item:focus-within > .deleteBtn {
+    display: inline-block;
+}
+
+.item:focus-within > .commentBtn {
     display: inline-block;
 }
 
 .deleteBtn:hover {
     color: #ffffff;
     background-color: red;
+}
+
+.commentBtn:hover {
+    color: #ffffff;
+    background-color: #8b00ff;
 }
 
 #chatWindow {
@@ -262,3 +301,50 @@ textarea:hover {
     cursor: text;
     overflow: hidden;
 }
+
+.comments {
+    display: none;
+    position: absolute;
+    width: 180%;
+    height: 170px;
+    background-color: white;
+    border-radius: 12px 12px 12px 0;
+    left: 130px;
+    top: -130px;
+}
+
+.comments p {
+    height: 15%;
+    margin: 8px 0 0  8px;
+}
+
+.commentField {
+    height: 112px;
+    overflow: scroll;
+}
+
+.commentInput {
+    position: absolute;
+    bottom: 0;
+    height: auto;
+    width: 100%;
+    border-radius: 0 0 12px 12px;
+    border: 0px;
+    border-top: 1px solid grey;
+    outline: none;
+    padding-left: 8px;
+}
+
+.senderName {
+    font-weight: bolder;
+    display: inline;
+    margin: 0 8px 0 0;
+}
+
+.commentMessage {
+    font-weight: lighter;
+    display: inline;
+    margin: 0 0 0;
+}
+
+
