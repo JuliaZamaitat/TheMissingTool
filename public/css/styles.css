@@ -246,6 +246,10 @@ textarea:hover {
     flex-direction: column-reverse;
 }
 
+.messageText {
+	white-space: pre-wrap;
+}
+
 #chatInputContainer {
     display: none;
     position: absolute;

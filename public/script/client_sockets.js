@@ -137,6 +137,11 @@ $("#plus").click(() => {
 	});
 });
 
+//Send mere message to server, without username and time
+function sendMessage(message) {
+	socket.emit("message", message);
+}
+
 // listening to web-sockets
 socket.on("new-card", (data) => {
 	const card = JSON.parse(data);
@@ -175,6 +180,18 @@ $("#user-name").on("focusout", function (event) {
 socket.on("board-deleted", (data) => {
 	alert("Board deleted");
 	location.href = "/";
+});
+
+socket.on("message", message => {
+	let usernameEl = $("<b>").text(message.username);
+	let time = new Date(message.time);
+	let timeEl = $("<span>", {class: "text-secondary float-right"}).text(time.getHours() + ":" + time.getMinutes());
+	let messageHeadEl = $("<small>", {class: "messageHead"}).append(usernameEl, timeEl);
+	let messageTextEl = $("<div>", {class: "messageText"}).text(message.text);
+	let messageEl = $("<div>", {class: "message mt-2"}).append(messageHeadEl, messageTextEl);
+	$("#chatContent").prepend(messageEl);
+	chatRescaleContent();
+	chatScrollBottom();
 });
 
 function getRandomColor() {
