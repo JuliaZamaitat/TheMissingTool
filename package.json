@@ -5,7 +5,9 @@
   "main": "main.js",
   "scripts": {
     "test": "jest",
-    "start": "nodemon main.js"
+    "start": "nodemon main.js",
+    "cypress": "cypress open",
+		"db:seed": "node seeds/*"
   },
   "repository": {
     "type": "git",
@@ -25,6 +27,7 @@
     "@shelf/jest-mongodb": "^1.1.5",
     "body-parser": "latest",
     "cookie-parser": "^1.4.5",
+    "cypress": "^4.7.0",
     "ejs": "^3.1.2",
     "express": "^4.17.1",
     "express-ejs-layouts": "^2.5.0",
@@ -44,6 +47,7 @@
   },
   "devDependencies": {
     "eslint": "^7.1.0",
+    "eslint-plugin-cypress": "^2.11.1",
     "eslint-plugin-react": "^7.20.0"
   }
 }
