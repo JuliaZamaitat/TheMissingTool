@@ -262,3 +262,23 @@ textarea:hover {
     cursor: text;
     overflow: hidden;
 }
+
+.notifier {
+    position: absolute;
+    bottom: 0px;
+    width: 50%;
+    height: 0;
+    left: -10%;
+    color: white;
+    text-align: center;
+    background: rgba(176, 0, 52, 0.7);
+    overflow: hidden;
+    box-sizing: border-box;
+    transition: height .2s;
+    border-radius: 0 8px 0 0;
+}
+
+.active {
+    height: 23px;
+}
+
