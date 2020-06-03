@@ -16,7 +16,7 @@ $.get("/board/" + windowBoardId + "/cards", (cards) => {
 function createCard(data) {
 	const card = document.createElement("div");
 	card.className = "item animate";
-	card.innerHTML = "<div class='buttonContainer'><span type='button' class='deleteBtn rounded'><i class='fa fa-trash-o'></i></span><span type='button' class='commentBtn rounded'><i class='fa fa-comments'></i></span></div><textarea type='text' value=''></textarea><pdiv class='comments'><p>Comments</p><div class='commentField'></div><input class='commentInput'></div>"
+	card.innerHTML = "<div class='buttonContainer'><span type='button' class='deleteBtn rounded'><i class='fa fa-trash-o'></i></span><span type='button' class='commentBtn rounded'><i class='fa fa-comments'></i></span></div><textarea type='text' value=''></textarea><div class='comments-box'><span class='close-commentBox'>&times;</span><div class='commentField'></div><input placeholder='Add a comment...' class='commentInput'></div>";
 	card.id = data._id;
 	if (data.position.left !== null && data.position.right !== null) {
 		card.style.left = data.position.left + "px";
@@ -32,21 +32,20 @@ function createCard(data) {
 	}
 
 	let comments = data.comments;
-	for (let i = 0; i < comments.length; i++) {
+	for (let i = comments.length-1; i > 0; i--) {
 		const comment = document.createElement("div");
-		comment.innerHTML = "<p class='senderName'>" + comments[i].sender + "</p><p class='commentMessage'>" + comments[i].message + "</p>";
+		comment.innerHTML = "<div class='comment-container'><p class='senderName'>" + comments[i].sender + "</p><p class='commentMessage'>" + comments[i].message + "</p><p class='timestamp'>" + new Date(comments[i].timestamp).toGMTString() + "</p></div>";
 		card.querySelector(".commentField").appendChild(comment);
-		console.log(card.querySelector(".commentField"));
 	}
+	
 
 	if (data.type === "LINK") {
 		card.className = "item animate";
-		card.innerHTML = "<div class='buttonContainer'><span type='button' class='link rounded'><i class='fa fa-link'></i></span><span type='button' class='deleteBtn rounded'><i class='fa fa-trash-o'></i></span><span type='button' class='commentBtn rounded'><i class='fa fa-comments'></i></span></div><textarea type='text' value=''></textarea><div class='comments'><p>Comments</p><div class='commentField'></div><input class='commentInput'></div>"
+		card.innerHTML = "<div class='buttonContainer'><span type='button' class='link rounded'><i class='fa fa-link'></i></span><span type='button' class='deleteBtn rounded'><i class='fa fa-trash-o'></i></span><span type='button' class='commentBtn rounded'><i class='fa fa-comments'></i></span></div><textarea type='text' value=''></textarea><div class='comments-box'><span class='close-commentBox'>&times;</span><div class='commentField'></div><input placeholder='Add a comment...' class='commentInput'></div>";
 		addLinkListeners(card);
 	}
 
 	addListeners(card);
-	console.log(card)
 	document.getElementById("overlay").appendChild(card);
 }
 
@@ -120,14 +119,8 @@ function addListeners(card) {
 	});
 
 	// Show chat
-	card.querySelector(".commentBtn").addEventListener("mousedown", function (event) {
-		const visibility = card.querySelector(".comments");
-		if (visibility.style.display === "inline-block") {
-			visibility.style.display = "none";
-		} else {
-			visibility.style.display = "inline-block";
-		}
-
+	card.querySelector(".commentBtn").addEventListener("mousedown", function () {
+		$("#" + card.id + " .comments-box").fadeIn();
 	});
 
 	card.querySelector(".commentInput").addEventListener("keydown", function (e) {
@@ -140,6 +133,10 @@ function addListeners(card) {
 				card.querySelector(".commentInput").value = "";
 			}
 		}
+	});
+
+	card.querySelector(".close-commentBox").addEventListener("mousedown", function () {
+		$("#" + card.id + " .comments-box").fadeOut();
 	});
 
 	// Change text of card listener
@@ -243,9 +240,8 @@ socket.on("board-deleted", (data) => {
 });
 
 socket.on("comment", (data) => {
-	console.log(data)
 	const comment = document.createElement("div");
-	comment.innerHTML = "<p class='senderName'>" + data.sender + "</p><p class='commentMessage'>" + data.message + "</p><p class='timestamp'>" + new Date(data.timestamp) + "</p>";
+	comment.innerHTML = "<p class='senderName'>" + data.sender + "</p><p class='commentMessage'>" + data.message + "</p><p class='timestamp'>" + new Date(data.timestamp).toGMTString() + "</p>";
 	document.getElementById(data.cardId).querySelector(".commentField").appendChild(comment);
 });
 
