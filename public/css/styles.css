@@ -264,7 +264,6 @@ textarea:focus {
 	display: flex;
 }
 
-
 .deleteBtn:hover {
 	color: #ffffff;
 	background-color: red;
@@ -329,9 +328,9 @@ textarea:focus {
 	width: 180%;
 	height: 170px;
 	background-color: white;
-	border-radius: 12px 12px 12px 0;
-	left: 130px;
-	top: -130px;
+	left: 160px;
+	top: -160px;
+	border: 1px solid grey;
 }
 
 .comments p {
@@ -349,8 +348,7 @@ textarea:focus {
 	bottom: 0;
 	height: auto;
 	width: 100%;
-	border-radius: 0 0 12px 12px;
-	border: 0px;
+	border: none;
 	border-top: 1px solid grey;
 	outline: none;
 	padding-left: 8px;

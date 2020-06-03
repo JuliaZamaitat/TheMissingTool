@@ -36,11 +36,11 @@ function createCard(data) {
 		const comment = document.createElement("div");
 		comment.innerHTML = "<p class='senderName'>" + comments[i].sender + "</p><p class='commentMessage'>" + comments[i].message + "</p>";
 		card.querySelector(".commentField").appendChild(comment);
+		console.log(card.querySelector(".commentField"));
 	}
 
 	if (data.type === "LINK") {
 		card.className = "item animate";
-		//card.innerHTML = "<span type='button' class='link rounded'><i class='fa fa-link'></i></span><span type='button' class='deleteBtn rounded'><i class='fa fa-trash-o'></i></span><span type='button' class='commentBtn rounded'><i class='fa fa-comments'></i></span><textarea type='text' value=''></textarea><pdiv class='comments'><p>Comments</p><div class='commentField'></div><input class='commentInput'></div>"
 		card.innerHTML = "<div class='buttonContainer'><span type='button' class='link rounded'><i class='fa fa-link'></i></span><span type='button' class='deleteBtn rounded'><i class='fa fa-trash-o'></i></span><span type='button' class='commentBtn rounded'><i class='fa fa-comments'></i></span></div><textarea type='text' value=''></textarea><div class='comments'><p>Comments</p><div class='commentField'></div><input class='commentInput'></div>"
 		addLinkListeners(card);
 	}
