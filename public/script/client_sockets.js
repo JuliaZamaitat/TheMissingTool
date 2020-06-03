@@ -2,7 +2,12 @@ let url = window.location.href;
 let windowBoardId = url.substr(url.lastIndexOf("/") + 1);
 let port;
 
-$.get( "/port", function( data ) { //set the port dynamically
+//typing notification
+var typing = false,
+	timeout = undefined,
+	user;
+
+$.get("/port", function (data) { //set the port dynamically
 	port = data;
 });
 
@@ -90,7 +95,7 @@ function addListeners(card) {
 	// Delete card listener
 	card.querySelector(".deleteBtn").addEventListener("mousedown", function (event) {
 		event.stopPropagation();  //prevent bubbling process so the whole card doesn't start dragging
-		const cardToDelete = {_id: event.currentTarget.parentElement.id};
+		const cardToDelete = { _id: event.currentTarget.parentElement.id };
 		socket.emit("delete-card", cardToDelete);
 	});
 
@@ -123,7 +128,7 @@ function shareBoard() {
 }
 
 function deleteBoard() {
-	socket.emit("delete-board", {_id: windowBoardId});
+	socket.emit("delete-board", { _id: windowBoardId });
 }
 
 function exportBoard() {
@@ -169,12 +174,12 @@ socket.on("board-name-update", (data) => {
 	console.log("Im Update");
 	const name = JSON.parse(data).name;
 	$("#board-name").val(name);
-	$("#board-name").css("width", name.length/1.5 + "rem");
+	$("#board-name").css("width", name.length / 1.5 + "rem");
 });
 
 $("#user-name").on("focusout", function (event) {
 	var name = event.currentTarget.value;
-	$.get("/username", {username: name, credentials: "same-origin"});
+	$.get("/username", { username: name, credentials: "same-origin" });
 });
 
 socket.on("board-deleted", (data) => {
@@ -185,10 +190,10 @@ socket.on("board-deleted", (data) => {
 socket.on("message", message => {
 	let usernameEl = $("<b>").text(message.username);
 	let time = new Date(message.time);
-	let timeEl = $("<span>", {class: "text-secondary float-right"}).text(time.getHours() + ":" + time.getMinutes());
-	let messageHeadEl = $("<small>", {class: "messageHead"}).append(usernameEl, timeEl);
-	let messageTextEl = $("<div>", {class: "messageText"}).text(message.text);
-	let messageEl = $("<div>", {class: "message mt-2"}).append(messageHeadEl, messageTextEl);
+	let timeEl = $("<span>", { class: "text-secondary float-right" }).text(time.getHours() + ":" + time.getMinutes());
+	let messageHeadEl = $("<small>", { class: "messageHead" }).append(usernameEl, timeEl);
+	let messageTextEl = $("<div>", { class: "messageText" }).text(message.text);
+	let messageEl = $("<div>", { class: "message mt-2" }).append(messageHeadEl, messageTextEl);
 	$("#chatContent").prepend(messageEl);
 	chatRescaleContent();
 	chatScrollBottom();
@@ -202,3 +207,33 @@ function getRandomColor() {
 	}
 	return color;
 }
+
+function typingTimeout(){
+	typing = false;
+	socket.emit('typing', {user: user, typing: false});
+}
+ //listen for keypress in chatinput and emits typing
+$(document).ready(function () {
+	$('#chatInput').keypress((e) => {
+		if (e.which != 13) {
+			typing = true;
+			socket.emit('typing', {user:user, typing:true});
+			clearTimeout(timeout);
+			timeout = setTimeout(typingTimeout, 2000);
+		} else {
+			clearTimeout(timeout);
+			typingTimeout();
+		}
+	})
+
+	//display a notification when a user is typing
+	socket.on('display', (data) => {
+		if (data.typing == true){
+			console.log(socket.id + " is typing");
+			$("#notbox").text("someone is typing");
+		}
+		else {$("#notbox").text("");}
+			
+		/* $('.typing').text("") */
+	})
+});

@@ -36,10 +36,10 @@ module.exports = {
 			});
 
 			socket.on("update-pos", function (req) {
-				const filter = {_id: mongoose.Types.ObjectId(req._id)};
-				const update = {position: {left: req.position.left, top: req.position.top}};
+				const filter = { _id: mongoose.Types.ObjectId(req._id) };
+				const update = { position: { left: req.position.left, top: req.position.top } };
 
-				Card.findOneAndUpdate(filter, update, {new: true},
+				Card.findOneAndUpdate(filter, update, { new: true },
 					function (err) {
 						if (err) {
 							console.log("Something wrong when updating data!");
@@ -56,7 +56,7 @@ module.exports = {
 			});
 
 			socket.on("delete-card", function (req) {
-				const filter = {_id: mongoose.Types.ObjectId(req._id)};
+				const filter = { _id: mongoose.Types.ObjectId(req._id) };
 
 				Card.deleteOne(filter,
 					function (err) {
@@ -71,10 +71,10 @@ module.exports = {
 			});
 
 			socket.on("update-text", function (req) {
-				const filter = {_id: mongoose.Types.ObjectId(req._id)};
-				const update = {text: req.text};
+				const filter = { _id: mongoose.Types.ObjectId(req._id) };
+				const update = { text: req.text };
 
-				Card.findOneAndUpdate(filter, update, {new: true},
+				Card.findOneAndUpdate(filter, update, { new: true },
 					function (err) {
 						if (err) {
 							console.log("Something wrong when updating data!");
@@ -88,10 +88,10 @@ module.exports = {
 			});
 
 			socket.on("update-board-name", function (req) {
-				const filter = {_id: mongoose.Types.ObjectId(req._id)};
-				const update = {name: req.name};
+				const filter = { _id: mongoose.Types.ObjectId(req._id) };
+				const update = { name: req.name };
 
-				Board.findOneAndUpdate(filter, update, {new: true},
+				Board.findOneAndUpdate(filter, update, { new: true },
 					function (err) {
 						if (err) {
 							console.log("Something wrong when updating board!");
@@ -104,8 +104,8 @@ module.exports = {
 			});
 
 			socket.on("delete-board", function (req) {
-				const card_filter = {boardId: mongoose.Types.ObjectId(req._id)};
-				const board_filter = {_id: mongoose.Types.ObjectId(req._id)};
+				const card_filter = { boardId: mongoose.Types.ObjectId(req._id) };
+				const board_filter = { _id: mongoose.Types.ObjectId(req._id) };
 
 				Card.deleteMany(card_filter, function (err) {
 					if (err) {
@@ -130,6 +130,9 @@ module.exports = {
 
 				io.to(board).emit("message", message);
 			});
+			socket.on('typing', (data) => {
+				io.emit('display', data)
+			})
 		});
 	}
 };
