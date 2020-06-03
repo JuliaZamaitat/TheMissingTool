@@ -17,7 +17,7 @@ const mongoose = require("mongoose"),
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "Board"
 		},
-		comments: [{sender: String, message: String}],
+		comments: [{sender: String, message: String, timestamp : Date}],
 		linkId: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "Board"

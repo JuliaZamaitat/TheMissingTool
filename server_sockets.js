@@ -28,12 +28,9 @@ module.exports = {
 						linkId: req.linkId
 					});
 
-				console.log(card)
 				card.save((err) => {
 					if (err) {
 						console.log("Something wrong saving card");
-					} else {
-						console.log(card._id, card.boardId);
 					}
 					io.to(board).emit("new-card", JSON.stringify(card));
 				});
@@ -136,13 +133,13 @@ module.exports = {
 			});
 
 			socket.on("comment", function (commentData) {
-				console.log(commentData);
 				let cookie = require("cookie");
 				let username = cookie.parse(socket.request.headers.cookie).username;
 
 				const comment = {
 					sender: username,
-					message: commentData.message
+					message: commentData.message,
+					timestamp: Date.now()
 				};
 
 				const filter = {_id: mongoose.Types.ObjectId(commentData.cardId)};
@@ -160,7 +157,8 @@ module.exports = {
 
 				io.to(board).emit("comment", {
 					sender: username,
-					message: commentData.message,
+					message: comment.message,
+					timestamp: comment.timestamp,
 					cardId: commentData.cardId
 				});
 			});

@@ -243,8 +243,9 @@ socket.on("board-deleted", (data) => {
 });
 
 socket.on("comment", (data) => {
+	console.log(data)
 	const comment = document.createElement("div");
-	comment.innerHTML = "<p class='senderName'>" + data.sender + "</p><p class='commentMessage'>" + data.message + "</p>";
+	comment.innerHTML = "<p class='senderName'>" + data.sender + "</p><p class='commentMessage'>" + data.message + "</p><p class='timestamp'>" + new Date(data.timestamp) + "</p>";
 	document.getElementById(data.cardId).querySelector(".commentField").appendChild(comment);
 });
 
