@@ -14,7 +14,7 @@ cache:
   directories:
     # we also need to cache folder with Cypress binary
     - ~/.cache
-# install:
+#install:
 #   - npm ci
 script:
-  - $(npm bin)/cypress run --record
+  - npm test
