@@ -129,6 +129,16 @@ module.exports = {
 				let username = cookie.parse(socket.request.headers.cookie).username;
 				message.username = username;
 
+				const filter = {_id: mongoose.Types.ObjectId(message.boardId)};
+
+				Board.findOneAndUpdate(
+					filter,
+					{$push: {messages: message}},
+					function (error) {
+						if (error) {
+							console.log("Something went wrong adding message to board");
+						}
+					});
 				io.to(board).emit("message", message);
 			});
 

@@ -38,3 +38,10 @@ exports.get_cards = function (req, res) {
 		res.send(cards);
 	});
 };
+
+exports.get_messages = function (req, res) {
+	const filter = {_id: mongoose.Types.ObjectId(req.params.boardId)};
+	Board.findById(filter, (err, board) => {
+		res.send(board.messages);
+	});
+};
