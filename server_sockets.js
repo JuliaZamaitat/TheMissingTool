@@ -15,6 +15,12 @@ module.exports = {
 			});
 
 			socket.on("save-card", function (req) {
+				if (req.type === "LINK") {
+					if (!isValidBoardId(req.linkId)) {
+						req.type = "NORMAL";
+					}
+				}
+
 				const card = new Card(
 					{
 						_id: new mongoose.mongo.ObjectId(),
@@ -35,6 +41,12 @@ module.exports = {
 					io.to(board).emit("new-card", JSON.stringify(card));
 				});
 			});
+
+			function isValidBoardId(boardId) {
+				Board.findById(boardId, function (err, board) {
+					return board !== null;
+				});
+			}
 
 			socket.on("update-pos", function (req) {
 				const filter = {_id: mongoose.Types.ObjectId(req._id)};
