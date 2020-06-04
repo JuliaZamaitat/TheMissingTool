@@ -10,7 +10,6 @@ var socket = io();
 socket.emit("join", windowBoardId);
 
 $.get("/board/" + windowBoardId + "/messages", (messages) => {
-	console.log("MESSAGES: "+  messages);
 	messages.forEach(addMessage);
 });
 
