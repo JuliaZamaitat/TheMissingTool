@@ -32,12 +32,12 @@ function createCard(data) {
 	}
 
 	let comments = data.comments;
-	for (let i = comments.length-1; i > 0; i--) {
+	for (let i = comments.length - 1; i > 0; i--) {
 		const comment = document.createElement("div");
 		comment.innerHTML = "<div class='comment-container'><p class='senderName'>" + comments[i].sender + "</p><p class='commentMessage'>" + comments[i].message + "</p><p class='timestamp'>" + new Date(comments[i].timestamp).toGMTString() + "</p></div>";
 		card.querySelector(".commentField").appendChild(comment);
 	}
-	
+
 
 	if (data.type === "LINK") {
 		card.className = "item animate";
@@ -150,11 +150,11 @@ function addListeners(card) {
 
 // event listeners for board
 $("#board-name").on("input", function (event) {
-    console.log("In Ajax ");
-    socket.emit("update-board-name", {
-        _id: windowBoardId,
-        name: event.currentTarget.value
-    });
+	console.log("In Ajax ");
+	socket.emit("update-board-name", {
+		_id: windowBoardId,
+		name: event.currentTarget.value
+	});
 });
 
 
@@ -163,22 +163,22 @@ $("#delete-board").on("click", deleteBoard);
 $("#export-board").on("click", exportBoard);
 
 function shareBoard() {
-    // TODO
+	// TODO
 }
 
 function deleteBoard() {
-    socket.emit("delete-board", {_id: windowBoardId});
+	socket.emit("delete-board", {_id: windowBoardId});
 }
 
 function exportBoard() {
-    // TODO
+	// TODO
 }
 
 // event listener for toolbar buttons
 $("#plus").click(() => {
-    socket.emit("save-card", {
-        color: getRandomColor()
-    });
+	socket.emit("save-card", {
+		color: getRandomColor()
+	});
 });
 
 $("#plus-link").click(() => {
