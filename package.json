@@ -4,9 +4,8 @@
 	"description": "",
 	"main": "main.js",
 	"scripts": {
-		"test": "jest",
+		"test": "cypress open",
 		"start": "nodemon main.js",
-		"cypress": "cypress open",
 		"db:seed": "node seeds/*"
 	},
 	"repository": {
