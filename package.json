@@ -6,8 +6,9 @@
 	"scripts": {
 		"start": "nodemon main.js",
 		"cy:run": "cypress run",
+		"cy:open": "cypress open",
 		"db:seed": "node seeds/*",
-		"test": "start-server-and-test start http://localhost:8080 db:seed cy:run"
+		"test": "start-server-and-test start http://localhost:8080 cy:run"
 	},
 	"repository": {
 		"type": "git",
