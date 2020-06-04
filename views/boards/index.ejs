@@ -1,5 +1,10 @@
 <body>
-<div id="overlay"></div>
+<div id="zoom-container"><div id="overlay"></div></div>
+<div id="zoom-btn_container">
+  <button id="zoom-in" class="rounded zoom-btn">&#43;</button>
+  <button id="zoom-out" class="rounded zoom-btn">&#8722;</button>
+</div>
+
 
 <div class="input-group mt-4">
 	<input class="mr-2" id="board-name" type="text" style="width:<%= board.name.length/1.3 %>rem" value="<%= board.name %>">

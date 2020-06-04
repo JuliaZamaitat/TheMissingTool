@@ -1,6 +1,10 @@
+var zoom = "100";
+var position = $("#zoom-container").scrollTop();
+
 window.onload = function () {
     $("#create-board").on("click", createBoard);
     $("#share-board").on("click", copyToClipboard);
+    zoomOnClick();
 };
 
 function createBoard() {
@@ -24,4 +28,41 @@ function copyToClipboard() {
     setTimeout(function () {
         $(".notifier").removeClass("active");
     }, 1000);
+}
+
+// TODO: zoom on scroll, navigation panel (mini map) for board
+// function zoomOnScroll() {
+//     $("#zoom-container").on("scroll", function() {
+//         var scroll = $("#zoom-container").scrollTop();
+
+//         if (scroll > position) { //scroll down
+//             zoom--;
+//             $("#overlay").css('zoom', zoom + "%");
+//         } else {
+//             zoom++;
+//             $("#overlay").css('zoom', zoom + "%");
+//         }
+//         position = scroll;
+//     });
+// }
+
+function zoomOnClick() {
+    var interval = 0;
+    $("#zoom-in").mousedown(function() {
+        interval = setInterval(function() {
+            zoom++;
+            $("#overlay").css("zoom", zoom + "%");
+        }, 50);
+    }).mouseup(function() {
+        clearInterval(interval);
+    });
+
+    $("#zoom-out").mousedown(function() {
+        interval = setInterval(function() {
+            zoom--;
+            $("#overlay").css("zoom", zoom + "%");
+        }, 50);
+    }).mouseup(function() {
+        clearInterval(interval);
+    });
 }
