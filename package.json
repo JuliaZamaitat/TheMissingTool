@@ -4,9 +4,10 @@
 	"description": "",
 	"main": "main.js",
 	"scripts": {
-		"test": "cypress open",
 		"start": "nodemon main.js",
-		"db:seed": "node seeds/*"
+		"cy:run": "cypress run",
+		"db:seed": "node seeds/*",
+		"test": "start-server-and-test start http://localhost:8080 db:seed cy:run"
 	},
 	"repository": {
 		"type": "git",
@@ -48,6 +49,7 @@
 	"devDependencies": {
 		"eslint": "^7.1.0",
 		"eslint-plugin-cypress": "^2.11.1",
-		"eslint-plugin-react": "^7.20.0"
+		"eslint-plugin-react": "^7.20.0",
+		"start-server-and-test": "^1.11.0"
 	}
 }
