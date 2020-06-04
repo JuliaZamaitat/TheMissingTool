@@ -14,19 +14,27 @@ const express = require("express"),
 	cookieParser = require("cookie-parser"),
 	keygen = require("keygenerator");
 
+if (process.env.CYPRESS_TEST_RUN){
+	console.log("here");
+	mongoose.connect(
+	 "mongodb://localhost:27017/board_test_db",
+	 { useNewUrlParser: true, useFindAndModify: false }
+ );
+} else {
+	//Connects either to the procution database, docker db or our local database
+	mongoose.connect(
+		process.env.MONGODB_URI || "mongodb://localhost:27017/board_db",
+		{useNewUrlParser: true, useFindAndModify: false}
+	);
+}
 
-//Connects either to the procution database, docker db or our local database
-mongoose.connect(
-	process.env.MONGODB_URI || "mongodb://localhost:27017/board_db",
-	{useNewUrlParser: true, useFindAndModify: false}
-);
 
 //Get a db instance to work with
 const db = mongoose.connection;
 
 //Notfication when connection to db was successfull
 db.once("open", () => {
-	console.log("Connected to MongoDB");
+	console.log("Connected to MongoDB with: " + db.name);
 });
 
 //In order to parse JSON for our application

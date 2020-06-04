@@ -16,6 +16,7 @@
  * @type {Cypress.PluginConfig}
  */
 module.exports = (on, config) => {
+	process.env.CYPRESS_TEST_RUN = true;
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
 }
