@@ -2,18 +2,12 @@ let url = window.location.href;
 let windowBoardId = url.substr(url.lastIndexOf("/") + 1);
 let port;
 
-$.get( "/port", function( data ) { //set the port dynamically
+$.get("/port", function (data) { //set the port dynamically
 	port = data;
 });
 
-var socket = io(port);
+var socket = io();
 socket.emit("join", windowBoardId);
-
-// window.onload = function () {
-//     $.get('/board/' + windowBoardId + '/cards', (cards) => {
-//         cards.forEach(createCard);
-//     });
-// };
 
 $.get("/board/" + windowBoardId + "/cards", (cards) => {
 	cards.forEach(createCard);
@@ -22,7 +16,7 @@ $.get("/board/" + windowBoardId + "/cards", (cards) => {
 function createCard(data) {
 	const card = document.createElement("div");
 	card.className = "item animate";
-	card.innerHTML = "<span type='button' class='deleteBtn rounded'><i class='fa fa-trash-o'></i></span><textarea type='text' value=''></textarea>";
+	card.innerHTML = "<div class='buttonContainer'><span type='button' class='deleteBtn rounded'><i class='fa fa-trash-o'></i></span><span type='button' class='commentBtn rounded'><i class='fa fa-comments'></i></span></div><textarea type='text' value=''></textarea><div class='comments-box'><span class='close-commentBox'>&times;</span><div class='commentField'></div><input placeholder='Add a comment...' class='commentInput'></div>";
 	card.id = data._id;
 	if (data.position.left !== null && data.position.right !== null) {
 		card.style.left = data.position.left + "px";
@@ -36,8 +30,38 @@ function createCard(data) {
 	if (data.text != null) {
 		card.querySelector("textarea").value = data.text; //Show the card text if defined
 	}
+
+	let comments = data.comments;
+	for (let i = comments.length - 1; i > 0; i--) {
+		const comment = document.createElement("div");
+		comment.innerHTML = "<div class='comment-container'><p class='senderName'>" + comments[i].sender + "</p><p class='commentMessage'>" + comments[i].message + "</p><p class='timestamp'>" + new Date(comments[i].timestamp).toGMTString() + "</p></div>";
+		card.querySelector(".commentField").appendChild(comment);
+	}
+
+
+	if (data.type === "LINK") {
+		card.className = "item animate";
+		card.innerHTML = "<div class='buttonContainer'><span type='button' class='link rounded'><i class='fa fa-link'></i></span><span type='button' class='deleteBtn rounded'><i class='fa fa-trash-o'></i></span><span type='button' class='commentBtn rounded'><i class='fa fa-comments'></i></span></div><textarea type='text' value=''></textarea><div class='comments-box'><span class='close-commentBox'>&times;</span><div class='commentField'></div><input placeholder='Add a comment...' class='commentInput'></div>";
+		addLinkListeners(card);
+	}
+
 	addListeners(card);
 	document.getElementById("overlay").appendChild(card);
+}
+
+function addLinkListeners(card) {
+	// Add listener for forwarding to new board
+
+	let querySelector = card.querySelector(".link");
+	querySelector.addEventListener("mousedown", function (event) {
+		$.get("/get-linked-board/" + card.id, function (data, status) {
+			if (data !== null && data !== "") {
+				location.href = "/board/" + data;
+			} else {
+				console.log("No boardId returned");
+			}
+		});
+	});
 }
 
 function addListeners(card) {
@@ -90,8 +114,29 @@ function addListeners(card) {
 	// Delete card listener
 	card.querySelector(".deleteBtn").addEventListener("mousedown", function (event) {
 		event.stopPropagation();  //prevent bubbling process so the whole card doesn't start dragging
-		const cardToDelete = {_id: event.currentTarget.parentElement.id};
+		const cardToDelete = {_id: event.currentTarget.parentElement.parentElement.id};
 		socket.emit("delete-card", cardToDelete);
+	});
+
+	// Show chat
+	card.querySelector(".commentBtn").addEventListener("mousedown", function () {
+		$("#" + card.id + " .comments-box").fadeIn();
+	});
+
+	card.querySelector(".commentInput").addEventListener("keydown", function (e) {
+		if ((e.keyCode === 10 || e.keyCode === 13)) {
+			if (!e.shiftKey) {
+				sendComment({
+					cardId: card.id,
+					message: $(this).val(),
+				});
+				card.querySelector(".commentInput").value = "";
+			}
+		}
+	});
+
+	card.querySelector(".close-commentBox").addEventListener("mousedown", function () {
+		$("#" + card.id + " .comments-box").fadeOut();
 	});
 
 	// Change text of card listener
@@ -105,11 +150,11 @@ function addListeners(card) {
 
 // event listeners for board
 $("#board-name").on("input", function (event) {
-    console.log("In Ajax ");
-    socket.emit("update-board-name", {
-        _id: windowBoardId,
-        name: event.currentTarget.value
-    });
+	console.log("In Ajax ");
+	socket.emit("update-board-name", {
+		_id: windowBoardId,
+		name: event.currentTarget.value
+	});
 });
 
 
@@ -118,27 +163,40 @@ $("#delete-board").on("click", deleteBoard);
 $("#export-board").on("click", exportBoard);
 
 function shareBoard() {
-    // TODO
+	// TODO
 }
 
 function deleteBoard() {
-    socket.emit("delete-board", {_id: windowBoardId});
+	socket.emit("delete-board", {_id: windowBoardId});
 }
 
 function exportBoard() {
-    // TODO
+	// TODO
 }
 
 // event listener for toolbar buttons
 $("#plus").click(() => {
-    socket.emit("save-card", {
-        color: getRandomColor()
-    });
+	socket.emit("save-card", {
+		color: getRandomColor()
+	});
+});
+
+$("#plus-link").click(() => {
+	var linkId = prompt("please enter your link-id", "");
+	socket.emit("save-card", {
+		color: getRandomColor(),
+		type: "LINK",
+		linkId: linkId
+	});
 });
 
 //Send mere message to server, without username and time
 function sendMessage(message) {
 	socket.emit("message", message);
+}
+
+function sendComment(comment) {
+	socket.emit("comment", comment);
 }
 
 // listening to web-sockets
@@ -168,7 +226,7 @@ socket.on("board-name-update", (data) => {
 	console.log("Im Update");
 	const name = JSON.parse(data).name;
 	$("#board-name").val(name);
-	$("#board-name").css("width", name.length/1.5 + "rem");
+	$("#board-name").css("width", name.length / 1.5 + "rem");
 });
 
 $("#user-name").on("focusout", function (event) {
@@ -179,6 +237,12 @@ $("#user-name").on("focusout", function (event) {
 socket.on("board-deleted", (data) => {
 	alert("Board deleted");
 	location.href = "/";
+});
+
+socket.on("comment", (data) => {
+	const comment = document.createElement("div");
+	comment.innerHTML = "<p class='senderName'>" + data.sender + "</p><p class='commentMessage'>" + data.message + "</p><p class='timestamp'>" + new Date(data.timestamp).toGMTString() + "</p>";
+	document.getElementById(data.cardId).querySelector(".commentField").appendChild(comment);
 });
 
 socket.on("message", message => {
