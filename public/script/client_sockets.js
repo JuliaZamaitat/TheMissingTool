@@ -9,9 +9,15 @@ $.get("/port", function (data) { //set the port dynamically
 var socket = io();
 socket.emit("join", windowBoardId);
 
+$.get("/board/" + windowBoardId + "/messages", (messages) => {
+	console.log("MESSAGES: "+  messages);
+	messages.forEach(addMessage);
+});
+
 $.get("/board/" + windowBoardId + "/cards", (cards) => {
 	cards.forEach(createCard);
 });
+
 
 function createCard(data) {
 	const card = document.createElement("div");
@@ -245,7 +251,9 @@ socket.on("comment", (data) => {
 	document.getElementById(data.cardId).querySelector(".commentField").appendChild(comment);
 });
 
-socket.on("message", message => {
+socket.on("message", addMessage);
+
+function addMessage(message) {
 	let usernameEl = $("<b>").text(message.username);
 	let time = new Date(message.time);
 	let timeEl = $("<span>", {class: "text-secondary float-right"}).text(time.getHours() + ":" + time.getMinutes());
@@ -255,7 +263,7 @@ socket.on("message", message => {
 	$("#chatContent").prepend(messageEl);
 	chatRescaleContent();
 	chatScrollBottom();
-});
+}
 
 function getRandomColor() {
 	var letters = "0123456789ABCDEF";
