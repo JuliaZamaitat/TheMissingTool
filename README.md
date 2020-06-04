@@ -16,11 +16,15 @@ run with nodemon:
 
 seed the Database with
 
-`node seeds.js`
+`npm run db:seed`
 
-run tests with cypress:
+open tests with cypress:
 
 `npm run cy:open`
+
+run tests with cypress on console:
+
+`npm run cy:run`
 
 
 
