@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/JuliaZamaitat/TheMissingTool.svg?token=fCqNQfj69cyZrUVtsikf&branch=master)](https://travis-ci.com/JuliaZamaitat/TheMissingTool)
+
 # TheMissingTool
 
 start docker container:
@@ -14,4 +16,15 @@ run with nodemon:
 
 seed the Database with
 
-`node seeds.js`
+`npm run db:seed`
+
+open tests with cypress:
+
+`npm run cy:open`
+
+run tests with cypress on console:
+
+`npm run cy:run`
+
+
+
