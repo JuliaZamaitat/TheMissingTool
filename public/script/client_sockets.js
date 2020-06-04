@@ -150,11 +150,11 @@ function addListeners(card) {
 
 // event listeners for board
 $("#board-name").on("input", function (event) {
-	console.log("In Ajax ");
-	socket.emit("update-board-name", {
-		_id: windowBoardId,
-		name: event.currentTarget.value
-	});
+    console.log("In Ajax ");
+    socket.emit("update-board-name", {
+        _id: windowBoardId,
+        name: event.currentTarget.value
+    });
 });
 
 
@@ -163,22 +163,22 @@ $("#delete-board").on("click", deleteBoard);
 $("#export-board").on("click", exportBoard);
 
 function shareBoard() {
-	// TODO
+    // TODO
 }
 
 function deleteBoard() {
-	socket.emit("delete-board", {_id: windowBoardId});
+    socket.emit("delete-board", {_id: windowBoardId});
 }
 
 function exportBoard() {
-	// TODO
+    // TODO
 }
 
 // event listener for toolbar buttons
 $("#plus").click(() => {
-	socket.emit("save-card", {
-		color: getRandomColor()
-	});
+    socket.emit("save-card", {
+        color: getRandomColor()
+    });
 });
 
 $("#plus-link").click(() => {
