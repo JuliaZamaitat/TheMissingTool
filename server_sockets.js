@@ -135,8 +135,8 @@ module.exports = {
 			});
 
 			socket.on("message", function (message) {
-				const filter = {_id: mongoose.Types.ObjectId(message.boardId)};
 
+				const filter = {_id: mongoose.Types.ObjectId(message.boardId)};
 				Board.findOneAndUpdate(
 					filter,
 					{$push: {messages: message}},
