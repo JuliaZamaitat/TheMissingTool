@@ -1,6 +1,7 @@
 let url = window.location.href;
 let windowBoardId = url.substr(url.lastIndexOf("/") + 1);
 let port;
+let messageCount = 0;
 
 $.get("/port", function (data) { //set the port dynamically
 	port = data;
@@ -123,7 +124,7 @@ function addListeners(card) {
 		socket.emit("delete-card", cardToDelete);
 	});
 
-	// Show chat
+	// Show comments
 	card.querySelector(".commentBtn").addEventListener("mousedown", function () {
 		$("#" + card.id + " .comments-box").fadeIn();
 	});
@@ -260,6 +261,7 @@ function addMessage(message) {
 	let messageTextEl = $("<div>", {class: "messageText"}).text(message.text);
 	let messageEl = $("<div>", {class: "message mt-2"}).append(messageHeadEl, messageTextEl);
 	$("#chatContent").prepend(messageEl);
+	$("#unreadMessages").text(messageCount++);
 	chatRescaleContent();
 	chatScrollBottom();
 }
