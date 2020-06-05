@@ -135,12 +135,6 @@ module.exports = {
 			});
 
 			socket.on("message", function (message) {
-				let cookie = require("cookie");
-
-				//Attach username to the message
-				let username = cookie.parse(socket.request.headers.cookie).username;
-				message.username = username;
-
 				const filter = {_id: mongoose.Types.ObjectId(message.boardId)};
 
 				Board.findOneAndUpdate(
@@ -155,11 +149,8 @@ module.exports = {
 			});
 
 			socket.on("comment", function (commentData) {
-				let cookie = require("cookie");
-				let username = cookie.parse(socket.request.headers.cookie).username;
-
 				const comment = {
-					sender: username,
+					sender: commentData.sender,
 					message: commentData.message,
 					timestamp: Date.now()
 				};
@@ -178,7 +169,7 @@ module.exports = {
 					});
 
 				io.to(board).emit("comment", {
-					sender: username,
+					sender: comment.sender,
 					message: comment.message,
 					timestamp: comment.timestamp,
 					cardId: commentData.cardId

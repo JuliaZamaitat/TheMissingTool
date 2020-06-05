@@ -134,6 +134,7 @@ function addListeners(card) {
 				sendComment({
 					cardId: card.id,
 					message: $(this).val(),
+					sender: cookieValue('username')
 				});
 				card.querySelector(".commentInput").value = "";
 			}
@@ -271,4 +272,8 @@ function getRandomColor() {
 		color += letters[Math.floor(Math.random() * 16)];
 	}
 	return color;
+}
+
+function cookieValue(name) {
+	return document.cookie.split("; ").find(row => row.startsWith(name)).split("=")[1];
 }
