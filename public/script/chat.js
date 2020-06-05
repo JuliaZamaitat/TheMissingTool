@@ -30,7 +30,8 @@ $("#chatInput").on("input keydown", function(e) {
 				sendMessage({
 					text: text,
 					time: time,
-					boardId: windowBoardId
+					boardId: windowBoardId,
+					username: cookieValue('username')
 				});
 			}
 		}
