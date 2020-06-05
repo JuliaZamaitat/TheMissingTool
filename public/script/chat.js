@@ -11,7 +11,7 @@ const chatScrollBottom = () => {
 //Chat window's open/close mechanism
 $("#chatHeader").click(() => {
 	$("#unreadMessages").text(messageCount = 0);
-	$("#unreadMessages").fadeToggle(300);
+	$("#unreadMessages").toggle();
 	$("#chatInputContainer").slideToggle();
 	$("#chatBody").slideToggle();
 	chatRescaleContent();

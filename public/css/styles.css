@@ -416,19 +416,8 @@ textarea:focus {
 }
 
 #unreadMessages {
-	width: 36px;
-	height: 36px;
-	background-color: red;
-	-moz-border-radius: 50px;
-	-webkit-border-radius: 50px;
-	border-radius: 50px;
-	position: fixed;
-	bottom: 20px;
-	right: 20px;
-	z-index: 1000000;
-	text-align: center;
-	font-size: 24px;
-	color: white;
+	color: red;
+	display: inline-block;
 }
 
 
