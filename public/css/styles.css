@@ -414,10 +414,3 @@ textarea:focus {
 .active {
     height: 23px;
 }
-
-#unreadMessages {
-	color: red;
-	display: inline-block;
-}
-
-

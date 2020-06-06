@@ -11,7 +11,9 @@ var socket = io();
 socket.emit("join", windowBoardId);
 
 $.get("/board/" + windowBoardId + "/messages", (messages) => {
-	messages.forEach(addMessage);
+	messages.forEach(message => {
+		addMessage(message, true);
+	});
 });
 
 $.get("/board/" + windowBoardId + "/cards", (cards) => {
@@ -253,7 +255,7 @@ socket.on("comment", (data) => {
 
 socket.on("message", addMessage);
 
-function addMessage(message) {
+function addMessage(message, read) {
 	let usernameEl = $("<b>").text(message.username);
 	let time = new Date(message.time);
 	let timeEl = $("<span>", {class: "text-secondary float-right"}).text(time.getHours() + ":" + time.getMinutes());
@@ -261,7 +263,8 @@ function addMessage(message) {
 	let messageTextEl = $("<div>", {class: "messageText"}).text(message.text);
 	let messageEl = $("<div>", {class: "message mt-2"}).append(messageHeadEl, messageTextEl);
 	$("#chatContent").prepend(messageEl);
-	$("#unreadMessages").text(messageCount++);
+	if(!read)
+		$("#unreadMessages").text(++messageCount);
 	chatRescaleContent();
 	chatScrollBottom();
 }

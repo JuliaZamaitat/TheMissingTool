@@ -13,8 +13,7 @@ $("#chatHeader").click(() => {
 	$("#unreadMessages").text(messageCount = 0);
 	$("#unreadMessages").toggle();
 	$("#chatInputContainer").slideToggle();
-	$("#chatBody").slideToggle();
-	chatRescaleContent();
+	$("#chatBody").slideToggle({ progress: chatRescaleContent });
 	chatScrollBottom();
 });
 
