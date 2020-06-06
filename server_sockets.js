@@ -175,6 +175,14 @@ module.exports = {
 					cardId: commentData.cardId
 				});
 			});
+
+			socket.on('typing', (data) => {
+				if(data.typing==true)
+					socket.broadcast.emit('display', data)
+				else
+					socket.broadcast.emit('display', data)
+			});
+
 		});
 	}
 };
