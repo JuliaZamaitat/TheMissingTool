@@ -275,5 +275,5 @@ function getRandomColor() {
 }
 
 function cookieValue(name) {
-	return document.cookie.split("; ").find(row => row.startsWith(name)).split("=")[1];
+	return decodeURIComponent(document.cookie.split("; ").find(row => row.startsWith(name)).split("=")[1]);
 }
