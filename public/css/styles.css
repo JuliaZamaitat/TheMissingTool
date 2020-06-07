@@ -198,7 +198,7 @@ textarea:hover {
       }
   }
 
-.deleteBtn {
+.deleteBtn, .extLinkBtn {
     display: none;
     position: absolute;
     top: -15px;
@@ -209,6 +209,10 @@ textarea:hover {
     color: red;
     background-color: #ffffff;
     border: 1px solid red;
+}
+
+.extLinkBtn {
+	color: #8b00ff;
 }
 
 .link {
@@ -229,10 +233,20 @@ textarea:hover {
     display: inline-block;
 }
 
+.item:hover > .extLinkBtn {
+    display: inline-block;
+}
+
 .deleteBtn:hover {
     color: #ffffff;
     background-color: red;
 }
+
+.extLinkBtn:hover {
+	color: #ffffff;
+	background-color: #8b00ff;
+}
+
 
 .linkBtn:hover {
     color: #ffffff;

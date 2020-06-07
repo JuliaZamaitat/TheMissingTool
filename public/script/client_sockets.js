@@ -22,7 +22,7 @@ $.get("/board/" + windowBoardId + "/cards", (cards) => {
 function createCard(data) {
     const card = document.createElement("div");
     card.className = "item animate";
-    card.innerHTML = "<span type='button' class='deleteBtn rounded'><i class='fa fa-trash-o'></i></span><textarea type='text' value=''></textarea>";
+    card.innerHTML = "<span type='button' class='deleteBtn rounded'><i class='fa fa-trash-o'></i></span><span type='button' class='extLinkBtn rounded'><i class='fa fa-external-link'></i></span><textarea type='text' value=''></textarea>";
     card.id = data._id;
     if (data.position.left !== null && data.position.right !== null) {
         card.style.left = data.position.left + "px";
@@ -110,7 +110,7 @@ function addListeners(card) {
     };
 
     // Create card on board
-    card.querySelector("textarea").addEventListener("dblclick", function (event) {
+    card.querySelector(".extLinkBtn").addEventListener("click", function (event) {
         $.post("/", function(data, status) {
             const newURL = "/board/" + data;
             window.open(newURL, "_blank");
