@@ -2,6 +2,10 @@ let url = window.location.href;
 let windowBoardId = url.substr(url.lastIndexOf("/") + 1);
 let port;
 
+//typing notification
+let typing = false,
+	timeout = undefined;
+
 $.get("/port", function (data) { //set the port dynamically
 	port = data;
 });
@@ -277,3 +281,38 @@ function getRandomColor() {
 function cookieValue(name) {
 	return decodeURIComponent(document.cookie.split("; ").find(row => row.startsWith(name)).split("=")[1]);
 }
+
+function typingTimeout(){
+	let user = cookieValue('username');
+	typing = false;
+	socket.emit('typing', {user: user, typing: false});
+}
+//listen for keypress in chatinput and emits typing
+$(document).ready(function () {
+	$('#chatInput').keypress((e) => {
+		if (e.which != 13) {
+			typing = true;
+			let user = cookieValue('username');
+			socket.emit('typing', {user:user, typing:true});
+			clearTimeout(timeout);
+			timeout = setTimeout(typingTimeout, 2000);
+		} else {
+			clearTimeout(timeout);
+			typingTimeout();
+		}
+	})
+
+	//display a notification when a user is typing
+	socket.on('display', (data) => {
+		if (data.typing == true){
+			console.log(data.user + " is typing");
+			$("#notificationbox").text(data.user + ` is typing`);
+			chatRescaleContent();
+		}
+		else {
+			$("#notificationbox").text("");
+			chatRescaleContent();
+		}
+	})
+
+});
