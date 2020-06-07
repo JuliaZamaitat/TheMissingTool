@@ -1,6 +1,7 @@
 let url = window.location.href;
 let windowBoardId = url.substr(url.lastIndexOf("/") + 1);
 let port;
+var no_card_selected = true;
 
 //typing notification
 let typing = false,
@@ -79,6 +80,7 @@ function addListeners(card) {
 	card.onmousedown = cardMouseDown;
 
 	function cardMouseDown(e) {
+		no_card_selected = false;
 		card.classList.remove("animate");
 		card.style.position = "absolute";
 		card.style.zIndex = 1000;
@@ -107,6 +109,7 @@ function addListeners(card) {
 				top: card.style.top.replace(/\D/g, ""),
 			}
 		});
+		no_card_selected = true;
 		document.onmouseup = null;
 		document.onmousemove = null;
 
@@ -182,6 +185,60 @@ function deleteBoard() {
 
 function exportBoard() {
 	// TODO
+}
+
+//ZOOM
+zoomOnClick();
+moveZoomContainer();
+function moveZoomContainer() {
+	if (no_card_selected) {
+		let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+		var zoomContainer =  document.getElementById("zoom-container");
+		var overlay = document.getElementById("overlay");
+		zoomContainer.onmousedown = containerSelected;
+
+		function containerSelected(e) {
+			pos3 = e.clientX;
+			pos4 = e.clientY;
+			zoomContainer.onmousemove = dragContainer;
+			zoomContainer.onmouseup = containerDropped;
+		}
+
+		function dragContainer(e) {
+			e.preventDefault();
+			pos1 = pos3 - e.clientX;
+			pos2 = pos4 - e.clientY;
+			pos3 = e.clientX;
+			pos4 = e.clientY;
+			overlay.style.top = (overlay.offsetTop - pos2) + "px";
+			overlay.style.left = (overlay.offsetLeft - pos1) + "px";
+		}
+
+		function containerDropped(e) {
+			zoomContainer.onmousemove = null;
+		}  
+	}
+}
+
+function zoomOnClick() {
+    var interval = 0;
+    $("#zoom-in").mousedown(function() {
+        interval = setInterval(function() {
+            zoom++;
+            $("#overlay").css("zoom", zoom + "%");
+        }, 50);
+    }).mouseup(function() {
+        clearInterval(interval);
+    });
+
+    $("#zoom-out").mousedown(function() {
+        interval = setInterval(function() {
+            zoom--;
+            $("#overlay").css("zoom", zoom + "%");
+        }, 50);
+    }).mouseup(function() {
+        clearInterval(interval);
+    });
 }
 
 // event listener for toolbar buttons

@@ -20,7 +20,7 @@ body {
 
 /* ZOOM */
 #overlay {
-	position: relative;
+	position: absolute;
 	top: 0;
 	left: 0;
 }
@@ -28,6 +28,9 @@ body {
 	width: 100vw;
 	height: 100vh;
 	overflow: scroll;
+}
+#zoom-container:hover {
+	cursor: move;
 }
 #zoom-btn_container {
 	position: absolute;
@@ -101,7 +104,7 @@ textarea:focus {
 }
 
 /* Input group */
-.input-group {
+.input-group#name-input {
 	position: absolute !important;
 	top: 0;
 	left: 1rem;
