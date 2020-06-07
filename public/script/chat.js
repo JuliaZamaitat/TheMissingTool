@@ -29,7 +29,9 @@ $("#chatInput").on("input keydown", function(e) {
 				//Send message without username
 				sendMessage({
 					text: text,
-					time: time
+					time: time,
+					boardId: windowBoardId,
+					username: cookieValue('username')
 				});
 			}
 		}

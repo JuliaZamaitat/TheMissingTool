@@ -24,7 +24,8 @@ open tests with cypress:
 
 run tests with cypress on console:
 
-`npm run cy:run`
+
+`npm start && npm run cy:run`
 
 
 

@@ -15,6 +15,12 @@ module.exports = {
 			});
 
 			socket.on("save-card", function (req) {
+				if (req.type === "LINK") {
+					if (!isValidBoardId(req.linkId)) {
+						req.type = "NORMAL";
+					}
+				}
+
 				const card = new Card(
 					{
 						_id: new mongoose.mongo.ObjectId(),
@@ -35,6 +41,12 @@ module.exports = {
 					io.to(board).emit("new-card", JSON.stringify(card));
 				});
 			});
+
+			function isValidBoardId(boardId) {
+				Board.findById(boardId, function (err, board) {
+					return board !== null;
+				});
+			}
 
 			socket.on("update-pos", function (req) {
 				const filter = {_id: mongoose.Types.ObjectId(req._id)};
@@ -123,21 +135,22 @@ module.exports = {
 			});
 
 			socket.on("message", function (message) {
-				let cookie = require("cookie");
 
-				//Attach username to the message
-				let username = cookie.parse(socket.request.headers.cookie).username;
-				message.username = username;
-
+				const filter = {_id: mongoose.Types.ObjectId(message.boardId)};
+				Board.findOneAndUpdate(
+					filter,
+					{$push: {messages: message}},
+					function (error) {
+						if (error) {
+							console.log("Something went wrong adding message to board");
+						}
+					});
 				io.to(board).emit("message", message);
 			});
 
 			socket.on("comment", function (commentData) {
-				let cookie = require("cookie");
-				let username = cookie.parse(socket.request.headers.cookie).username;
-
 				const comment = {
-					sender: username,
+					sender: commentData.sender,
 					message: commentData.message,
 					timestamp: Date.now()
 				};
@@ -156,12 +169,20 @@ module.exports = {
 					});
 
 				io.to(board).emit("comment", {
-					sender: username,
+					sender: comment.sender,
 					message: comment.message,
 					timestamp: comment.timestamp,
 					cardId: commentData.cardId
 				});
 			});
+
+			socket.on('typing', (data) => {
+				if(data.typing==true)
+					socket.broadcast.emit('display', data)
+				else
+					socket.broadcast.emit('display', data)
+			});
+
 		});
 	}
 };

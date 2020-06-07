@@ -2,6 +2,10 @@ let url = window.location.href;
 let windowBoardId = url.substr(url.lastIndexOf("/") + 1);
 let port;
 
+//typing notification
+let typing = false,
+	timeout = undefined;
+
 $.get("/port", function (data) { //set the port dynamically
 	port = data;
 });
@@ -9,9 +13,14 @@ $.get("/port", function (data) { //set the port dynamically
 var socket = io();
 socket.emit("join", windowBoardId);
 
+$.get("/board/" + windowBoardId + "/messages", (messages) => {
+	messages.forEach(addMessage);
+});
+
 $.get("/board/" + windowBoardId + "/cards", (cards) => {
 	cards.forEach(createCard);
 });
+
 
 function createCard(data) {
 	const card = document.createElement("div");
@@ -129,6 +138,7 @@ function addListeners(card) {
 				sendComment({
 					cardId: card.id,
 					message: $(this).val(),
+					sender: cookieValue("username")
 				});
 				card.querySelector(".commentInput").value = "";
 			}
@@ -231,7 +241,7 @@ socket.on("board-name-update", (data) => {
 
 $("#user-name").on("focusout", function (event) {
 	var name = event.currentTarget.value;
-	$.get("/username", {username: name, credentials: "same-origin"});
+	document.cookie = "username=" + name;
 });
 
 socket.on("board-deleted", (data) => {
@@ -245,7 +255,9 @@ socket.on("comment", (data) => {
 	document.getElementById(data.cardId).querySelector(".commentField").appendChild(comment);
 });
 
-socket.on("message", message => {
+socket.on("message", addMessage);
+
+function addMessage(message) {
 	let usernameEl = $("<b>").text(message.username);
 	let time = new Date(message.time);
 	let timeEl = $("<span>", {class: "text-secondary float-right"}).text(time.getHours() + ":" + time.getMinutes());
@@ -255,7 +267,7 @@ socket.on("message", message => {
 	$("#chatContent").prepend(messageEl);
 	chatRescaleContent();
 	chatScrollBottom();
-});
+}
 
 function getRandomColor() {
 	var letters = "0123456789ABCDEF";
@@ -265,3 +277,42 @@ function getRandomColor() {
 	}
 	return color;
 }
+
+function cookieValue(name) {
+	return decodeURIComponent(document.cookie.split("; ").find(row => row.startsWith(name)).split("=")[1]);
+}
+
+function typingTimeout(){
+	let user = cookieValue('username');
+	typing = false;
+	socket.emit('typing', {user: user, typing: false});
+}
+//listen for keypress in chatinput and emits typing
+$(document).ready(function () {
+	$('#chatInput').keypress((e) => {
+		if (e.which != 13) {
+			typing = true;
+			let user = cookieValue('username');
+			socket.emit('typing', {user:user, typing:true});
+			clearTimeout(timeout);
+			timeout = setTimeout(typingTimeout, 2000);
+		} else {
+			clearTimeout(timeout);
+			typingTimeout();
+		}
+	})
+
+	//display a notification when a user is typing
+	socket.on('display', (data) => {
+		if (data.typing == true){
+			console.log(data.user + " is typing");
+			$("#notificationbox").text(data.user + ` is typing`);
+			chatRescaleContent();
+		}
+		else {
+			$("#notificationbox").text("");
+			chatRescaleContent();
+		}
+	})
+
+});
