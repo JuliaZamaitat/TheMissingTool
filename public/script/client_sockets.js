@@ -109,6 +109,15 @@ function addListeners(card) {
         return false;
     };
 
+    // Create card on board
+    card.querySelector("textarea").addEventListener("dblclick", function (event) {
+        $.post("/", function(data, status) {
+            const newURL = "/board/" + data;
+            window.open(newURL, "_blank");
+            //location.href = "/board/" + data;
+        });
+    });
+
     // Delete card listener
     card.querySelector(".deleteBtn").addEventListener("mousedown", function (event) {
         event.stopPropagation();  //prevent bubbling process so the whole card doesn't start dragging
