@@ -138,7 +138,7 @@ function addListeners(card) {
 				sendComment({
 					cardId: card.id,
 					message: $(this).val(),
-					sender: cookieValue('username')
+					sender: cookieValue("username")
 				});
 				card.querySelector(".commentInput").value = "";
 			}
@@ -241,7 +241,7 @@ socket.on("board-name-update", (data) => {
 
 $("#user-name").on("focusout", function (event) {
 	var name = event.currentTarget.value;
-	$.get("/username", {username: name, credentials: "same-origin"});
+	document.cookie = "username=" + name;
 });
 
 socket.on("board-deleted", (data) => {
@@ -279,7 +279,7 @@ function getRandomColor() {
 }
 
 function cookieValue(name) {
-	return document.cookie.split("; ").find(row => row.startsWith(name)).split("=")[1];
+	return decodeURIComponent(document.cookie.split("; ").find(row => row.startsWith(name)).split("=")[1]);
 }
 
 function typingTimeout(){
