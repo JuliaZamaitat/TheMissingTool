@@ -45,19 +45,3 @@ exports.get_messages = function (req, res) {
 		res.send(board.messages);
 	});
 };
-
-
-exports.add_link = function (req, res) {
-	const filter = {_id: mongoose.Types.ObjectId(req.params.cardId)};
-	const update = {linkId: req.query.linkId};
-
-	Card.findOneAndUpdate(filter, update, {new: true},
-		function (err) {
-			if (err) {
-				console.log("Something wrong when updating data!");
-			} else {
-				res.send("Successfully created link");
-			}
-		}
-	);
-};

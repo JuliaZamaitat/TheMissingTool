@@ -60,9 +60,7 @@ function createCard(data) {
 		querySelector.addEventListener("mousedown", function (event) {
 			$.post("/",
 				function (boardId) {
-					$.post("/card/" + card.id + "?linkId=" + boardId, function (data, status) {
-						convertToLink(card);
-					});
+					socket.emit("add-link", {linkId: boardId, cardId: card.id});
 				});
 		});
 	}
@@ -89,6 +87,7 @@ function convertToLink(card) {
 		});
 	});
 }
+
 
 function addListeners(card) {
 	// Moving card listener
@@ -284,6 +283,11 @@ function addMessage(message) {
 	chatRescaleContent();
 	chatScrollBottom();
 }
+
+socket.on("card-to-link", (data) => {
+	const card = document.getElementById(data);
+	convertToLink(card);
+});
 
 function getRandomColor() {
 	var letters = "0123456789ABCDEF";
