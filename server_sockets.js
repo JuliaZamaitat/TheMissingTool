@@ -15,12 +15,6 @@ module.exports = {
 			});
 
 			socket.on("save-card", function (req) {
-				if (req.type === "LINK") {
-					if (!isValidBoardId(req.linkId)) {
-						req.type = "NORMAL";
-					}
-				}
-
 				const card = new Card(
 					{
 						_id: new mongoose.mongo.ObjectId(),
@@ -31,7 +25,8 @@ module.exports = {
 						},
 						boardId: mongoose.Types.ObjectId(board),
 						type: req.type,
-						linkId: req.linkId
+						linkId: req.linkId,
+						shape: req.shape
 					});
 
 				card.save((err) => {

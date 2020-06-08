@@ -48,6 +48,20 @@ function createCard(data) {
 	}
 
 
+	if (data.shape === "CIRCLE") {
+		adjustStylingToCircle(card);
+	}
+
+	function adjustStylingToCircle(card) {
+		card.style.width ="150px";
+		card.style.height= "150px";
+		card.style.borderRadius = "50%";
+
+		card.querySelector("textarea").style.width ="150px";
+		card.querySelector("textarea").style.height= "150px";
+		card.querySelector("textarea").style.borderRadius = "50%";
+	}
+
 	if (data.type === "LINK") {
 		card.className = "item animate";
 		card.innerHTML = "<div class='buttonContainer'><span type='button' class='link rounded'><i class='fa fa-link'></i></span><span type='button' class='deleteBtn rounded'><i class='fa fa-trash-o'></i></span><span type='button' class='commentBtn rounded'><i class='fa fa-comments'></i></span></div><textarea type='text' value=''></textarea><div class='comments-box'><span class='close-commentBox'>&times;</span><div class='commentField'></div><input placeholder='Add a comment...' class='commentInput'></div>";
@@ -191,12 +205,10 @@ $("#plus").click(() => {
 	});
 });
 
-$("#plus-link").click(() => {
-	var linkId = prompt("please enter your link-id", "");
+$("#plus-circle").click(() => {
 	socket.emit("save-card", {
 		color: getRandomColor(),
-		type: "LINK",
-		linkId: linkId
+		shape: "CIRCLE"
 	});
 });
 
