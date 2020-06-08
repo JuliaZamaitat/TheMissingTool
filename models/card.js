@@ -17,16 +17,11 @@ const mongoose = require("mongoose"),
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "Board"
 		},
-		comments: [{sender: String, message: String, timestamp : Date}],
 		linkId: {
 			type: mongoose.Schema.Types.ObjectId,
-			ref: "Board"
+			default: null
 		},
-		type: {
-			type: String,
-			enum: ["LINK", "NORMAL"],
-			default: "NORMAL"
-		},
+		comments: [{sender: String, message: String, timestamp : Date}]
 	});
 
 module.exports = mongoose.model("Card", cardSchema);

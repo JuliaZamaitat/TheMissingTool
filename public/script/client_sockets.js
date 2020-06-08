@@ -23,9 +23,10 @@ $.get("/board/" + windowBoardId + "/cards", (cards) => {
 
 
 function createCard(data) {
+	console.log(data)
 	const card = document.createElement("div");
 	card.className = "item animate";
-	card.innerHTML = "<div class='buttonContainer'><span type='button' class='deleteBtn rounded'><i class='fa fa-trash-o'></i></span><span type='button' class='commentBtn rounded'><i class='fa fa-comments'></i></span></div><textarea type='text' value=''></textarea><div class='comments-box'><span class='close-commentBox'>&times;</span><div class='commentField'></div><input placeholder='Add a comment...' class='commentInput'></div>";
+	card.innerHTML = "<div class='buttonContainer'><span type='button' class='link rounded'><i class='fa fa-link'></i></span><span type='button' class='deleteBtn rounded'><i class='fa fa-trash-o'></i></span><span type='button' class='commentBtn rounded'><i class='fa fa-comments'></i></span></div><textarea type='text' value=''></textarea><div class='comments-box'><span class='close-commentBox'>&times;</span><div class='commentField'></div><input placeholder='Add a comment...' class='commentInput'></div>";
 	card.id = data._id;
 	if (data.position.left !== null && data.position.right !== null) {
 		card.style.left = data.position.left + "px";
@@ -47,23 +48,33 @@ function createCard(data) {
 		card.querySelector(".commentField").appendChild(comment);
 	}
 
-
-	if (data.type === "LINK") {
+	// only when cards contains link
+	if (data.linkId !== null && data.linkId !== undefined) {
 		card.className = "item animate";
-		card.innerHTML = "<div class='buttonContainer'><span type='button' class='link rounded'><i class='fa fa-link'></i></span><span type='button' class='deleteBtn rounded'><i class='fa fa-trash-o'></i></span><span type='button' class='commentBtn rounded'><i class='fa fa-comments'></i></span></div><textarea type='text' value=''></textarea><div class='comments-box'><span class='close-commentBox'>&times;</span><div class='commentField'></div><input placeholder='Add a comment...' class='commentInput'></div>";
+		card.innerHTML = "<div class='buttonContainer'><span type='button' class='deleteBtn rounded'><i class='fa fa-trash-o'></i></span><span type='button' class='commentBtn rounded'><i class='fa fa-comments'></i></span></div><textarea type='text' value=''></textarea><div class='comments-box'><span class='close-commentBox'>&times;</span><div class='commentField'></div><input placeholder='Add a comment...' class='commentInput'></div>";
+		changeStylingToLink(card);
 		addLinkListeners(card);
-	}
+	} else {
+		let querySelector = card.querySelector(".link");
+		querySelector.addEventListener("mousedown", function (event) {
+			$.post("/",
+				function (boardId) {
+					$.post("/card/" + card.id + "?linkId=" + boardId, function (data, status) {
+						changeStylingToLink(card);
+					});
+				});
+		});
 
+	}
 	addListeners(card);
 	document.getElementById("overlay").appendChild(card);
 }
 
 function addLinkListeners(card) {
 	// Add listener for forwarding to new board
-
-	let querySelector = card.querySelector(".link");
-	querySelector.addEventListener("mousedown", function (event) {
-		$.get("/get-linked-board/" + card.id, function (data, status) {
+	card.querySelector("textarea").addEventListener("mousedown", function () {
+		$.get("/get-linked-board/" + card.id, function (data) {
+			console.log(data)
 			if (data !== null && data !== "") {
 				location.href = "/board/" + data;
 			} else {
@@ -71,6 +82,11 @@ function addLinkListeners(card) {
 			}
 		});
 	});
+}
+
+function changeStylingToLink(card) {
+	card.style.backgroundColor = "transparent";
+	card.style.border = "1px solid blue";
 }
 
 function addListeners(card) {
@@ -195,7 +211,6 @@ $("#plus-link").click(() => {
 	var linkId = prompt("please enter your link-id", "");
 	socket.emit("save-card", {
 		color: getRandomColor(),
-		type: "LINK",
 		linkId: linkId
 	});
 });
@@ -282,37 +297,37 @@ function cookieValue(name) {
 	return decodeURIComponent(document.cookie.split("; ").find(row => row.startsWith(name)).split("=")[1]);
 }
 
-function typingTimeout(){
-	let user = cookieValue('username');
+function typingTimeout() {
+	let user = cookieValue("username");
 	typing = false;
-	socket.emit('typing', {user: user, typing: false});
+	socket.emit("typing", {user: user, typing: false});
 }
+
 //listen for keypress in chatinput and emits typing
 $(document).ready(function () {
-	$('#chatInput').keypress((e) => {
+	$("#chatInput").keypress((e) => {
 		if (e.which != 13) {
 			typing = true;
-			let user = cookieValue('username');
-			socket.emit('typing', {user:user, typing:true});
+			let user = cookieValue("username");
+			socket.emit("typing", {user: user, typing: true});
 			clearTimeout(timeout);
 			timeout = setTimeout(typingTimeout, 2000);
 		} else {
 			clearTimeout(timeout);
 			typingTimeout();
 		}
-	})
+	});
 
 	//display a notification when a user is typing
-	socket.on('display', (data) => {
-		if (data.typing == true){
+	socket.on("display", (data) => {
+		if (data.typing == true) {
 			console.log(data.user + " is typing");
 			$("#notificationbox").text(data.user + ` is typing`);
 			chatRescaleContent();
-		}
-		else {
+		} else {
 			$("#notificationbox").text("");
 			chatRescaleContent();
 		}
-	})
+	});
 
 });

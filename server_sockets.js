@@ -15,12 +15,6 @@ module.exports = {
 			});
 
 			socket.on("save-card", function (req) {
-				if (req.type === "LINK") {
-					if (!isValidBoardId(req.linkId)) {
-						req.type = "NORMAL";
-					}
-				}
-
 				const card = new Card(
 					{
 						_id: new mongoose.mongo.ObjectId(),
@@ -30,7 +24,6 @@ module.exports = {
 							top: null
 						},
 						boardId: mongoose.Types.ObjectId(board),
-						type: req.type,
 						linkId: req.linkId
 					});
 
@@ -176,11 +169,11 @@ module.exports = {
 				});
 			});
 
-			socket.on('typing', (data) => {
-				if(data.typing==true)
-					socket.broadcast.emit('display', data)
+			socket.on("typing", (data) => {
+				if (data.typing == true)
+					socket.broadcast.emit("display", data);
 				else
-					socket.broadcast.emit('display', data)
+					socket.broadcast.emit("display", data);
 			});
 
 		});
