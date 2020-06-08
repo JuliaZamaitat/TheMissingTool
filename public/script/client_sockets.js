@@ -47,7 +47,6 @@ function createCard(data) {
 		card.querySelector(".commentField").appendChild(comment);
 	}
 
-
 	if (data.shape === "CIRCLE") {
 		adjustStylingToCircle(card);
 	}
