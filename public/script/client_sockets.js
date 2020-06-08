@@ -73,8 +73,6 @@ function createCard(data) {
 function convertToLink(card) {
 	const link = card.querySelector(".link");
 	if (card.querySelector(".link")) link.remove();
-	card.style.backgroundColor = "transparent";
-	card.style.border = "1px solid blue";
 	const element = document.createElement("span");
 	element.className = "forward";
 	element.type = "button";

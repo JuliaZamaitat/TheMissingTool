@@ -47,7 +47,7 @@ exports.get_messages = function (req, res) {
 };
 
 
-exports.convert_to_link = function (req, res) {
+exports.add_link = function (req, res) {
 	const filter = {_id: mongoose.Types.ObjectId(req.params.cardId)};
 	const update = {linkId: req.query.linkId};
 

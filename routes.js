@@ -11,7 +11,7 @@ router.get("/board/:boardId", appController.get_username, boardController.get_bo
 router.get("/board/:boardId/cards", boardController.get_cards);
 router.get("/board/:boardId/messages", boardController.get_messages);
 
-router.post("/card/:cardId", boardController.convert_to_link);
+router.post("/card/:cardId", boardController.add_link);
 
 router.get("/port", appController.get_port);
 router.get("/get-linked-board/:cardId", boardController.get_linked_board);
