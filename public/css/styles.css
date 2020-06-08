@@ -415,3 +415,9 @@ textarea:focus {
     height: 23px;
 }
 
+.forward {
+	position: absolute;
+	right: 5px;
+	bottom: 5px;
+}
+

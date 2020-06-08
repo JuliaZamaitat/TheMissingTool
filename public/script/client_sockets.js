@@ -52,29 +52,37 @@ function createCard(data) {
 	if (data.linkId !== null && data.linkId !== undefined) {
 		card.className = "item animate";
 		card.innerHTML = "<div class='buttonContainer'><span type='button' class='deleteBtn rounded'><i class='fa fa-trash-o'></i></span><span type='button' class='commentBtn rounded'><i class='fa fa-comments'></i></span></div><textarea type='text' value=''></textarea><div class='comments-box'><span class='close-commentBox'>&times;</span><div class='commentField'></div><input placeholder='Add a comment...' class='commentInput'></div>";
-		changeStylingToLink(card);
-		addLinkListeners(card);
+
+		convertToLink(card);
+
 	} else {
 		let querySelector = card.querySelector(".link");
 		querySelector.addEventListener("mousedown", function (event) {
 			$.post("/",
 				function (boardId) {
 					$.post("/card/" + card.id + "?linkId=" + boardId, function (data, status) {
-						changeStylingToLink(card);
+						convertToLink(card);
 					});
 				});
 		});
-
 	}
 	addListeners(card);
 	document.getElementById("overlay").appendChild(card);
 }
 
-function addLinkListeners(card) {
-	// Add listener for forwarding to new board
-	card.querySelector("textarea").addEventListener("mousedown", function () {
+function convertToLink(card) {
+	const link = card.querySelector(".link");
+	if (card.querySelector(".link")) link.remove();
+	card.style.backgroundColor = "transparent";
+	card.style.border = "1px solid blue";
+	const element = document.createElement("span");
+	element.className = "forward";
+	element.type = "button";
+	element.innerHTML = "<i class='fa fa-arrow-right'></i>";
+	card.append(element);
+	// Listener for forwarding to new board
+	card.querySelector(".forward").addEventListener("mousedown", function () {
 		$.get("/get-linked-board/" + card.id, function (data) {
-			console.log(data)
 			if (data !== null && data !== "") {
 				location.href = "/board/" + data;
 			} else {
@@ -82,11 +90,6 @@ function addLinkListeners(card) {
 			}
 		});
 	});
-}
-
-function changeStylingToLink(card) {
-	card.style.backgroundColor = "transparent";
-	card.style.border = "1px solid blue";
 }
 
 function addListeners(card) {
