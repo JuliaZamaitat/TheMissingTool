@@ -23,10 +23,13 @@ $.get("/board/" + windowBoardId + "/cards", (cards) => {
 
 
 function createCard(data) {
+
+	// General styling
 	const card = document.createElement("div");
 	card.className = "item animate";
 	card.innerHTML = "<div class='buttonContainer'><span type='button' class='deleteBtn rounded'><i class='fa fa-trash-o'></i></span><span type='button' class='commentBtn rounded'><i class='fa fa-comments'></i></span></div><textarea type='text' value=''></textarea><div class='comments-box'><span class='close-commentBox'>&times;</span><div class='commentField'></div><input placeholder='Add a comment...' class='commentInput'></div>";
 	card.id = data._id;
+	card.style.backgroundColor = data.backgroundColor;
 	if (data.position.left !== null && data.position.right !== null) {
 		card.style.left = data.position.left + "px";
 		card.style.top = data.position.top + "px";
@@ -35,11 +38,11 @@ function createCard(data) {
 		card.style.top = 200 + "px";
 	}
 	card.style.fontSize = data.fontSize;
-	card.style.backgroundColor = data.backgroundColor;
 	if (data.text != null) {
 		card.querySelector("textarea").value = data.text; //Show the card text if defined
 	}
 
+	// Check for comments and add
 	let comments = data.comments;
 	for (let i = comments.length - 1; i > 0; i--) {
 		const comment = document.createElement("div");
@@ -47,20 +50,26 @@ function createCard(data) {
 		card.querySelector(".commentField").appendChild(comment);
 	}
 
-	if (data.shape === "CIRCLE") {
-		adjustStylingToCircle(card);
+	// Adjust stylings to shape
+	switch(data.shape) {
+	case "RECTANGLE":
+		card.classList.add("rectangle");
+		break;
+	case "CIRCLE":
+		card.classList.add("circle");
+		break;
+	case "OVAL":
+		card.classList.add("oval");
+		break;
+	case "TRIANGLE":
+		card.style.backgroundColor = "transparent";
+		card.style.borderColor = "transparent transparent" + data.backgroundColor +  "transparent"
+		card.classList.add("triangle");
+		break;
+	default:
 	}
 
-	function adjustStylingToCircle(card) {
-		card.style.width ="150px";
-		card.style.height= "150px";
-		card.style.borderRadius = "50%";
-
-		card.querySelector("textarea").style.width ="150px";
-		card.querySelector("textarea").style.height= "150px";
-		card.querySelector("textarea").style.borderRadius = "50%";
-	}
-
+	//Check if Link
 	if (data.type === "LINK") {
 		card.className = "item animate";
 		card.innerHTML = "<div class='buttonContainer'><span type='button' class='link rounded'><i class='fa fa-link'></i></span><span type='button' class='deleteBtn rounded'><i class='fa fa-trash-o'></i></span><span type='button' class='commentBtn rounded'><i class='fa fa-comments'></i></span></div><textarea type='text' value=''></textarea><div class='comments-box'><span class='close-commentBox'>&times;</span><div class='commentField'></div><input placeholder='Add a comment...' class='commentInput'></div>";
@@ -69,6 +78,8 @@ function createCard(data) {
 
 	addListeners(card);
 	document.getElementById("overlay").appendChild(card);
+	card.classList.remove("animate");
+	card.style.position = "absolute";
 }
 
 function addLinkListeners(card) {
@@ -92,8 +103,6 @@ function addListeners(card) {
 	card.onmousedown = cardMouseDown;
 
 	function cardMouseDown(e) {
-		card.classList.remove("animate");
-		card.style.position = "absolute";
 		card.style.zIndex = 1000;
 		document.getElementById("overlay").append(card);
 		pos3 = e.clientX;
@@ -204,12 +213,41 @@ $("#plus").click(() => {
 	});
 });
 
+$("#plus-rectangle").click(() => {
+	socket.emit("save-card", {
+		color: getRandomColor(),
+		shape: "RECTANGLE"
+	});
+});
+
 $("#plus-circle").click(() => {
 	socket.emit("save-card", {
 		color: getRandomColor(),
 		shape: "CIRCLE"
 	});
 });
+
+$("#plus-oval").click(() => {
+	socket.emit("save-card", {
+		color: getRandomColor(),
+		shape: "OVAL"
+	});
+});
+
+$("#plus-triangle").click(() => {
+	socket.emit("save-card", {
+		color: getRandomColor(),
+		shape: "TRIANGLE"
+	});
+});
+
+$("#plus-star").click(() => {
+	socket.emit("save-card", {
+		color: getRandomColor(),
+		shape: "STAR"
+	});
+});
+
 
 //Send mere message to server, without username and time
 function sendMessage(message) {
@@ -293,37 +331,37 @@ function cookieValue(name) {
 	return decodeURIComponent(document.cookie.split("; ").find(row => row.startsWith(name)).split("=")[1]);
 }
 
-function typingTimeout(){
-	let user = cookieValue('username');
+function typingTimeout() {
+	let user = cookieValue("username");
 	typing = false;
-	socket.emit('typing', {user: user, typing: false});
+	socket.emit("typing", {user: user, typing: false});
 }
+
 //listen for keypress in chatinput and emits typing
 $(document).ready(function () {
-	$('#chatInput').keypress((e) => {
+	$("#chatInput").keypress((e) => {
 		if (e.which != 13) {
 			typing = true;
-			let user = cookieValue('username');
-			socket.emit('typing', {user:user, typing:true});
+			let user = cookieValue("username");
+			socket.emit("typing", {user: user, typing: true});
 			clearTimeout(timeout);
 			timeout = setTimeout(typingTimeout, 2000);
 		} else {
 			clearTimeout(timeout);
 			typingTimeout();
 		}
-	})
+	});
 
 	//display a notification when a user is typing
-	socket.on('display', (data) => {
-		if (data.typing == true){
+	socket.on("display", (data) => {
+		if (data.typing == true) {
 			console.log(data.user + " is typing");
 			$("#notificationbox").text(data.user + ` is typing`);
 			chatRescaleContent();
-		}
-		else {
+		} else {
 			$("#notificationbox").text("");
 			chatRescaleContent();
 		}
-	})
+	});
 
 });

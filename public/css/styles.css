@@ -189,7 +189,7 @@ textarea:focus {
 }
 
 .toolbar-btn:hover {
-	width: 120px;
+	width: 150px;
 }
 
 .toolbar-btn:hover span {
@@ -234,7 +234,7 @@ textarea:focus {
 
 
 .buttonContainer {
-	width: 150px;
+	width: 100%;
 	font-size: 18px;
 	display: none;
 	position: absolute;
@@ -414,4 +414,78 @@ textarea:focus {
 .active {
     height: 23px;
 }
+
+.rectangle {
+	width: 200px;
+	height: 100px;
+}
+
+.rectangle textarea {
+	width: 200px;
+	height: 100px;
+}
+
+.circle {
+	width: 150px;
+	height: 150px;
+	border-radius: 50%
+}
+
+.circle textarea{
+	width: 150px;
+	height: 150px;
+	border-radius: 50%;
+	padding: 20px;
+}
+
+.oval {
+	width: 200px;
+	height: 100px;
+	border-radius: 100px / 50px;
+}
+
+.oval textarea{
+	width: 200px;
+	height: 100px;
+	border-radius: 100px / 50px;
+	padding: 20px;
+}
+
+.triangle {
+	width: 0;
+	height: 0;
+	border-style: inset;
+	border-width: 0 100px 173px 100px;
+	border-color: transparent transparent #007bff transparent;
+	float: left;
+	transform: rotate(360deg);
+	-ms-transform: rotate(360deg);
+	-moz-transform: rotate(360deg);
+	-webkit-transform: rotate(360deg);
+	-o-transform: rotate(360deg);
+}
+
+.triangle textarea {
+	text-align: center;
+	top: 80px;
+	left: -47px;
+	position: relative;
+	width: 93px;
+	height: 93px;
+	margin: 0px;
+	cursor: pointer;
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+
+}
+
+.triangle textarea:focus {
+	cursor: pointer;
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+
+
 

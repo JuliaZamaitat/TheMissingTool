@@ -10,8 +10,8 @@ const mongoose = require("mongoose"),
 		fontSize: Number,
 		shape: {
 			type: String,
-			enum: ["RECTANGLE", "CIRCLE", "TRIANGLE", "ELLIPSE"],
-			default: "RECTANGLE"
+			enum: ["SQUARE", "CIRCLE", "TRIANGLE", "OVAL", "STAR", "RECTANGLE"],
+			default: "SQUARE"
 		},
 		boardId: {
 			type: mongoose.Schema.Types.ObjectId,
