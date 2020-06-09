@@ -100,6 +100,7 @@ function addListeners(card) {
 	}
 
 	function closeDragCard() {
+		isOverlappingAny();
 		sendPosChange({
 			_id: card.id,
 			position: {
@@ -110,6 +111,47 @@ function addListeners(card) {
 		document.onmouseup = null;
 		document.onmousemove = null;
 
+	}
+
+	function isOverlappingAny() {
+		let allCards = document.getElementsByClassName("item");
+		for (let i = 0; i < allCards.length; i++) {
+			if (isOverlapping(allCards[i], card) === true) {
+				if (allCards[i].id !== card.id) {
+					$.get("/get-linked-board/" + allCards[i].id, function (linkedBoard) {
+						console.log(linkedBoard);
+						if (linkedBoard !== null && linkedBoard !== "") {
+							socket.emit("move-card", {cardId: card.id, boardId: linkedBoard});
+							card.remove();
+						}
+					});
+				}
+			}
+		}
+	}
+
+	function isOverlapping(first, second) {
+		if (first.length && first.length > 1) {
+			first = first[0];
+		}
+		if (second.length && second.length > 1) {
+			second = second[0];
+		}
+		const element1 = first instanceof Element ? first.getBoundingClientRect() : false;
+		const element2 = second instanceof Element ? second.getBoundingClientRect() : false;
+
+		let overlap = null;
+		if (element1 && element2) {
+			overlap = !(
+				element1.right < element2.left ||
+				element1.left > element2.right ||
+				element1.bottom < element2.top ||
+				element1.top > element2.bottom
+			);
+			return overlap;
+		} else {
+			return overlap;
+		}
 	}
 
 	function sendPosChange(update) {
@@ -257,6 +299,10 @@ socket.on("comment", (data) => {
 
 socket.on("message", addMessage);
 
+socket.on("display-card", (data) => {
+	createCard(data);
+})
+
 function addMessage(message) {
 	let usernameEl = $("<b>").text(message.username);
 	let time = new Date(message.time);
@@ -282,37 +328,37 @@ function cookieValue(name) {
 	return decodeURIComponent(document.cookie.split("; ").find(row => row.startsWith(name)).split("=")[1]);
 }
 
-function typingTimeout(){
-	let user = cookieValue('username');
+function typingTimeout() {
+	let user = cookieValue("username");
 	typing = false;
-	socket.emit('typing', {user: user, typing: false});
+	socket.emit("typing", {user: user, typing: false});
 }
+
 //listen for keypress in chatinput and emits typing
 $(document).ready(function () {
-	$('#chatInput').keypress((e) => {
+	$("#chatInput").keypress((e) => {
 		if (e.which != 13) {
 			typing = true;
-			let user = cookieValue('username');
-			socket.emit('typing', {user:user, typing:true});
+			let user = cookieValue("username");
+			socket.emit("typing", {user: user, typing: true});
 			clearTimeout(timeout);
 			timeout = setTimeout(typingTimeout, 2000);
 		} else {
 			clearTimeout(timeout);
 			typingTimeout();
 		}
-	})
+	});
 
 	//display a notification when a user is typing
-	socket.on('display', (data) => {
-		if (data.typing == true){
+	socket.on("display", (data) => {
+		if (data.typing == true) {
 			console.log(data.user + " is typing");
 			$("#notificationbox").text(data.user + ` is typing`);
 			chatRescaleContent();
-		}
-		else {
+		} else {
 			$("#notificationbox").text("");
 			chatRescaleContent();
 		}
-	})
+	});
 
 });
