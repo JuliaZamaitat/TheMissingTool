@@ -155,6 +155,8 @@ textarea:focus {
 	overflow: visible;
 	transition: ease-in-out .3s;
 	box-shadow: 1px 1px 3px rgba(0, 0, 0, .3);
+	z-index: 999999999999999;
+
 }
 
 #toolbar:hover {
@@ -169,6 +171,7 @@ textarea:focus {
 	overflow: hidden;
 	position: relative;
 	transition: ease-in-out .3s !important;
+
 }
 
 .toolbar-btn i {
