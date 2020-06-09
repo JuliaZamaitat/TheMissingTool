@@ -60,7 +60,44 @@ function createCard(data) {
 		card.querySelector("textarea").style.height= "150px";
 		card.querySelector("textarea").style.borderRadius = "50%";
 	}
+	if(data.shape=== "RECTANGLE"){
+		adjustStylingToRectangle(card);
+	}
+	function adjustStylingToRectangle(card){
+		card.style.width ="150px";
+		card.style.height="100px";
 
+		card.querySelector("textarea").style.width="150px";
+		card.querySelector("textarea").style.height="100px";
+	}
+	if(data.shape==="TRIANGLE"){
+		adjustStylingToTriangle(card);
+	}
+	function adjustStylingToTriangle(card) {
+  card.style.width="0px";
+  card.style.height="0px";
+  card.style.borderBottom= "150px";
+  card.style.borderLeft="60px";
+  card.style.borderRight="60px";
+
+  card.querySelector("textarea").style.width="0px";
+  card.querySelector("textarea").style.height="0px";
+  card.querySelector("textarea").style.borderBottom="150px";
+  card.querySelector("textarea").style.borderRight="60px";
+  card.querySelector("textarea").style.borderLeft="60px";
+	}
+	if(data.shape==="ELLIPSE"){
+		adjustStylingToEllipse(card);
+	}
+	function adjustStylingToEllipse(card) {
+     card.style.width="200px";
+     card.style.height="100px";
+     card.style.borderRadius="50%";
+
+     card.querySelector("textarea").style.width="200px";
+     card.querySelector("textarea").style.height="100px";
+     card.querySelector("textarea").style.borderRadius="50%";
+	}
 	if (data.type === "LINK") {
 		card.className = "item animate";
 		card.innerHTML = "<div class='buttonContainer'><span type='button' class='link rounded'><i class='fa fa-link'></i></span><span type='button' class='deleteBtn rounded'><i class='fa fa-trash-o'></i></span><span type='button' class='commentBtn rounded'><i class='fa fa-comments'></i></span></div><textarea type='text' value=''></textarea><div class='comments-box'><span class='close-commentBox'>&times;</span><div class='commentField'></div><input placeholder='Add a comment...' class='commentInput'></div>";
