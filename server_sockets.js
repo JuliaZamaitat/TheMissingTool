@@ -95,6 +95,23 @@ module.exports = {
 				);
 			});
 
+			socket.on("update-color", function(req) {
+				const filter = {_id: mongoose.Types.ObjectId(req._id)};
+				const update = {backgroundColor: req.backgroundColor};
+
+				Card.findOneAndUpdate(filter, update, {new: true},
+					function (err) {
+						if (err) {
+							console.log("Something wrong when updating data!");
+						}
+						socket.broadcast.to(board).emit("color-update", JSON.stringify({
+							_id: req._id,
+							backgroundColor: req.backgroundColor
+						}));
+					}
+				);
+			});
+
 			socket.on("update-board-name", function (req) {
 				const filter = {_id: mongoose.Types.ObjectId(req._id)};
 				const update = {name: req.name};
