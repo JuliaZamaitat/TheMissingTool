@@ -223,11 +223,11 @@ module.exports = {
 				});
 			});
 
-			socket.on('typing', (data) => {
+			socket.on("typing", (data) => {
 				if(data.typing==true)
-					socket.broadcast.emit('display', data)
+					socket.broadcast.emit("display", data);
 				else
-					socket.broadcast.emit('display', data)
+					socket.broadcast.emit("display", data);
 			});
 
 		});
