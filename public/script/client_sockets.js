@@ -1,17 +1,21 @@
+
+
 let url = window.location.href;
 let windowBoardId = url.substr(url.lastIndexOf("/") + 1);
 let colors = ["#c50c08", "#31a023", "#385bd6", "#d2c72a"];
-let usernames = [];
+
 //typing notification
 let typing = false,
 	timeout = undefined;
-
-$.get("/port", function (data) { //set the port dynamically
-	port = data;
-});
-
+var userList = [];
 var socket = io();
-socket.emit("join", {boardId: windowBoardId, name: cookieValue("username")});
+
+
+
+window.onbeforeunload = function(){
+
+};
+
 
 $.get("/board/" + windowBoardId + "/messages", (messages) => {
 	messages.forEach(addMessage);
@@ -21,12 +25,20 @@ $.get("/board/" + windowBoardId + "/cards", (cards) => {
 	cards.forEach(createCard);
 });
 
-socket.on("user-joined", (name) => {
-	const username = document.createElement("div");
-	 username.innerHTML = "<p>" + name + "</p>";
-	 usernames.push(username);
-	 console.log(usernames);
-	$(".users").append(usernames);
+socket.on("update-users", (users) => {
+	userList = users;
+	// let username = document.createElement("p");
+	// username.innerText = name;
+
+	 $(".users").empty();
+	// console.log(users);
+	for(var i=0; i<userList.length; i++) {
+		let username = document.createElement("p");
+		username.innerText = userList[i];
+		console.log(username);
+      $(".users").append(username);
+		}
+	// $(".users").append(username);
 });
 
 
@@ -441,6 +453,7 @@ function typingTimeout(){
 }
 //listen for keypress in chatinput and emits typing
 $(document).ready(function () {
+	socket.emit("join", {boardId: windowBoardId, name: cookieValue("username")});
 	$('#chatInput').keypress((e) => {
 		if (e.which != 13) {
 			typing = true;

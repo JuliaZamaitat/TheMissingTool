@@ -1,6 +1,7 @@
 const mongoose = require("mongoose"),
 	Card = require("./models/card"),
 	Board = require("./models/board");
+var users = [];
 
 module.exports = {
 	start: function (io) {
@@ -9,13 +10,26 @@ module.exports = {
 			console.log("a user connected with id %s", socket.id);
 
 			socket.on("join", function (obj) {
+				socket.user = obj.name;
+				users.push(obj.name);
 				let room = obj.boardId;
 				socket.join(room);
 				board = room;
-				io.to(board).emit("user-joined");
-				socket.broadcast.to(board).emit("user-joined", obj.name);
+				socket.broadcast.to(board).emit("update-users", users);
+				// console.log(users);
 				console.log(socket.id, "joined", room);
 			});
+
+			socket.on("disconnect", function () {
+         for(var i=0; i<users.length; i++) {
+             if(users[i] == socket.user) {
+							  users.splice(i, 1);
+             }
+
+         }
+         socket.broadcast.to(board).emit("update-users", users);
+     });
+
 
 
 			socket.on("add-link", function (incoming) {
