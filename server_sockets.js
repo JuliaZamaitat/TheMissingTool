@@ -10,13 +10,17 @@ module.exports = {
 			console.log("a user connected with id %s", socket.id);
 
 			socket.on("join", function (obj) {
-				socket.user = obj.name;
-				users.push(obj.name);
+				let username = obj.name;
+				socket.user = username;
+				if(!users.includes(username)){
+					console.log("Here");
+					users.push(username);
+				}
 				let room = obj.boardId;
 				socket.join(room);
 				board = room;
-				socket.broadcast.to(board).emit("update-users", users);
-				socket.broadcast.to(board).emit("request-present-users");
+				socket.broadcast.emit("update-users", users);
+				socket.broadcast.emit("request-present-users");
 				console.log(socket.id, "joined", room);
 			});
 
@@ -26,7 +30,7 @@ module.exports = {
 						users.splice(i, 1);
 					}
 				}
-				socket.broadcast.to(board).emit("update-users", users);
+				socket.broadcast.emit("update-users", users);
 			});
 
 			socket.on("collect-usernames", name =>{
