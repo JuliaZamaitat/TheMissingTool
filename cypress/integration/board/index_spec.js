@@ -7,7 +7,7 @@ describe("The Board Index Page", () => {
 	});
 
 	it("shows the name of the board", () => {
-		cy.get("#board-name").should("have.value", "Cooles Board");
+		cy.get("#board-name").should("have.text", "Cooles Board");
 	});
 
 	it("shows the text of the cards", () => {
@@ -21,7 +21,7 @@ describe("The Board Index Page", () => {
 			.find(row => row.startsWith("username"))
 			.split("=")[1];
 		username = decodeURI(username);
-		cy.get("#user-name").should("have.value", username);
+		cy.get("#user-name").should("have.text", username);
 	});
 
 	it("shows the chat window", () => {
