@@ -134,7 +134,7 @@ function addListeners(card) {
 				sendComment({
 					cardId: card.id,
 					message: $(this).val(),
-					sender: cookieValue('username')
+					sender: cookieValue("username")
 				});
 				card.querySelector(".commentInput").value = "";
 			}

@@ -298,6 +298,7 @@ textarea:focus {
 
 #chatHeader {
 	cursor: pointer;
+	user-select:none;
 }
 
 #chatBody {
@@ -415,3 +416,13 @@ textarea:focus {
     height: 23px;
 }
 
+#mic {
+	position: absolute;
+	right: 0;
+	padding: inherit;
+	border-radius: 50%;
+}
+
+#mic:hover {
+	background:lightgray;
+}
