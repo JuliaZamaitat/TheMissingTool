@@ -24,6 +24,7 @@ $.get("/board/" + windowBoardId + "/cards", (cards) => {
 
 
 function createCard(data) {
+	console.log(data)
 	const card = document.createElement("div");
 	card.className = "item animate";
 
@@ -37,7 +38,7 @@ function createCard(data) {
 
 	const buttons = document.createElement("div");
 	buttons.className = "buttonContainer";
-	buttons.innerHTML = "<span type='button' class='btn btn-outline-primary colorChangeBtn rounded'><div class='colorChangeOptions'></div><i class='fa fa-edit'></i></span><span type='button' class='btn btn-outline-danger deleteBtn rounded'><i class='fa fa-trash-o'></i></span><span type='button' class='btn btn-outline-warning commentBtn rounded'><i class='fa fa-comments'></i></span>";
+	buttons.innerHTML = "<span type='button' class='link rounded'><i class='fa fa-link'></i></span><span type='button' class='btn btn-outline-primary colorChangeBtn rounded'><div class='colorChangeOptions'></div><i class='fa fa-edit'></i></span><span type='button' class='btn btn-outline-danger deleteBtn rounded'><i class='fa fa-trash-o'></i></span><span type='button' class='btn btn-outline-warning commentBtn rounded'><i class='fa fa-comments'></i></span>";
 	card.innerHTML = "<textarea type='text' value=''></textarea><div class='comments-box'><span class='close-commentBox'>&times;</span><div class='commentField'></div><input placeholder='Add a comment...' class='commentInput'></div>";
 	card.prepend(buttons);
 
@@ -63,22 +64,35 @@ function createCard(data) {
 		card.querySelector(".commentField").appendChild(comment);
 	}
 
-	if (data.type === "LINK") {
-		card.className = "item animate";
-		card.innerHTML = "<div class='buttonContainer'><span type='button' class='colorChangeBtn rounded'><i class='fa fa-palette'></i></span><span type='button' class='link rounded'><i class='fa fa-link'></i></span><span type='button' class='deleteBtn rounded'><i class='fa fa-trash-o'></i></span><span type='button' class='commentBtn rounded'><i class='fa fa-comments'></i></span></div><textarea type='text' value=''></textarea><div class='comments-box'><span class='close-commentBox'>&times;</span><div class='commentField'></div><input placeholder='Add a comment...' class='commentInput'></div>";
-		addLinkListeners(card);
-	}
+	if (data.linkId !== null && data.linkId !== undefined) {
+		convertToLink(card);
 
-	addListeners(card, data);
+	} else {
+		let querySelector = card.querySelector(".link");
+		querySelector.addEventListener("mousedown", function (event) {
+			$.post("/",
+				function (boardId) {
+				console.log(boardId)
+					socket.emit("add-link", {linkId: boardId, cardId: card.id});
+				});
+		});
+	}
+	addListeners(card);
 	document.getElementById("overlay").appendChild(card);
 }
 
-function addLinkListeners(card) {
-	// Add listener for forwarding to new board
-
-	let querySelector = card.querySelector(".link");
-	querySelector.addEventListener("mousedown", function (event) {
-		$.get("/get-linked-board/" + card.id, function (data, status) {
+function convertToLink(card) {
+	const link = card.querySelector(".link");
+	if (card.querySelector(".link"))
+		link.remove();
+	const element = document.createElement("span");
+	element.className = "forward";
+	element.type = "button";
+	element.innerHTML = "<i class='fa fa-arrow-right'></i>";
+	card.append(element);
+	// Listener for forwarding to new board
+	card.querySelector(".forward").addEventListener("mousedown", function () {
+		$.get("/get-linked-board/" + card.id, function (data) {
 			if (data !== null && data !== "") {
 				location.href = "/board/" + data;
 			} else {
@@ -88,7 +102,8 @@ function addLinkListeners(card) {
 	});
 }
 
-function addListeners(card, data) {
+
+function addListeners(card) {
 	// Moving card listener
 	let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
 	card.onmousedown = cardMouseDown;
@@ -284,6 +299,11 @@ socket.on("color-update", (data) => {
 socket.on("delete-card", (data) => {
 	const card = JSON.parse(data);
 	$("#" + card._id).remove(); //remove the card element by its ID
+});
+
+socket.on("card-to-link", (data) => {
+	const card = document.getElementById(data);
+	convertToLink(card);
 });
 
 socket.on("board-name-update", (data) => {

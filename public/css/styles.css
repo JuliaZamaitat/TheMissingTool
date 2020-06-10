@@ -56,6 +56,13 @@ body {
 	border-radius: 50%;
 	padding: 2rem;
 }
+
+.circle .forward {
+	position: absolute;
+	right: 25px;
+	bottom: 25px;
+}
+
 .triangle {
 	width: 0;
 	height: 0;
@@ -70,6 +77,7 @@ body {
 }
 
 .rectangle {
+	position: absolute;
 	width: 200px;
 	height: 100px;
 }
@@ -77,6 +85,12 @@ body {
 .rectangle textarea {
 	width: 200px;
 	height: 100px;
+}
+
+.rectangle .forward {
+	position: absolute;
+	right: 5px;
+	bottom: 5px;
 }
 
 .triangle textarea {
@@ -100,6 +114,13 @@ body {
 	-webkit-box-shadow: none;
 	box-shadow: none;
 }
+
+.triangle .forward {
+	position: absolute;
+	right: -85px;
+	bottom: -170px;
+}
+
 .ellipse {
 	width: 200px;
     height: 100px;
@@ -110,14 +131,26 @@ body {
 	padding: 2rem;
 }
 
+.ellipse .forward {
+	position: absolute;
+	right: 20px;
+	bottom: 20px;
+}
+
 .square {
-	width: 200px;
-	height: 100px;
+	width: 150px;
+	height: 150px;
 }
 
 .square textarea {
-	width: 200px;
-	height: 100px;
+	width: 150px;
+	height: 150px;
+}
+
+.square .forward {
+	position: absolute;
+	right: 5px;
+	bottom: 5px;
 }
 
 textarea:hover {
@@ -503,4 +536,3 @@ textarea:focus {
 .active {
     height: 23px;
 }
-

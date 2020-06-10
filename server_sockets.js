@@ -14,6 +14,21 @@ module.exports = {
 				console.log(socket.id, "joined", room);
 			});
 
+			socket.on("add-link", function (incoming) {
+				const filter = {_id: mongoose.Types.ObjectId(incoming.cardId)};
+				const update = {linkId: incoming.linkId};
+
+				Card.findOneAndUpdate(filter, update, {new: true},
+					function (err) {
+						if (err) {
+							console.log("Something wrong when updating data!");
+						} else {
+							io.to(board).emit("card-to-link", incoming.cardId);
+						}
+					}
+				);
+			});
+
 			socket.on("save-card", function (req) {
 				const card = new Card(
 					{
