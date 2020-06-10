@@ -11,6 +11,7 @@ module.exports = {
 			socket.on("join", function (room) {
 				socket.join(room);
 				board = room;
+				io.to(board).emit("add-user-icon-to-room");
 				console.log(socket.id, "joined", room);
 			});
 

@@ -22,6 +22,13 @@ $.get("/board/" + windowBoardId + "/cards", (cards) => {
 	cards.forEach(createCard);
 });
 
+socket.on("add-user-icon-to-room", () => {
+	const username = document.createElement("div");
+	 username.innerHTML = "<p>" + cookieValue("username") + "</p>";
+	$(".users").append(username);
+
+});
+
 
 function createCard(data) {
 	console.log(data)
