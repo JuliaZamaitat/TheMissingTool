@@ -8,10 +8,12 @@ module.exports = {
 			let board;
 			console.log("a user connected with id %s", socket.id);
 
-			socket.on("join", function (room) {
+			socket.on("join", function (obj) {
+				let room = obj.boardId;
 				socket.join(room);
 				board = room;
 				io.to(board).emit("user-joined");
+				socket.broadcast.to(board).emit("user-joined", obj.name);
 				console.log(socket.id, "joined", room);
 			});
 

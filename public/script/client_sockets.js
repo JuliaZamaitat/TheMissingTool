@@ -11,7 +11,7 @@ $.get("/port", function (data) { //set the port dynamically
 });
 
 var socket = io();
-socket.emit("join", windowBoardId);
+socket.emit("join", {boardId: windowBoardId, name: cookieValue("username")});
 
 $.get("/board/" + windowBoardId + "/messages", (messages) => {
 	messages.forEach(addMessage);
@@ -21,14 +21,12 @@ $.get("/board/" + windowBoardId + "/cards", (cards) => {
 	cards.forEach(createCard);
 });
 
-socket.on("user-joined", () => {
+socket.on("user-joined", (name) => {
 	const username = document.createElement("div");
-	 username.innerHTML = "<p>" + cookieValue("username") + "</p>";
+	 username.innerHTML = "<p>" + name + "</p>";
 	 usernames.push(username);
 	 console.log(usernames);
 	$(".users").append(usernames);
-
-
 });
 
 
