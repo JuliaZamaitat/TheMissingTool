@@ -10,8 +10,8 @@ const mongoose = require("mongoose"),
 		fontSize: Number,
 		shape: {
 			type: String,
-			enum: ["RECTANGLE", "CIRCLE", "TRIANGLE", "ELLIPSE"],
-			default: "RECTANGLE"
+			enum: ["SQUARE", "RECTANGLE", "CIRCLE", "TRIANGLE", "ELLIPSE"],
+			default: "SQUARE"
 		},
 		boardId: {
 			type: mongoose.Schema.Types.ObjectId,
@@ -20,13 +20,8 @@ const mongoose = require("mongoose"),
 		comments: [{sender: String, message: String, timestamp : Date}],
 		linkId: {
 			type: mongoose.Schema.Types.ObjectId,
-			ref: "Board"
-		},
-		type: {
-			type: String,
-			enum: ["LINK", "NORMAL"],
-			default: "NORMAL"
-		},
+			default: null
+		}
 	});
 
 module.exports = mongoose.model("Card", cardSchema);

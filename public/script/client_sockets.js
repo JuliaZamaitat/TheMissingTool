@@ -1,6 +1,6 @@
 let url = window.location.href;
 let windowBoardId = url.substr(url.lastIndexOf("/") + 1);
-let port;
+let colors = ["#c50c08", "#31a023", "#385bd6", "#d2c72a"];
 
 //typing notification
 let typing = false,
@@ -23,10 +23,27 @@ $.get("/board/" + windowBoardId + "/cards", (cards) => {
 
 
 function createCard(data) {
+	console.log(data);
 	const card = document.createElement("div");
 	card.className = "item animate";
-	card.innerHTML = "<div class='buttonContainer'><span type='button' class='deleteBtn rounded'><i class='fa fa-trash-o'></i></span><span type='button' class='commentBtn rounded'><i class='fa fa-comments'></i></span></div><textarea type='text' value=''></textarea><div class='comments-box'><span class='close-commentBox'>&times;</span><div class='commentField'></div><input placeholder='Add a comment...' class='commentInput'></div>";
+
+	card.style.backgroundColor = data.backgroundColor;
+	card.classList.add(data.shape.toLowerCase());
+
+	if (data.shape === "TRIANGLE") {
+		card.style.borderColor = "transparent transparent " + data.backgroundColor +  " transparent";
+		card.style.backgroundColor = "transparent";
+	}
+
+	const buttons = document.createElement("div");
+	buttons.className = "buttonContainer";
+	buttons.innerHTML = "<span type='button' class='link rounded'><i class='fa fa-link'></i></span><span type='button' class='btn btn-outline-primary colorChangeBtn rounded'><div class='colorChangeOptions'></div><i class='fa fa-edit'></i></span><span type='button' class='btn btn-outline-danger deleteBtn rounded'><i class='fa fa-trash-o'></i></span><span type='button' class='btn btn-outline-warning commentBtn rounded'><i class='fa fa-comments'></i></span>";
+	card.innerHTML = "<textarea type='text' value=''></textarea><div class='comments-box'><span class='close-commentBox'>&times;</span><div class='commentField'></div><input placeholder='Add a comment...' class='commentInput'></div>";
+	card.prepend(buttons);
+
 	card.id = data._id;
+	assignColorsToChange(card);
+
 	if (data.position.left !== null && data.position.right !== null) {
 		card.style.left = data.position.left + "px";
 		card.style.top = data.position.top + "px";
@@ -35,7 +52,6 @@ function createCard(data) {
 		card.style.top = 200 + "px";
 	}
 	card.style.fontSize = data.fontSize;
-	card.style.backgroundColor = data.backgroundColor;
 	if (data.text != null) {
 		card.querySelector("textarea").value = data.text; //Show the card text if defined
 	}
@@ -47,23 +63,35 @@ function createCard(data) {
 		card.querySelector(".commentField").appendChild(comment);
 	}
 
+	if (data.linkId !== null && data.linkId !== undefined) {
+		convertToLink(card);
 
-	if (data.type === "LINK") {
-		card.className = "item animate";
-		card.innerHTML = "<div class='buttonContainer'><span type='button' class='link rounded'><i class='fa fa-link'></i></span><span type='button' class='deleteBtn rounded'><i class='fa fa-trash-o'></i></span><span type='button' class='commentBtn rounded'><i class='fa fa-comments'></i></span></div><textarea type='text' value=''></textarea><div class='comments-box'><span class='close-commentBox'>&times;</span><div class='commentField'></div><input placeholder='Add a comment...' class='commentInput'></div>";
-		addLinkListeners(card);
+	} else {
+		let querySelector = card.querySelector(".link");
+		querySelector.addEventListener("mousedown", function (event) {
+			$.post("/",
+				function (boardId) {
+				console.log(boardId)
+					socket.emit("add-link", {linkId: boardId, cardId: card.id});
+				});
+		});
 	}
-
 	addListeners(card);
 	document.getElementById("overlay").appendChild(card);
 }
 
-function addLinkListeners(card) {
-	// Add listener for forwarding to new board
-
-	let querySelector = card.querySelector(".link");
-	querySelector.addEventListener("mousedown", function (event) {
-		$.get("/get-linked-board/" + card.id, function (data, status) {
+function convertToLink(card) {
+	const link = card.querySelector(".link");
+	if (card.querySelector(".link"))
+		link.remove();
+	const element = document.createElement("span");
+	element.className = "forward";
+	element.type = "button";
+	element.innerHTML = "<i class='fa fa-arrow-right'></i>";
+	card.append(element);
+	// Listener for forwarding to new board
+	card.querySelector(".forward").addEventListener("mousedown", function () {
+		$.get("/get-linked-board/" + card.id, function (data) {
 			if (data !== null && data !== "") {
 				location.href = "/board/" + data;
 			} else {
@@ -72,6 +100,7 @@ function addLinkListeners(card) {
 		});
 	});
 }
+
 
 function addListeners(card) {
 	// Moving card listener
@@ -100,6 +129,7 @@ function addListeners(card) {
 	}
 
 	function closeDragCard() {
+		isOverlappingAny();
 		sendPosChange({
 			_id: card.id,
 			position: {
@@ -110,6 +140,48 @@ function addListeners(card) {
 		document.onmouseup = null;
 		document.onmousemove = null;
 
+	}
+
+	function isOverlappingAny() {
+		let allCards = document.getElementsByClassName("item");
+		for (let i = 0; i < allCards.length; i++) {
+			if (isOverlapping(allCards[i], card) === true) {
+				let idFromOverlappingCard = allCards[i].id;
+				if (idFromOverlappingCard !== card.id) {
+					$.get("/get-linked-board/" + idFromOverlappingCard, function (linkedBoard) {
+						console.log(linkedBoard);
+						if (linkedBoard !== null && linkedBoard !== "") {
+							socket.emit("move-card", {cardId: card.id, boardId: linkedBoard});
+							card.remove();
+						}
+					});
+				}
+			}
+		}
+	}
+
+	function isOverlapping(first, second) {
+		if (first.length && first.length > 1) {
+			first = first[0];
+		}
+		if (second.length && second.length > 1) {
+			second = second[0];
+		}
+		const element1 = first instanceof Element ? first.getBoundingClientRect() : false;
+		const element2 = second instanceof Element ? second.getBoundingClientRect() : false;
+
+		let overlap = null;
+		if (element1 && element2) {
+			overlap = !(
+				element1.right < element2.left ||
+				element1.left > element2.right ||
+				element1.bottom < element2.top ||
+				element1.top > element2.bottom
+			);
+			return overlap;
+		} else {
+			return overlap;
+		}
 	}
 
 	function sendPosChange(update) {
@@ -156,6 +228,18 @@ function addListeners(card) {
 			text: event.currentTarget.value
 		});
 	});
+
+	// Change card color
+	let colorButtons = card.querySelectorAll(".color-change-btn");
+	colorButtons.forEach(function(btn) {
+		btn.addEventListener("mousedown", function(event) {
+			socket.emit("update-color", {
+				_id: card.id,
+				backgroundColor: event.currentTarget.id,
+				shape: data.shape
+			});
+		});
+	});
 }
 
 // event listeners for board
@@ -163,7 +247,7 @@ $("#board-name").on("input", function (event) {
 	console.log("In Ajax ");
 	socket.emit("update-board-name", {
 		_id: windowBoardId,
-		name: event.currentTarget.value
+		name: $(this).text()
 	});
 });
 
@@ -185,20 +269,36 @@ function exportBoard() {
 }
 
 // event listener for toolbar buttons
-$("#plus").click(() => {
-	socket.emit("save-card", {
-		color: getRandomColor()
-	});
-});
+assignColorsToCreate();
+createCardOnClick();
+function createCardOnClick() {
+	var color_picked = false;
 
-$("#plus-link").click(() => {
-	var linkId = prompt("please enter your link-id", "");
-	socket.emit("save-card", {
-		color: getRandomColor(),
-		type: "LINK",
-		linkId: linkId
+	$(".create-card-btn").each(function() {
+		$(this).mousedown(() => {
+			if (!color_picked) {
+				socket.emit("save-card", {
+					color: getRandomColor(),
+					shape: $(this).attr("id")
+				});
+			} else {
+				return;
+			}
+		}).mouseup(() => {
+			color_picked = false;
+		});
 	});
-});
+
+	$(".color-btn").each(function() {
+		$(this).mousedown(() => {
+			color_picked = true;
+			socket.emit("save-card", {
+				color: $(this).attr("id"),
+				shape: $(this).closest(".create-card-btn").attr("id")
+			});
+		});
+	});
+}
 
 //Send mere message to server, without username and time
 function sendMessage(message) {
@@ -227,20 +327,36 @@ socket.on("text-update", (data) => {
 	$("#" + card._id).find("textarea").val(card.text);
 });
 
+socket.on("color-update", (data) => {
+	const card = JSON.parse(data);
+	let elementById = document.getElementById(card._id);
+	if (card.shape === "TRIANGLE") {
+		elementById.style.borderColor = "transparent transparent " + card.backgroundColor + " transparent";
+	} else {
+		elementById.style.backgroundColor = card.backgroundColor;
+	}
+
+});
+
 socket.on("delete-card", (data) => {
 	const card = JSON.parse(data);
 	$("#" + card._id).remove(); //remove the card element by its ID
 });
 
+socket.on("card-to-link", (data) => {
+	const card = document.getElementById(data);
+	convertToLink(card);
+});
+
 socket.on("board-name-update", (data) => {
 	console.log("Im Update");
 	const name = JSON.parse(data).name;
-	$("#board-name").val(name);
-	$("#board-name").css("width", name.length / 1.5 + "rem");
+	// $("#board-name").val(name);
+	// $("#board-name").css("width", name.length / 1.5 + "rem");
 });
 
 $("#user-name").on("focusout", function (event) {
-	var name = event.currentTarget.value;
+	var name = $(this).text();
 	document.cookie = "username=" + name;
 });
 
@@ -254,6 +370,10 @@ socket.on("comment", (data) => {
 	comment.innerHTML = "<p class='senderName'>" + data.sender + "</p><p class='commentMessage'>" + data.message + "</p><p class='timestamp'>" + new Date(data.timestamp).toGMTString() + "</p>";
 	document.getElementById(data.cardId).querySelector(".commentField").appendChild(comment);
 });
+
+socket.on("display-card", (data) => {
+	createCard(data);
+})
 
 socket.on("message", addMessage);
 
@@ -269,13 +389,37 @@ function addMessage(message) {
 	chatScrollBottom();
 }
 
+// function getRandomColor() {
+// 	var colors = "0123456789ABCDEF";
+// 	var color = "#";
+// 	for (var i = 0; i < 6; i++) {
+// 		color += letters[Math.floor(Math.random() * 16)];
+// 	}
+// 	return color;
+// }
+
 function getRandomColor() {
-	var letters = "0123456789ABCDEF";
-	var color = "#";
-	for (var i = 0; i < 6; i++) {
-		color += letters[Math.floor(Math.random() * 16)];
+	return colors[Math.floor(Math.random() * Math.floor(colors.length))];
+}
+
+function assignColorsToCreate() {
+	for (var i = 0; i < colors.length; i++) {
+		var button = "<button class='btn color-btn' id='" + colors[i] + "' style='background-color:" + colors[i] + "'></button>";
+
+		$(".color-options").each(function() {
+			$(this).append(button);
+		});
 	}
-	return color;
+}
+function assignColorsToChange(card) {
+	for (var i = 0; i < colors.length; i++) {
+		var colorButton = document.createElement("button");
+		colorButton.className = "btn color-change-btn";
+		colorButton.id = colors[i];
+		colorButton.style.backgroundColor = colors[i];
+
+		card.querySelector(".colorChangeOptions").append(colorButton);
+	}
 }
 
 function cookieValue(name) {
