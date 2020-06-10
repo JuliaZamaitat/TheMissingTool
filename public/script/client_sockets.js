@@ -21,7 +21,6 @@ $.get("/board/" + windowBoardId + "/cards", (cards) => {
 	cards.forEach(createCard);
 });
 
-
 function createCard(data) {
 	console.log(data);
 	const card = document.createElement("div");
@@ -31,13 +30,13 @@ function createCard(data) {
 	card.classList.add(data.shape.toLowerCase());
 
 	if (data.shape === "TRIANGLE") {
-		card.style.borderColor = "transparent transparent " + data.backgroundColor +  " transparent";
+		card.style.borderColor = "transparent transparent " + data.backgroundColor + " transparent";
 		card.style.backgroundColor = "transparent";
 	}
 
 	const buttons = document.createElement("div");
 	buttons.className = "buttonContainer";
-	buttons.innerHTML = "<span type='button' class='link rounded'><i class='fa fa-link'></i></span><span type='button' class='btn btn-outline-primary colorChangeBtn rounded'><div class='colorChangeOptions'></div><i class='fa fa-edit'></i></span><span type='button' class='btn btn-outline-danger deleteBtn rounded'><i class='fa fa-trash-o'></i></span><span type='button' class='btn btn-outline-warning commentBtn rounded'><i class='fa fa-comments'></i></span>";
+	buttons.innerHTML = "<span type='button' class='btn btn-outline-success link rounded'><i class='fa fa-link'></i></span><span type='button' class='btn btn-outline-primary colorChangeBtn rounded'><div class='colorChangeOptions'></div><i class='fa fa-edit'></i></span><span type='button' class='btn btn-outline-danger deleteBtn rounded'><i class='fa fa-trash-o'></i></span><span type='button' class='btn btn-outline-warning commentBtn rounded'><i class='fa fa-comments'></i></span>";
 	card.innerHTML = "<textarea type='text' value=''></textarea><div class='comments-box'><span class='close-commentBox'>&times;</span><div class='commentField'></div><input placeholder='Add a comment...' class='commentInput'></div>";
 	card.prepend(buttons);
 
@@ -71,12 +70,12 @@ function createCard(data) {
 		querySelector.addEventListener("mousedown", function (event) {
 			$.post("/",
 				function (boardId) {
-				console.log(boardId)
+					console.log(boardId);
 					socket.emit("add-link", {linkId: boardId, cardId: card.id});
 				});
 		});
 	}
-	addListeners(card);
+	addListeners(card, data);
 	document.getElementById("overlay").appendChild(card);
 }
 
@@ -102,7 +101,7 @@ function convertToLink(card) {
 }
 
 
-function addListeners(card) {
+function addListeners(card, data) {
 	// Moving card listener
 	let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
 	card.onmousedown = cardMouseDown;
@@ -231,8 +230,8 @@ function addListeners(card) {
 
 	// Change card color
 	let colorButtons = card.querySelectorAll(".color-change-btn");
-	colorButtons.forEach(function(btn) {
-		btn.addEventListener("mousedown", function(event) {
+	colorButtons.forEach(function (btn) {
+		btn.addEventListener("mousedown", function (event) {
 			socket.emit("update-color", {
 				_id: card.id,
 				backgroundColor: event.currentTarget.id,
@@ -271,10 +270,11 @@ function exportBoard() {
 // event listener for toolbar buttons
 assignColorsToCreate();
 createCardOnClick();
+
 function createCardOnClick() {
 	var color_picked = false;
 
-	$(".create-card-btn").each(function() {
+	$(".create-card-btn").each(function () {
 		$(this).mousedown(() => {
 			if (!color_picked) {
 				socket.emit("save-card", {
@@ -289,7 +289,7 @@ function createCardOnClick() {
 		});
 	});
 
-	$(".color-btn").each(function() {
+	$(".color-btn").each(function () {
 		$(this).mousedown(() => {
 			color_picked = true;
 			socket.emit("save-card", {
@@ -373,7 +373,7 @@ socket.on("comment", (data) => {
 
 socket.on("display-card", (data) => {
 	createCard(data);
-})
+});
 
 socket.on("message", addMessage);
 
@@ -406,11 +406,12 @@ function assignColorsToCreate() {
 	for (var i = 0; i < colors.length; i++) {
 		var button = "<button class='btn color-btn' id='" + colors[i] + "' style='background-color:" + colors[i] + "'></button>";
 
-		$(".color-options").each(function() {
+		$(".color-options").each(function () {
 			$(this).append(button);
 		});
 	}
 }
+
 function assignColorsToChange(card) {
 	for (var i = 0; i < colors.length; i++) {
 		var colorButton = document.createElement("button");
@@ -426,37 +427,37 @@ function cookieValue(name) {
 	return decodeURIComponent(document.cookie.split("; ").find(row => row.startsWith(name)).split("=")[1]);
 }
 
-function typingTimeout(){
-	let user = cookieValue('username');
+function typingTimeout() {
+	let user = cookieValue("username");
 	typing = false;
-	socket.emit('typing', {user: user, typing: false});
+	socket.emit("typing", {user: user, typing: false});
 }
+
 //listen for keypress in chatinput and emits typing
 $(document).ready(function () {
-	$('#chatInput').keypress((e) => {
+	$("#chatInput").keypress((e) => {
 		if (e.which != 13) {
 			typing = true;
-			let user = cookieValue('username');
-			socket.emit('typing', {user:user, typing:true});
+			let user = cookieValue("username");
+			socket.emit("typing", {user: user, typing: true});
 			clearTimeout(timeout);
 			timeout = setTimeout(typingTimeout, 2000);
 		} else {
 			clearTimeout(timeout);
 			typingTimeout();
 		}
-	})
+	});
 
 	//display a notification when a user is typing
-	socket.on('display', (data) => {
-		if (data.typing == true){
+	socket.on("display", (data) => {
+		if (data.typing == true) {
 			console.log(data.user + " is typing");
 			$("#notificationbox").text(data.user + ` is typing`);
 			chatRescaleContent();
-		}
-		else {
+		} else {
 			$("#notificationbox").text("");
 			chatRescaleContent();
 		}
-	})
+	});
 
 });
