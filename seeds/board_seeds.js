@@ -13,7 +13,8 @@ mongoose.connect(
 Board.deleteMany({}).then(() => {
 	return Board.create({
 		"_id": new mongoose.Types.ObjectId("56cb91bdc3464f14678934ca"),
-		"name": "Cooles Board"
+		"name": "Cooles Board",
+		"messages": [{"text": "Some message", "date": Date.now(), "username": "Hanz Franz"}]
 	})
 		.then(board => {
 			this.id = board._id;
