@@ -10,13 +10,6 @@ let typing = false,
 var userList = [];
 var socket = io();
 
-
-
-window.onbeforeunload = function(){
-
-};
-
-
 $.get("/board/" + windowBoardId + "/messages", (messages) => {
 	messages.forEach(addMessage);
 });
@@ -27,18 +20,16 @@ $.get("/board/" + windowBoardId + "/cards", (cards) => {
 
 socket.on("update-users", (users) => {
 	userList = users;
-	// let username = document.createElement("p");
-	// username.innerText = name;
-
-	 $(".users").empty();
-	// console.log(users);
+	$(".users").empty();
 	for(var i=0; i<userList.length; i++) {
 		let username = document.createElement("p");
 		username.innerText = userList[i];
-		console.log(username);
-      $(".users").append(username);
-		}
-	// $(".users").append(username);
+    $(".users").append(username);
+	}
+});
+
+socket.on("request-present-users", () => {
+	socket.emit("collect-usernames", cookieValue("username"));
 });
 
 

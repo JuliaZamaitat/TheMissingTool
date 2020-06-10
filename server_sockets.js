@@ -16,21 +16,23 @@ module.exports = {
 				socket.join(room);
 				board = room;
 				socket.broadcast.to(board).emit("update-users", users);
-				// console.log(users);
+				socket.broadcast.to(board).emit("request-present-users");
 				console.log(socket.id, "joined", room);
 			});
 
 			socket.on("disconnect", function () {
-         for(var i=0; i<users.length; i++) {
-             if(users[i] == socket.user) {
-							  users.splice(i, 1);
-             }
+				for(var i=0; i<users.length; i++) {
+					if(users[i] == socket.user) {
+						users.splice(i, 1);
+					}
+				}
+				socket.broadcast.to(board).emit("update-users", users);
+			});
 
-         }
-         socket.broadcast.to(board).emit("update-users", users);
-     });
-
-
+			socket.on("collect-usernames", name =>{
+				users.push(name);
+				socket.broadcast.to(board).emit("update-users", users);
+			});
 
 			socket.on("add-link", function (incoming) {
 				const filter = {_id: mongoose.Types.ObjectId(incoming.cardId)};
