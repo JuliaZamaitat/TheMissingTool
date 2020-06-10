@@ -14,13 +14,41 @@ module.exports = {
 				console.log(socket.id, "joined", room);
 			});
 
-			socket.on("save-card", function (req) {
-				if (req.type === "LINK") {
-					if (!isValidBoardId(req.linkId)) {
-						req.type = "NORMAL";
-					}
-				}
+			socket.on("add-link", function (incoming) {
+				const filter = {_id: mongoose.Types.ObjectId(incoming.cardId)};
+				const update = {linkId: incoming.linkId};
 
+				Card.findOneAndUpdate(filter, update, {new: true},
+					function (err) {
+						if (err) {
+							console.log("Something wrong when updating data!");
+						} else {
+							io.to(board).emit("card-to-link", incoming.cardId);
+						}
+					}
+				);
+			});
+
+			socket.on("move-card", function (incoming) {
+				const filter = {_id: mongoose.Types.ObjectId(incoming.cardId)};
+				const update = {boardId: incoming.boardId};
+
+				Card.findOneAndUpdate(filter, update, {new: true},
+					function (err) {
+						if (err) {
+							console.log("Something wrong when updating data!");
+						} else {
+							Card.findById(incoming.cardId, function (err, card) {
+								if (err) console.log("Error finding card by id");
+								io.to(incoming.boardId).emit("display-card", card);
+							});
+
+						}
+					}
+				);
+			});
+
+			socket.on("save-card", function (req) {
 				const card = new Card(
 					{
 						_id: new mongoose.mongo.ObjectId(),
@@ -31,7 +59,8 @@ module.exports = {
 						},
 						boardId: mongoose.Types.ObjectId(board),
 						type: req.type,
-						linkId: req.linkId
+						linkId: req.linkId,
+						shape: req.shape
 					});
 
 				card.save((err) => {
@@ -95,6 +124,24 @@ module.exports = {
 						socket.broadcast.to(board).emit("text-update", JSON.stringify({
 							_id: req._id,
 							text: req.text
+						}));
+					}
+				);
+			});
+
+			socket.on("update-color", function(req) {
+				const filter = {_id: mongoose.Types.ObjectId(req._id)};
+				const update = {backgroundColor: req.backgroundColor};
+
+				Card.findOneAndUpdate(filter, update, {new: true},
+					function (err) {
+						if (err) {
+							console.log("Something wrong when updating data!");
+						}
+						io.to(board).emit("color-update", JSON.stringify({
+							_id: req._id,
+							backgroundColor: req.backgroundColor,
+							shape: req.shape
 						}));
 					}
 				);

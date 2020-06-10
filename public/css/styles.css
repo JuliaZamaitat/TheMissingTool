@@ -18,8 +18,6 @@ body {
 /* CARDS */
 .item {
 	position: absolute;
-	width: 150px;
-	height: 150px;
 	-webkit-animation-name: fadeIn;
 	animation-name: fadeIn;
 }
@@ -29,7 +27,6 @@ body {
 	display: block;
 	width: 100%;
 	height: 100%;
-	padding: 1rem;
 	background-color: transparent;
 	outline: none;
 	border: none;
@@ -42,6 +39,119 @@ body {
 	-webkit-box-shadow: 0 0 5px rgba(33, 33, 33, .5);
 	box-shadow: 0 0 5px rgba(33, 33, 33, .5);
 }
+.square {
+	width: 150px;
+	height: 150px;
+}
+.square textarea {
+	padding: 1rem;
+}
+
+.circle {
+	width: 150px;
+	height: 150px;
+	border-radius: 50%;
+}
+.circle textarea {
+	border-radius: 50%;
+	padding: 2rem;
+}
+
+.circle .forward {
+	position: absolute;
+	right: 25px;
+	bottom: 25px;
+}
+
+.triangle {
+	width: 0;
+	height: 0;
+	border-style: inset;
+	border-width: 0 100px 173px 100px;
+	float: left;
+	transform: rotate(360deg);
+	-ms-transform: rotate(360deg);
+	-moz-transform: rotate(360deg);
+	-webkit-transform: rotate(360deg);
+	-o-transform: rotate(360deg);
+}
+
+.rectangle {
+	position: absolute;
+	width: 200px;
+	height: 100px;
+}
+
+.rectangle textarea {
+	width: 200px;
+	height: 100px;
+}
+
+.rectangle .forward {
+	position: absolute;
+	right: 5px;
+	bottom: 5px;
+}
+
+.triangle textarea {
+	text-align: center;
+	top: 80px;
+	left: -47px;
+	position: relative;
+	width: 93px;
+	height: 93px;
+	margin: 0px;
+	cursor: pointer;
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+
+}
+
+.triangle textarea:focus {
+	cursor: pointer;
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+
+.triangle .forward {
+	position: absolute;
+	right: -85px;
+	bottom: -170px;
+}
+
+.ellipse {
+	width: 200px;
+    height: 100px;
+	border-radius: 100px / 50px;
+}
+.ellipse textarea {
+	border-radius: 100px / 50px;
+	padding: 2rem;
+}
+
+.ellipse .forward {
+	position: absolute;
+	right: 20px;
+	bottom: 20px;
+}
+
+.square {
+	width: 150px;
+	height: 150px;
+}
+
+.square textarea {
+	width: 150px;
+	height: 150px;
+}
+
+.square .forward {
+	position: absolute;
+	right: 5px;
+	bottom: 5px;
+}
 
 textarea:hover {
 	cursor: pointer;
@@ -52,6 +162,17 @@ textarea:focus {
 	-moz-box-shadow: 0 0 5px rgb(0, 168, 235);
 	-webkit-box-shadow: 0 0 5px rgb(0, 168, 235);
 	box-shadow: 0 0 5px rgb(0, 168, 235);
+}
+/* Card functions */
+.colorChangeOptions {
+	position: absolute;
+	top: -20px;
+	left: 20px;
+	opacity: 0;
+	transition: ease-in-out .3s;
+}
+.colorChangeBtn:hover .colorChangeOptions {
+	opacity: 1;
 }
 
 #remove {
@@ -155,6 +276,7 @@ textarea:focus {
 	overflow: visible;
 	transition: ease-in-out .3s;
 	box-shadow: 1px 1px 3px rgba(0, 0, 0, .3);
+	z-index: 999999999999999;
 }
 
 #toolbar:hover {
@@ -166,7 +288,6 @@ textarea:focus {
 	width: 35px;
 	height: 35px;
 	margin: 4px 0;
-	overflow: hidden;
 	position: relative;
 	transition: ease-in-out .3s !important;
 }
@@ -189,11 +310,33 @@ textarea:focus {
 }
 
 .toolbar-btn:hover {
-	width: 120px;
+	width: 110px;
 }
 
 .toolbar-btn:hover span {
 	opacity: 1;
+}
+.toolbar-btn:hover .color-options {
+	opacity: 1;
+}
+.color-options {
+	position: absolute;
+	z-index: 10;
+	right: -140px;
+	top: 4px;
+	width: 120px;
+	height: 20px;
+	transition: ease-in-out .5s;
+	opacity: 0;
+}
+.color-btn, .color-change-btn {
+	margin: 0 5px;
+	padding: 0 !important;
+	width: 20px;
+	height: 20px;
+}
+.color-btn:hover, .color-change-btn:hover {
+	box-shadow: 0 0 2px 2px lightblue;
 }
 
 /* From animate.css */
@@ -213,28 +356,28 @@ textarea:focus {
 @-webkit-keyframes fadeIn {
 	from {
 		opacity: 0;
-		height: 0;
+		transform: translateY(-20px);
 	}
 	to {
 		opacity: 1;
-		height: 150px;
+		transform: translateY(0);
 	}
 }
 
 @keyframes fadeIn {
 	from {
 		opacity: 0;
-		height: 0;
+		transform: translateY(-20px);
 	}
 	to {
 		opacity: 1;
-		height: 150px;
+		transform: translateY(0);
 	}
 }
 
 
 .buttonContainer {
-	width: 150px;
+	width: 100%;
 	font-size: 18px;
 	display: none;
 	position: absolute;
@@ -245,39 +388,18 @@ textarea:focus {
 	justify-content: center;
 }
 
-.deleteBtn {
-	color: #ff0300;
-}
-
-.commentBtn {
-	color: #8b00ff;
-}
-
-.link {
-	color: #19ebff;
-}
-
-.deleteBtn, .commentBtn, .link {
+.buttonContainer span {
 	font-size: 18px;
 	cursor: pointer;
 	line-height: 0;
 	padding: 7px;
 	background-color: white;
 	margin: 4px;
+	border: none !important;
 }
 
 .item:focus-within > .buttonContainer {
 	display: flex;
-}
-
-.deleteBtn:hover {
-	color: #ffffff;
-	background-color: red;
-}
-
-.commentBtn:hover {
-	color: #ffffff;
-	background-color: #8b00ff;
 }
 
 .link:hover {
@@ -414,4 +536,3 @@ textarea:focus {
 .active {
     height: 23px;
 }
-
