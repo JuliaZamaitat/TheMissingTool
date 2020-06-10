@@ -130,6 +130,7 @@ function addListeners(card) {
 	}
 
 	function closeDragCard() {
+		isOverlappingAny();
 		sendPosChange({
 			_id: card.id,
 			position: {
@@ -140,6 +141,48 @@ function addListeners(card) {
 		document.onmouseup = null;
 		document.onmousemove = null;
 
+	}
+
+	function isOverlappingAny() {
+		let allCards = document.getElementsByClassName("item");
+		for (let i = 0; i < allCards.length; i++) {
+			if (isOverlapping(allCards[i], card) === true) {
+				let idFromOverlappingCard = allCards[i].id;
+				if (idFromOverlappingCard !== card.id) {
+					$.get("/get-linked-board/" + idFromOverlappingCard, function (linkedBoard) {
+						console.log(linkedBoard);
+						if (linkedBoard !== null && linkedBoard !== "") {
+							socket.emit("move-card", {cardId: card.id, boardId: linkedBoard});
+							card.remove();
+						}
+					});
+				}
+			}
+		}
+	}
+
+	function isOverlapping(first, second) {
+		if (first.length && first.length > 1) {
+			first = first[0];
+		}
+		if (second.length && second.length > 1) {
+			second = second[0];
+		}
+		const element1 = first instanceof Element ? first.getBoundingClientRect() : false;
+		const element2 = second instanceof Element ? second.getBoundingClientRect() : false;
+
+		let overlap = null;
+		if (element1 && element2) {
+			overlap = !(
+				element1.right < element2.left ||
+				element1.left > element2.right ||
+				element1.bottom < element2.top ||
+				element1.top > element2.bottom
+			);
+			return overlap;
+		} else {
+			return overlap;
+		}
 	}
 
 	function sendPosChange(update) {
@@ -328,6 +371,10 @@ socket.on("comment", (data) => {
 	comment.innerHTML = "<p class='senderName'>" + data.sender + "</p><p class='commentMessage'>" + data.message + "</p><p class='timestamp'>" + new Date(data.timestamp).toGMTString() + "</p>";
 	document.getElementById(data.cardId).querySelector(".commentField").appendChild(comment);
 });
+
+socket.on("display-card", (data) => {
+	createCard(data);
+})
 
 socket.on("message", addMessage);
 

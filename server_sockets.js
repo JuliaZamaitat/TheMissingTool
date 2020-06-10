@@ -29,6 +29,25 @@ module.exports = {
 				);
 			});
 
+			socket.on("move-card", function (incoming) {
+				const filter = {_id: mongoose.Types.ObjectId(incoming.cardId)};
+				const update = {boardId: incoming.boardId};
+
+				Card.findOneAndUpdate(filter, update, {new: true},
+					function (err) {
+						if (err) {
+							console.log("Something wrong when updating data!");
+						} else {
+							Card.findById(incoming.cardId, function (err, card) {
+								if (err) console.log("Error finding card by id");
+								io.to(incoming.boardId).emit("display-card", card);
+							});
+
+						}
+					}
+				);
+			});
+
 			socket.on("save-card", function (req) {
 				const card = new Card(
 					{
