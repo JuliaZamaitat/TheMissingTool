@@ -39,13 +39,14 @@ body {
 	-webkit-box-shadow: 0 0 5px rgba(33, 33, 33, .5);
 	box-shadow: 0 0 5px rgba(33, 33, 33, .5);
 }
-.rectangle {
+.square {
 	width: 150px;
 	height: 150px;
 }
-.rectangle textarea {
+.square textarea {
 	padding: 1rem;
 }
+
 .circle {
 	width: 150px;
 	height: 150px;
@@ -55,18 +56,50 @@ body {
 	border-radius: 50%;
 	padding: 2rem;
 }
-/* .triangle {
+.triangle {
 	width: 0;
-    height: 0;
-    border-left: 60px;
-	border-right: 60px;
+	height: 0;
+	border-style: inset;
+	border-width: 0 100px 173px 100px;
+	float: left;
+	transform: rotate(360deg);
+	-ms-transform: rotate(360deg);
+	-moz-transform: rotate(360deg);
+	-webkit-transform: rotate(360deg);
+	-o-transform: rotate(360deg);
 }
+
+.rectangle {
+	width: 200px;
+	height: 100px;
+}
+
+.rectangle textarea {
+	width: 200px;
+	height: 100px;
+}
+
 .triangle textarea {
-	width: 0;
-    height: 0;
-    border-left: 60px solid transparent;
-	border-right: 60px solid transparent;
-} */
+	text-align: center;
+	top: 80px;
+	left: -47px;
+	position: relative;
+	width: 93px;
+	height: 93px;
+	margin: 0px;
+	cursor: pointer;
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+
+}
+
+.triangle textarea:focus {
+	cursor: pointer;
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
 .ellipse {
 	width: 200px;
     height: 100px;
@@ -75,6 +108,16 @@ body {
 .ellipse textarea {
 	border-radius: 100px / 50px;
 	padding: 2rem;
+}
+
+.square {
+	width: 200px;
+	height: 100px;
+}
+
+.square textarea {
+	width: 200px;
+	height: 100px;
 }
 
 textarea:hover {
@@ -200,6 +243,7 @@ textarea:focus {
 	overflow: visible;
 	transition: ease-in-out .3s;
 	box-shadow: 1px 1px 3px rgba(0, 0, 0, .3);
+	z-index: 999999999999999;
 }
 
 #toolbar:hover {
@@ -233,7 +277,7 @@ textarea:focus {
 }
 
 .toolbar-btn:hover {
-	width: 140px;
+	width: 110px;
 }
 
 .toolbar-btn:hover span {
@@ -246,7 +290,7 @@ textarea:focus {
 	position: absolute;
 	z-index: 10;
 	right: -140px;
-	top: 7px;
+	top: 4px;
 	width: 120px;
 	height: 20px;
 	transition: ease-in-out .5s;
@@ -300,7 +344,7 @@ textarea:focus {
 
 
 .buttonContainer {
-	width: 150px;
+	width: 100%;
 	font-size: 18px;
 	display: none;
 	position: absolute;

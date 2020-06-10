@@ -104,9 +104,10 @@ module.exports = {
 						if (err) {
 							console.log("Something wrong when updating data!");
 						}
-						socket.broadcast.to(board).emit("color-update", JSON.stringify({
+						io.to(board).emit("color-update", JSON.stringify({
 							_id: req._id,
-							backgroundColor: req.backgroundColor
+							backgroundColor: req.backgroundColor,
+							shape: req.shape
 						}));
 					}
 				);

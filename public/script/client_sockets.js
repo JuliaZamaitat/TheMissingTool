@@ -1,7 +1,7 @@
 let url = window.location.href;
 let windowBoardId = url.substr(url.lastIndexOf("/") + 1);
 let port;
-let colors = ["#FFC8C8", "#CDF4FF", "#FFFDCA", "#D8FFF7"];
+let colors = ["#c50c08", "#31a023", "#385bd6", "#d2c72a"];
 
 //typing notification
 let typing = false,
@@ -26,13 +26,13 @@ $.get("/board/" + windowBoardId + "/cards", (cards) => {
 function createCard(data) {
 	const card = document.createElement("div");
 	card.className = "item animate";
-	
-	if (data.shape === "CIRCLE") {
-		card.classList.add("circle");
-	} else if (data.shape === "ELLIPSE") {
-		card.classList.add("ellipse");
-	} else {
-		card.classList.add("rectangle"); //no triangle
+
+	card.style.backgroundColor = data.backgroundColor;
+	card.classList.add(data.shape.toLowerCase());
+
+	if (data.shape === "TRIANGLE") {
+		card.style.borderColor = "transparent transparent " + data.backgroundColor +  " transparent";
+		card.style.backgroundColor = "transparent";
 	}
 
 	const buttons = document.createElement("div");
@@ -40,7 +40,7 @@ function createCard(data) {
 	buttons.innerHTML = "<span type='button' class='btn btn-outline-primary colorChangeBtn rounded'><div class='colorChangeOptions'></div><i class='fa fa-edit'></i></span><span type='button' class='btn btn-outline-danger deleteBtn rounded'><i class='fa fa-trash-o'></i></span><span type='button' class='btn btn-outline-warning commentBtn rounded'><i class='fa fa-comments'></i></span>";
 	card.innerHTML = "<textarea type='text' value=''></textarea><div class='comments-box'><span class='close-commentBox'>&times;</span><div class='commentField'></div><input placeholder='Add a comment...' class='commentInput'></div>";
 	card.prepend(buttons);
-	
+
 	card.id = data._id;
 	assignColorsToChange(card);
 
@@ -52,7 +52,6 @@ function createCard(data) {
 		card.style.top = 200 + "px";
 	}
 	card.style.fontSize = data.fontSize;
-	card.style.backgroundColor = data.backgroundColor;
 	if (data.text != null) {
 		card.querySelector("textarea").value = data.text; //Show the card text if defined
 	}
@@ -70,24 +69,7 @@ function createCard(data) {
 		addLinkListeners(card);
 	}
 
-// 	if(data.shape==="TRIANGLE"){
-// 		adjustStylingToTriangle(card);
-// 	}
-// 	function adjustStylingToTriangle(card) {
-//   card.style.width="0px";
-//   card.style.height="0px";
-//   card.style.borderBottom= "150px";
-//   card.style.borderLeft="60px";
-//   card.style.borderRight="60px";
-
-//   card.querySelector("textarea").style.width="0px";
-//   card.querySelector("textarea").style.height="0px";
-//   card.querySelector("textarea").style.borderBottom="150px";
-//   card.querySelector("textarea").style.borderRight="60px";
-//   card.querySelector("textarea").style.borderLeft="60px";
-// 	}
-
-	addListeners(card);
+	addListeners(card, data);
 	document.getElementById("overlay").appendChild(card);
 }
 
@@ -106,7 +88,7 @@ function addLinkListeners(card) {
 	});
 }
 
-function addListeners(card) {
+function addListeners(card, data) {
 	// Moving card listener
 	let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
 	card.onmousedown = cardMouseDown;
@@ -196,9 +178,9 @@ function addListeners(card) {
 		btn.addEventListener("mousedown", function(event) {
 			socket.emit("update-color", {
 				_id: card.id,
-				backgroundColor: event.currentTarget.id
+				backgroundColor: event.currentTarget.id,
+				shape: data.shape
 			});
-			card.style.backgroundColor = event.currentTarget.id;
 		});
 	});
 }
@@ -244,7 +226,7 @@ function createCardOnClick() {
 				});
 			} else {
 				return;
-			}	
+			}
 		}).mouseup(() => {
 			color_picked = false;
 		});
@@ -290,7 +272,13 @@ socket.on("text-update", (data) => {
 
 socket.on("color-update", (data) => {
 	const card = JSON.parse(data);
-	document.getElementById(card._id).style.backgroundColor = card.backgroundColor;
+	let elementById = document.getElementById(card._id);
+	if (card.shape === "TRIANGLE") {
+		elementById.style.borderColor = "transparent transparent " + card.backgroundColor + " transparent";
+	} else {
+		elementById.style.backgroundColor = card.backgroundColor;
+	}
+
 });
 
 socket.on("delete-card", (data) => {
@@ -345,14 +333,13 @@ function addMessage(message) {
 // }
 
 function getRandomColor() {
-	var colors = ["#FFC8C8", "#CDF4FF", "#FFFDCA", "#D8FFF7"];
 	return colors[Math.floor(Math.random() * Math.floor(colors.length))];
 }
 
-function assignColorsToCreate() {	
+function assignColorsToCreate() {
 	for (var i = 0; i < colors.length; i++) {
 		var button = "<button class='btn color-btn' id='" + colors[i] + "' style='background-color:" + colors[i] + "'></button>";
-	
+
 		$(".color-options").each(function() {
 			$(this).append(button);
 		});
@@ -364,7 +351,7 @@ function assignColorsToChange(card) {
 		colorButton.className = "btn color-change-btn";
 		colorButton.id = colors[i];
 		colorButton.style.backgroundColor = colors[i];
-	
+
 		card.querySelector(".colorChangeOptions").append(colorButton);
 	}
 }
