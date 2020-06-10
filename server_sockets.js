@@ -11,9 +11,10 @@ module.exports = {
 			socket.on("join", function (room) {
 				socket.join(room);
 				board = room;
-				io.to(board).emit("add-user-icon-to-room");
+				io.to(board).emit("user-joined");
 				console.log(socket.id, "joined", room);
 			});
+
 
 			socket.on("add-link", function (incoming) {
 				const filter = {_id: mongoose.Types.ObjectId(incoming.cardId)};
@@ -224,11 +225,11 @@ module.exports = {
 				});
 			});
 
-			socket.on('typing', (data) => {
+			socket.on("typing", (data) => {
 				if(data.typing==true)
-					socket.broadcast.emit('display', data)
+					socket.broadcast.emit("display", data);
 				else
-					socket.broadcast.emit('display', data)
+					socket.broadcast.emit("display", data);
 			});
 
 		});

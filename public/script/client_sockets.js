@@ -1,8 +1,7 @@
 let url = window.location.href;
 let windowBoardId = url.substr(url.lastIndexOf("/") + 1);
-let port;
 let colors = ["#c50c08", "#31a023", "#385bd6", "#d2c72a"];
-
+let usernames = [];
 //typing notification
 let typing = false,
 	timeout = undefined;
@@ -22,16 +21,19 @@ $.get("/board/" + windowBoardId + "/cards", (cards) => {
 	cards.forEach(createCard);
 });
 
-socket.on("add-user-icon-to-room", () => {
+socket.on("user-joined", () => {
 	const username = document.createElement("div");
 	 username.innerHTML = "<p>" + cookieValue("username") + "</p>";
-	$(".users").append(username);
+	 usernames.push(username);
+	 console.log(usernames);
+	$(".users").append(usernames);
+
 
 });
 
 
 function createCard(data) {
-	console.log(data)
+	console.log(data);
 	const card = document.createElement("div");
 	card.className = "item animate";
 
@@ -255,7 +257,7 @@ $("#board-name").on("input", function (event) {
 	console.log("In Ajax ");
 	socket.emit("update-board-name", {
 		_id: windowBoardId,
-		name: event.currentTarget.value
+		name: $(this).text()
 	});
 });
 
@@ -359,12 +361,12 @@ socket.on("card-to-link", (data) => {
 socket.on("board-name-update", (data) => {
 	console.log("Im Update");
 	const name = JSON.parse(data).name;
-	$("#board-name").val(name);
-	$("#board-name").css("width", name.length / 1.5 + "rem");
+	// $("#board-name").val(name);
+	// $("#board-name").css("width", name.length / 1.5 + "rem");
 });
 
 $("#user-name").on("focusout", function (event) {
-	var name = event.currentTarget.value;
+	var name = $(this).text();
 	document.cookie = "username=" + name;
 });
 
