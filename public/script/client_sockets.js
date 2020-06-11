@@ -1,3 +1,5 @@
+
+
 let url = window.location.href;
 let windowBoardId = url.substr(url.lastIndexOf("/") + 1);
 let colors = ["#c50c08", "#31a023", "#385bd6", "#d2c72a"];
@@ -5,13 +7,7 @@ let colors = ["#c50c08", "#31a023", "#385bd6", "#d2c72a"];
 //typing notification
 let typing = false,
 	timeout = undefined;
-
-$.get("/port", function (data) { //set the port dynamically
-	port = data;
-});
-
 var socket = io();
-socket.emit("join", windowBoardId);
 
 $.get("/board/" + windowBoardId + "/messages", (messages) => {
 	messages.forEach(addMessage);
@@ -19,6 +15,19 @@ $.get("/board/" + windowBoardId + "/messages", (messages) => {
 
 $.get("/board/" + windowBoardId + "/cards", (cards) => {
 	cards.forEach(createCard);
+});
+
+
+socket.on("update-users", (users) => {
+	console.log("IN UPDATE USER");
+	$(".users").empty();
+	for(var i=0; i<users.length; i++) {
+		let username = document.createElement("p");
+		username.innerText = users[i];
+		if (users[i] !== cookieValue("username")) {
+			$(".users").append(username);
+		}
+	}
 });
 
 function createCard(data) {
@@ -436,6 +445,9 @@ function typingTimeout() {
 
 //listen for keypress in chatinput and emits typing
 $(document).ready(function () {
+
+	socket.emit("join", {boardId: windowBoardId, name: cookieValue("username")});
+	
 	$("#chatInput").keypress((e) => {
 		if (e.which != 13) {
 			typing = true;

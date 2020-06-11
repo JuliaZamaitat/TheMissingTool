@@ -1,6 +1,7 @@
 const mongoose = require("mongoose"),
 	Card = require("./models/card"),
 	Board = require("./models/board");
+var users = {};
 
 module.exports = {
 	start: function (io) {
@@ -8,10 +9,33 @@ module.exports = {
 			let board;
 			console.log("a user connected with id %s", socket.id);
 
-			socket.on("join", function (room) {
+			socket.on("join", function (obj) {
+				let username = obj.name;
+				socket.user = username;
+				let room = obj.boardId;
 				socket.join(room);
 				board = room;
-				console.log(socket.id, "joined", room);
+
+				if (!(board in users)) {
+					users[board] = [];
+				}
+				if(!users[board].includes(username)) {
+					users[board].push(username);
+				}
+				console.log(users);
+
+				io.to(board).emit("update-users", users[board]);
+
+			});
+
+			socket.on("disconnect", function () {
+
+				for(var i=0; i<users.length; i++) {
+					if(users[board][i] == socket.user) {
+						users[board].splice(i, 1);
+					}
+				}
+				io.to(board).emit("update-users", users[board]);
 			});
 
 			socket.on("add-link", function (incoming) {
@@ -71,12 +95,6 @@ module.exports = {
 					io.to(board).emit("new-card", JSON.stringify(card));
 				});
 			});
-
-			function isValidBoardId(boardId) {
-				Board.findById(boardId, function (err, board) {
-					return board !== null;
-				});
-			}
 
 			socket.on("update-pos", function (req) {
 				const filter = {_id: mongoose.Types.ObjectId(req._id)};
