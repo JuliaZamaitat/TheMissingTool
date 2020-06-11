@@ -7,7 +7,6 @@ let colors = ["#c50c08", "#31a023", "#385bd6", "#d2c72a"];
 //typing notification
 let typing = false,
 	timeout = undefined;
-var userList = [];
 var socket = io();
 
 $.get("/board/" + windowBoardId + "/messages", (messages) => {
@@ -19,18 +18,17 @@ $.get("/board/" + windowBoardId + "/cards", (cards) => {
 });
 
 socket.on("update-users", (users) => {
-	userList = users;
 	$(".users").empty();
-	for(var i=0; i<userList.length; i++) {
+	for(var i=0; i<users.length; i++) {
 		let username = document.createElement("p");
-		username.innerText = userList[i];
+		username.innerText = users[i];
     $(".users").append(username);
 	}
 });
 
-socket.on("request-present-users", () => {
-	socket.emit("collect-usernames", cookieValue("username"));
-});
+// socket.on("request-present-users", () => {
+// 	socket.emit("collect-usernames", cookieValue("username"));
+// });
 
 
 function createCard(data) {

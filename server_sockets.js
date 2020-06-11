@@ -1,7 +1,7 @@
 const mongoose = require("mongoose"),
 	Card = require("./models/card"),
 	Board = require("./models/board");
-var users = [];
+var users = {};
 
 module.exports = {
 	start: function (io) {
@@ -12,31 +12,39 @@ module.exports = {
 			socket.on("join", function (obj) {
 				let username = obj.name;
 				socket.user = username;
-				if(!users.includes(username)){
-					console.log("Here");
-					users.push(username);
-				}
 				let room = obj.boardId;
 				socket.join(room);
 				board = room;
-				socket.broadcast.emit("update-users", users);
-				socket.broadcast.emit("request-present-users");
+
+
+				if (!(board in users)) {
+					users[board] = [];
+					users[board].push(username);
+				} else if(!users[board].includes(username)) {
+					users[board].push(username);
+				}
+				console.log(users);
+				socket.to(board).broadcast.emit("update-users", users[board]);
+				//socket.broadcast.emit("request-present-users");
 				console.log(socket.id, "joined", room);
 			});
 
 			socket.on("disconnect", function () {
+
 				for(var i=0; i<users.length; i++) {
-					if(users[i] == socket.user) {
-						users.splice(i, 1);
+					if(users[board][i] == socket.user) {
+						users[board].splice(i, 1);
 					}
 				}
-				socket.broadcast.emit("update-users", users);
+				socket.to(board).emit("update-users", users[board]);
 			});
 
-			socket.on("collect-usernames", name =>{
-				users.push(name);
-				socket.broadcast.to(board).emit("update-users", users);
-			});
+			// socket.on("collect-usernames", name =>{
+			// 	if((board in users) && !users[board].includes(name)){
+			// 		users[board].push(name);
+			// 	}
+			// 	socket.broadcast.to(board).emit("update-users", users[board]);
+			// });
 
 			socket.on("add-link", function (incoming) {
 				const filter = {_id: mongoose.Types.ObjectId(incoming.cardId)};
