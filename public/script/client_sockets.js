@@ -18,11 +18,14 @@ $.get("/board/" + windowBoardId + "/cards", (cards) => {
 });
 
 socket.on("update-users", (users) => {
+	console.log("IN UPDATE USER");
 	$(".users").empty();
 	for(var i=0; i<users.length; i++) {
 		let username = document.createElement("p");
 		username.innerText = users[i];
-    $(".users").append(username);
+		if (users[i] !== cookieValue("username")) {
+			$(".users").append(username);
+		}
 	}
 });
 

@@ -16,17 +16,16 @@ module.exports = {
 				socket.join(room);
 				board = room;
 
-
 				if (!(board in users)) {
 					users[board] = [];
-					users[board].push(username);
-				} else if(!users[board].includes(username)) {
+				}
+				if(!users[board].includes(username)) {
 					users[board].push(username);
 				}
 				console.log(users);
-				socket.to(board).broadcast.emit("update-users", users[board]);
-				//socket.broadcast.emit("request-present-users");
-				console.log(socket.id, "joined", room);
+
+				io.to(board).emit("update-users", users[board]);
+
 			});
 
 			socket.on("disconnect", function () {
@@ -36,15 +35,8 @@ module.exports = {
 						users[board].splice(i, 1);
 					}
 				}
-				socket.to(board).emit("update-users", users[board]);
+				io.to(board).emit("update-users", users[board]);
 			});
-
-			// socket.on("collect-usernames", name =>{
-			// 	if((board in users) && !users[board].includes(name)){
-			// 		users[board].push(name);
-			// 	}
-			// 	socket.broadcast.to(board).emit("update-users", users[board]);
-			// });
 
 			socket.on("add-link", function (incoming) {
 				const filter = {_id: mongoose.Types.ObjectId(incoming.cardId)};
