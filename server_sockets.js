@@ -65,6 +65,7 @@ module.exports = {
 							Card.findById(incoming.cardId, function (err, card) {
 								if (err) console.log("Error finding card by id");
 								io.to(incoming.boardId).emit("display-card", card);
+								io.to(board).emit("remove-card", card.id);
 							});
 
 						}
