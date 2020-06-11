@@ -22,7 +22,6 @@ $.get("/board/" + windowBoardId + "/cards", (cards) => {
 });
 
 function createCard(data) {
-	console.log(data);
 	const card = document.createElement("div");
 	card.className = "item animate";
 
@@ -70,7 +69,6 @@ function createCard(data) {
 		querySelector.addEventListener("mousedown", function (event) {
 			$.post("/",
 				function (boardId) {
-					console.log(boardId);
 					socket.emit("add-link", {linkId: boardId, cardId: card.id});
 				});
 		});
@@ -148,10 +146,8 @@ function addListeners(card, data) {
 				let idFromOverlappingCard = allCards[i].id;
 				if (idFromOverlappingCard !== card.id) {
 					$.get("/get-linked-board/" + idFromOverlappingCard, function (linkedBoard) {
-						console.log(linkedBoard);
 						if (linkedBoard !== null && linkedBoard !== "") {
 							socket.emit("move-card", {cardId: card.id, boardId: linkedBoard});
-							card.remove();
 						}
 					});
 				}
@@ -349,7 +345,6 @@ socket.on("card-to-link", (data) => {
 });
 
 socket.on("board-name-update", (data) => {
-	console.log("Im Update");
 	const name = JSON.parse(data).name;
 	// $("#board-name").val(name);
 	// $("#board-name").css("width", name.length / 1.5 + "rem");
@@ -374,6 +369,12 @@ socket.on("comment", (data) => {
 socket.on("display-card", (data) => {
 	createCard(data);
 });
+
+
+socket.on("remove-card", (data) => {
+	console.log(data.id);
+	document.getElementById(data).remove();
+})
 
 socket.on("message", addMessage);
 
@@ -451,7 +452,6 @@ $(document).ready(function () {
 	//display a notification when a user is typing
 	socket.on("display", (data) => {
 		if (data.typing == true) {
-			console.log(data.user + " is typing");
 			$("#notificationbox").text(data.user + ` is typing`);
 			chatRescaleContent();
 		} else {
