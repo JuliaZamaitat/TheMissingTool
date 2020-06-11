@@ -95,12 +95,6 @@ module.exports = {
 				});
 			});
 
-			function isValidBoardId(boardId) {
-				Board.findById(boardId, function (err, board) {
-					return board !== null;
-				});
-			}
-
 			socket.on("update-pos", function (req) {
 				const filter = {_id: mongoose.Types.ObjectId(req._id)};
 				const update = {position: {left: req.position.left, top: req.position.top}};
