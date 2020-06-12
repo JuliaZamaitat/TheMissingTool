@@ -16,11 +16,10 @@ $.get("/board/" + windowBoardId + "/cards", (cards) => {
 	cards.forEach(createCard);
 });
 
-
 socket.on("update-users", (users) => {
 	console.log("IN UPDATE USER");
 	$(".users").empty();
-	for(var i=0; i<users.length; i++) {
+	for (var i = 0; i < users.length; i++) {
 		let username = document.createElement("p");
 		username.innerText = users[i];
 		if (users[i] !== cookieValue("username")) {
@@ -98,7 +97,7 @@ function convertToLink(card) {
 	card.querySelector(".forward").addEventListener("mousedown", function () {
 		$.get("/get-linked-board/" + card.id, function (data) {
 			if (data !== null && data !== "") {
-				changeLocAndAppend(data);
+				changeLocationAndAppend(data);
 			} else {
 				console.log("No boardId returned");
 			}
@@ -382,7 +381,7 @@ socket.on("display-card", (data) => {
 socket.on("remove-card", (data) => {
 	console.log(data.id);
 	document.getElementById(data).remove();
-})
+});
 
 socket.on("message", addMessage);
 
@@ -446,6 +445,33 @@ function typingTimeout() {
 $(document).ready(function () {
 
 	socket.emit("join", {boardId: windowBoardId, name: cookieValue("username")});
+
+	const url = new URL(window.location.href);
+	const params = url.searchParams;
+
+	let currentParams = params.get("linkedBoard");
+	var arrayOfLinkedBoards = currentParams.toString().split(",");
+
+	arrayOfLinkedBoards.forEach(element => {
+		if (element !== null) {
+			appendNameToBoardList(element);
+		}
+	});
+
+	function appendNameToBoardList(boardId) {
+		$.get("/board/" + boardId + "/data", (boardData) => {
+			console.log(boardData)
+			var element = document.createElement("LI");
+			var text = document.createTextNode(boardData.name);
+			element.appendChild(text);
+			element.id = boardData._id;
+			element.className = "boardLink";
+			element.addEventListener("mousedown", function () {
+				changeLocationAndAppend(element.id);
+			});
+			document.getElementById("board-links").appendChild(element);
+		});
+	}
 
 	$("#chatInput").keypress((e) => {
 		if (e.which != 13) {

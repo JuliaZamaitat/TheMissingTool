@@ -39,10 +39,12 @@ body {
 	-webkit-box-shadow: 0 0 5px rgba(33, 33, 33, .5);
 	box-shadow: 0 0 5px rgba(33, 33, 33, .5);
 }
+
 .square {
 	width: 150px;
 	height: 150px;
 }
+
 .square textarea {
 	padding: 1rem;
 }
@@ -52,6 +54,7 @@ body {
 	height: 150px;
 	border-radius: 50%;
 }
+
 .circle textarea {
 	border-radius: 50%;
 	padding: 2rem;
@@ -123,9 +126,10 @@ body {
 
 .ellipse {
 	width: 200px;
-    height: 100px;
+	height: 100px;
 	border-radius: 100px / 50px;
 }
+
 .ellipse textarea {
 	border-radius: 100px / 50px;
 	padding: 2rem;
@@ -163,6 +167,7 @@ textarea:focus {
 	-webkit-box-shadow: 0 0 5px rgb(0, 168, 235);
 	box-shadow: 0 0 5px rgb(0, 168, 235);
 }
+
 /* Card functions */
 .colorChangeOptions {
 	position: absolute;
@@ -171,6 +176,7 @@ textarea:focus {
 	opacity: 0;
 	transition: ease-in-out .3s;
 }
+
 .colorChangeBtn:hover .colorChangeOptions {
 	opacity: 1;
 }
@@ -187,18 +193,38 @@ textarea:focus {
 	left: 0;
 }
 
-#board-name, #user-name {
+#user-name {
 	height: 3rem;
 	border-radius: 5px;
 	box-shadow: 1px 1px 3px rgba(0, 0, 0, .3);
 	padding: 1rem;
 	border: none;
 	text-transform: uppercase;
+	position: fixed;
+	bottom: 20px;
 }
 
-#board-name {
-	background-color: rgba(255, 0, 0, .2);
+#board-links {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
 }
+
+
+#board-links > li {
+	color: grey;
+	float: left;
+	height: 3rem;
+	padding: 1rem;
+	cursor: pointer;
+}
+
+
+#board-name {
+	font-weight: bold;
+	color: black;
+}
+
 
 #user-name {
 	background-color: rgba(0, 0, 255, .2);
@@ -313,9 +339,11 @@ textarea:focus {
 .toolbar-btn:hover span {
 	opacity: 1;
 }
+
 .toolbar-btn:hover .color-options {
 	opacity: 1;
 }
+
 .color-options {
 	position: absolute;
 	z-index: 10;
@@ -326,12 +354,14 @@ textarea:focus {
 	transition: ease-in-out .5s;
 	opacity: 0;
 }
+
 .color-btn, .color-change-btn {
 	margin: 0 5px;
 	padding: 0 !important;
 	width: 20px;
 	height: 20px;
 }
+
 .color-btn:hover, .color-change-btn:hover {
 	box-shadow: 0 0 2px 2px lightblue;
 }
@@ -447,7 +477,7 @@ textarea:focus {
 	overflow: hidden;
 }
 
-.comments-box{
+.comments-box {
 	display: none;
 	position: absolute;
 	width: 18rem;
@@ -464,9 +494,10 @@ textarea:focus {
 .close-commentBox {
 	position: absolute;
 	top: 0rem;
-    right: .5rem;
-    font-size: 1.2rem;
+	right: .5rem;
+	font-size: 1.2rem;
 }
+
 .close-commentBox:hover {
 	opacity: .5;
 	cursor: pointer;
@@ -479,8 +510,9 @@ textarea:focus {
 	padding-bottom: 5px;
 	display: flex;
 	width: 100%;
-    flex-direction: column-reverse;
+	flex-direction: column-reverse;
 }
+
 .comment-container {
 	max-width: 100%;
 	word-break: break-all;
@@ -514,22 +546,21 @@ textarea:focus {
 }
 
 
-
 .notifier {
-    position: absolute;
-    bottom: 0px;
-    width: 50%;
-    height: 0;
-    left: -10%;
-    color: white;
-    text-align: center;
-    background: rgba(176, 0, 52, 0.7);
-    overflow: hidden;
-    box-sizing: border-box;
-    transition: height .2s;
-    border-radius: 0 8px 0 0;
+	position: absolute;
+	bottom: 0px;
+	width: 50%;
+	height: 0;
+	left: -10%;
+	color: white;
+	text-align: center;
+	background: rgba(176, 0, 52, 0.7);
+	overflow: hidden;
+	box-sizing: border-box;
+	transition: height .2s;
+	border-radius: 0 8px 0 0;
 }
 
 .active {
-    height: 23px;
+	height: 23px;
 }

@@ -6,16 +6,25 @@ window.onload = function () {
 function createBoard() {
 	$.post("/",
 		function (data) {
-			changeLocAndAppend(data)
+			changeLocationAndAppend(data);
 		});
 }
 
-function changeLocAndAppend(newBoard) {
+function changeLocationAndAppend(newBoard) {
 	const url = new URL(window.location.href);
 	let pathname = url.pathname.toString();
 	const currentBoard = pathname.substr(pathname.lastIndexOf("/") + 1);
 	const params = url.searchParams;
-	params.append("linkedBoard", currentBoard);
+	let currentParams = params.get("linkedBoard");
+	if (currentParams === null || currentParams === "") {
+		params.set("linkedBoard", currentBoard);
+	} else {
+		var arrayOfLinkedBoards = currentParams.toString().split(",");
+		if (!arrayOfLinkedBoards.includes(newBoard)) {
+			arrayOfLinkedBoards.push(currentBoard);
+			params.set("linkedBoard", arrayOfLinkedBoards);
+		}
+	}
 	url.search = params.toString();
 	url.pathname = "/board/" + newBoard;
 	location.href = url.toString();

@@ -25,6 +25,13 @@ exports.get_board = function (req, res) {
 	});
 };
 
+exports.get_board_data = function (req, res) {
+	const filter = {_id: mongoose.Types.ObjectId(req.params.boardId)};
+	Board.findOne(filter, (err, savedBoard) => {
+		res.send(savedBoard);
+	});
+};
+
 exports.get_linked_board = function (req, res) {
 	const filter = {_id: mongoose.Types.ObjectId(req.params.cardId)};
 	Card.findOne(filter, (err, savedCard) => {
