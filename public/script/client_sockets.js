@@ -1,7 +1,6 @@
-
-
-let url = window.location.href;
-let windowBoardId = url.substr(url.lastIndexOf("/") + 1);
+const url = new URL(window.location.href);
+let pathname = url.pathname.toString();
+const windowBoardId = pathname.substr(pathname.lastIndexOf("/") + 1);
 let colors = ["#c50c08", "#31a023", "#385bd6", "#d2c72a"];
 
 //typing notification
@@ -99,7 +98,7 @@ function convertToLink(card) {
 	card.querySelector(".forward").addEventListener("mousedown", function () {
 		$.get("/get-linked-board/" + card.id, function (data) {
 			if (data !== null && data !== "") {
-				location.href = "/board/" + data;
+				changeLocAndAppend(data);
 			} else {
 				console.log("No boardId returned");
 			}
@@ -447,7 +446,7 @@ function typingTimeout() {
 $(document).ready(function () {
 
 	socket.emit("join", {boardId: windowBoardId, name: cookieValue("username")});
-	
+
 	$("#chatInput").keypress((e) => {
 		if (e.which != 13) {
 			typing = true;

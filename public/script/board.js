@@ -6,8 +6,19 @@ window.onload = function () {
 function createBoard() {
 	$.post("/",
 		function (data) {
-			location.href = "/board/" + data;
+			changeLocAndAppend(data)
 		});
+}
+
+function changeLocAndAppend(newBoard) {
+	const url = new URL(window.location.href);
+	let pathname = url.pathname.toString();
+	const currentBoard = pathname.substr(pathname.lastIndexOf("/") + 1);
+	const params = url.searchParams;
+	params.append("linkedBoard", currentBoard);
+	url.search = params.toString();
+	url.pathname = "/board/" + newBoard;
+	location.href = url.toString();
 }
 
 function copyToClipboard() {
