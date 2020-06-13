@@ -273,7 +273,7 @@ textarea:focus {
 	overflow: visible;
 	transition: ease-in-out .3s;
 	box-shadow: 1px 1px 3px rgba(0, 0, 0, .3);
-	z-index: 999999999999999;
+	z-index: 999;
 }
 
 #toolbar:hover {
@@ -411,7 +411,7 @@ textarea:focus {
 	width: 30vw;
 	border-bottom-left-radius: 0px;
 	border-bottom-right-radius: 0px;
-	z-index: 10000000;
+	z-index: 999;
 	border-bottom: none;
 }
 

@@ -7,7 +7,7 @@ exports.create_board = function (req, res) {
 	var newBoard =
 		new Board({
 			_id: new mongoose.mongo.ObjectId(),
-			name: "The coolest board"
+			name: ""
 		});
 	newBoard.save((err) => {
 		if (err) {

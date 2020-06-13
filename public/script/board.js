@@ -1,4 +1,19 @@
 window.onload = function () {
+	//If the modal for the board name is rendered then show it
+	if($("#setNameModal")) {
+		$("#setNameModal").modal("show");
+		//Keep submit button disabled as long as input is empty
+		$("#board-name-input").on("input", () => {
+			$("#board-name-button").prop("disabled", !$("#board-name-input").val().trim());
+		});
+	}
+	//Update board name via modal
+	$("#board-name-form").submit(e => {
+		e.preventDefault();
+		$("#setNameModal").modal("hide");
+		updateBoardName($("#board-name-input").val().trim());
+	});
+
 	$("#create-board").on("click", createBoard);
 	$("#share-board").on("click", copyToClipboard);
 };
