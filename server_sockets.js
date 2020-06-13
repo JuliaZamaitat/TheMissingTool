@@ -11,11 +11,24 @@ module.exports = {
 
 			socket.on("join", function (obj) {
 				let username = obj.name;
-				socket.user = username;
 				let room = obj.boardId;
 				socket.join(room);
 				board = room;
+				updateUserNames(username, board);
+			});
 
+			socket.on("disconnect", function () {
+				refreshUserNameList()
+			});
+
+			socket.on("change-user-list", function (obj) {
+				refreshUserNameList()
+				updateUserNames(obj.name);
+			});
+
+
+			function updateUserNames(username){
+				socket.user = username;
 				if (!(board in users)) {
 					users[board] = [];
 				}
@@ -23,20 +36,21 @@ module.exports = {
 					users[board].push(username);
 				}
 				console.log(users);
-
 				io.to(board).emit("update-users", users[board]);
+			}
 
-			});
-
-			socket.on("disconnect", function () {
-
-				for(var i=0; i<users.length; i++) {
-					if(users[board][i] == socket.user) {
-						users[board].splice(i, 1);
+			function refreshUserNameList() {
+				if (users[board] != null){
+					const currentUsers = Object.values(users[board]);
+					for (var i=0; i<currentUsers.length; i++){
+						if (currentUsers[i] == socket.user) {
+							currentUsers.splice(i,1);
+							users[board] = currentUsers;
+						}
 					}
+					io.to(board).emit("update-users", users[board]);
 				}
-				io.to(board).emit("update-users", users[board]);
-			});
+			}
 
 			socket.on("add-link", function (incoming) {
 				const filter = {_id: mongoose.Types.ObjectId(incoming.cardId)};
