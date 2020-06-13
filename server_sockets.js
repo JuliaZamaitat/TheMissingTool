@@ -249,6 +249,10 @@ module.exports = {
 					socket.broadcast.emit("display", data);
 			});
 
+			socket.on('editing', (data) => {
+				socket.broadcast.emit('card-display', data)
+			});
+
 		});
 	}
 };
