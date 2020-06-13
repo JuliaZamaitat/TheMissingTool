@@ -64,8 +64,8 @@ function createCard(data) {
 		card.style.left = data.position.left + "px";
 		card.style.top = data.position.top + "px";
 	} else {
-		card.style.left = 200 + "px";
-		card.style.top = 200 + "px";
+		card.style.left = Math.floor(Math.random() * 301) + 100 + "px";
+		card.style.top = Math.floor(Math.random() * 401) + 100 + "px";
 	}
 	card.style.fontSize = data.fontSize;
 	if (data.text != null) {
