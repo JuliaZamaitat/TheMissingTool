@@ -1,5 +1,3 @@
-
-
 let url = window.location.href;
 let windowBoardId = url.substr(url.lastIndexOf("/") + 1);
 let colors = ["#c50c08", "#31a023", "#385bd6", "#d2c72a"];
@@ -8,15 +6,27 @@ let colors = ["#c50c08", "#31a023", "#385bd6", "#d2c72a"];
 let typing = false,
 	timeout = undefined;
 var socket = io();
+var messageCount = 0;
 
 $.get("/board/" + windowBoardId + "/messages", (messages) => {
 	messages.forEach(addMessage);
+	$("#messageCount").text(( messageCount = 0).toString());
+
 });
 
 $.get("/board/" + windowBoardId + "/cards", (cards) => {
 	cards.forEach(createCard);
 });
 
+window.addEventListener( "pageshow", function ( event ) {
+
+	const historyTraversal = event.persisted ||
+		(typeof window.performance != "undefined" &&
+			window.performance.navigation.type === 2);
+	if ( historyTraversal ) {
+		window.location.reload();
+	}
+});
 
 socket.on("update-users", (users) => {
 	console.log("IN UPDATE USER");
@@ -99,7 +109,7 @@ function convertToLink(card) {
 	card.querySelector(".forward").addEventListener("mousedown", function () {
 		$.get("/get-linked-board/" + card.id, function (data) {
 			if (data !== null && data !== "") {
-				location.href = "/board/" + data;
+ 				location.href = "/board/" + data;
 			} else {
 				console.log("No boardId returned");
 			}
@@ -388,6 +398,7 @@ socket.on("remove-card", (data) => {
 socket.on("message", addMessage);
 
 function addMessage(message) {
+	$("#messageCount").text(( messageCount++).toString());
 	let usernameEl = $("<b>").text(message.username);
 	let time = new Date(message.time);
 	let timeEl = $("<span>", {class: "text-secondary float-right"}).text(time.getHours() + ":" + time.getMinutes());
@@ -447,7 +458,7 @@ function typingTimeout() {
 $(document).ready(function () {
 
 	socket.emit("join", {boardId: windowBoardId, name: cookieValue("username")});
-	
+
 	$("#chatInput").keypress((e) => {
 		if (e.which != 13) {
 			typing = true;
@@ -471,5 +482,4 @@ $(document).ready(function () {
 			chatRescaleContent();
 		}
 	});
-
 });
