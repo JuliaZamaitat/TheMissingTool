@@ -361,8 +361,7 @@ socket.on("board-name-update", (data) => {
 $("#user-name").on("focusout", function (event) {
 	var name = $(this).text();
 	document.cookie = "username=" + name;
-	socket.emit("change-user-list");
-	socket.emit("join", {boardId: windowBoardId, name: cookieValue("username")});
+	socket.emit("change-user-list", {boardId: windowBoardId, name: cookieValue("username")});
 });
 
 socket.on("board-deleted", (data) => {

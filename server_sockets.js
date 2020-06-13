@@ -11,11 +11,24 @@ module.exports = {
 
 			socket.on("join", function (obj) {
 				let username = obj.name;
-				socket.user = username;
 				let room = obj.boardId;
 				socket.join(room);
 				board = room;
+				updateUserNames(username, board);
+			});
 
+			socket.on("disconnect", function () {
+				refreshUserNameList()
+			});
+
+			socket.on("change-user-list", function (obj) {
+				refreshUserNameList()
+				updateUserNames(obj.name);
+			});
+
+
+			function updateUserNames(username){
+				socket.user = username;
 				if (!(board in users)) {
 					users[board] = [];
 				}
@@ -23,18 +36,8 @@ module.exports = {
 					users[board].push(username);
 				}
 				console.log(users);
-
 				io.to(board).emit("update-users", users[board]);
-
-			});
-
-			socket.on("disconnect", function () {
-				refreshUserNameList()
-			});
-
-			socket.on("change-user-list", function () {
-				refreshUserNameList()
-			});
+			}
 
 			function refreshUserNameList() {
 				if (users[board] != null){
