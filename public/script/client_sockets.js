@@ -19,7 +19,6 @@ $.get("/board/" + windowBoardId + "/cards", (cards) => {
 
 
 socket.on("update-users", (users) => {
-	console.log("IN UPDATE USER");
 	$(".users").empty();
 	for(var i=0; i<users.length; i++) {
 		let username = document.createElement("p");
@@ -362,6 +361,7 @@ socket.on("board-name-update", (data) => {
 $("#user-name").on("focusout", function (event) {
 	var name = $(this).text();
 	document.cookie = "username=" + name;
+	socket.emit("change-user-list", {boardId: windowBoardId, name: cookieValue("username")});
 });
 
 socket.on("board-deleted", (data) => {
@@ -447,7 +447,7 @@ function typingTimeout() {
 $(document).ready(function () {
 
 	socket.emit("join", {boardId: windowBoardId, name: cookieValue("username")});
-	
+
 	$("#chatInput").keypress((e) => {
 		if (e.which != 13) {
 			typing = true;
