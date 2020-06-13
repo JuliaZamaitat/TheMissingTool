@@ -6,7 +6,6 @@ let colors = ["#c50c08", "#31a023", "#385bd6", "#d2c72a"];
 let typing = false,
 	timeout = undefined;
 var socket = io();
-var messageCount = 0;
 
 $.get("/board/" + windowBoardId + "/messages", (messages) => {
 	messages.forEach(addMessage);
@@ -398,7 +397,7 @@ socket.on("remove-card", (data) => {
 socket.on("message", addMessage);
 
 function addMessage(message) {
-	$("#messageCount").text(( messageCount++).toString());
+	$("#messageCount").text(( ++messageCount).toString());
 	let usernameEl = $("<b>").text(message.username);
 	let time = new Date(message.time);
 	let timeEl = $("<span>", {class: "text-secondary float-right"}).text(time.getHours() + ":" + time.getMinutes());
