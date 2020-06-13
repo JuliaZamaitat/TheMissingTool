@@ -29,14 +29,25 @@ module.exports = {
 			});
 
 			socket.on("disconnect", function () {
-
-				for(var i=0; i<users.length; i++) {
-					if(users[board][i] == socket.user) {
-						users[board].splice(i, 1);
-					}
-				}
-				io.to(board).emit("update-users", users[board]);
+				refreshUserNameList()
 			});
+
+			socket.on("change-user-list", function () {
+				refreshUserNameList()
+			});
+
+			function refreshUserNameList() {
+				if (users[board] != null){
+					const currentUsers = Object.values(users[board]);
+					for (var i=0; i<currentUsers.length; i++){
+						if (currentUsers[i] == socket.user) {
+							currentUsers.splice(i,1);
+							users[board] = currentUsers;
+						}
+					}
+					io.to(board).emit("update-users", users[board]);
+				}
+			}
 
 			socket.on("add-link", function (incoming) {
 				const filter = {_id: mongoose.Types.ObjectId(incoming.cardId)};
