@@ -6,6 +6,7 @@ let colors = ["#c50c08", "#31a023", "#385bd6", "#d2c72a"];
 let typing = false,
 	timeout = undefined;
 var socket = io();
+var messageCount = 0;
 
 $.get("/board/" + windowBoardId + "/messages", (messages) => {
 	messages.forEach(addMessage);
