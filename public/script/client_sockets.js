@@ -398,7 +398,7 @@ socket.on("remove-card", (data) => {
 socket.on("message", addMessage);
 
 function addMessage(message) {
-	$("#messageCount").text(( messageCount++).toString());
+	$("#messageCount").text(( ++messageCount).toString());
 	let usernameEl = $("<b>").text(message.username);
 	let time = new Date(message.time);
 	let timeEl = $("<span>", {class: "text-secondary float-right"}).text(time.getHours() + ":" + time.getMinutes());
