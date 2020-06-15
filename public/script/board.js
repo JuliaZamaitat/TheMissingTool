@@ -1,6 +1,7 @@
 window.onload = function () {
 	$("#create-board").on("click", createBoard);
 	$("#share-board").on("click", copyToClipboard);
+	$("#folder").on("click", showOrHide);
 };
 
 function createBoard() {
@@ -8,6 +9,10 @@ function createBoard() {
 		function (data) {
 			setCookieAndChangeLocation(data);
 		});
+}
+
+function showOrHide() {
+	$("#dropdown-content").fadeToggle();
 }
 
 function setCookieAndChangeLocation(newBoard) {

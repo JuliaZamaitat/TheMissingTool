@@ -204,37 +204,23 @@ textarea:focus {
 	bottom: 20px;
 }
 
-#board-links {
-	list-style-type: none;
-	margin: 0;
-	padding: 0;
+.dropdown:hover #dropdown-content {
+	display: block;
 }
 
-
-#board-links > li {
-	color: grey;
-	float: left;
-	height: 3rem;
-	padding: 1rem;
-	cursor: pointer;
+.dropdown #dropdown-content p:hover {
+	color: #89ba17;
+	cursor: default;
 }
-
-
-#board-name {
-	font-weight: bold;
-	color: black;
-}
-
 
 #user-name {
 	background-color: rgba(0, 0, 255, .2);
 }
 
-#board-name:focus, #user-name:focus {
+#user-name:focus {
 	outline: none;
 	box-shadow: 0 0 5px rgba(0, 170, 255, .7);
 }
-
 
 /* MENUBAR */
 #menubar {
@@ -545,7 +531,6 @@ textarea:focus {
 	margin-bottom: .3rem;
 }
 
-
 .notifier {
 	position: absolute;
 	bottom: 0px;
@@ -563,4 +548,61 @@ textarea:focus {
 
 .active {
 	height: 23px;
+}
+
+#dropdown-content
+{
+	left: 10px;
+	top: 10px;
+	z-index: 1;
+	cursor: default;
+	margin: 6px;
+	padding: 12px;
+}
+
+
+#dropdown-content p:hover
+{
+	color: blue;
+}
+
+
+#board-name {
+	z-index: 1;
+	cursor: default;
+	text-align: center;
+	display: inline;
+	padding: 12px;
+	margin: 6px;
+}
+
+#board-name p, #folder {
+	z-index: 1;
+	cursor: default;
+	margin: 6px;
+	text-align: center;
+}
+
+#dropdown-content {
+	display: none;
+	top: 58px;
+}
+
+#dropdown-content:last-child {
+	padding-bottom: 0;
+}
+
+#board-name:focus{
+	outline: none;
+}
+
+.neo-container {
+	border-radius: 6px;
+	width: fit-content;
+	box-shadow:  5px 5px 10px #bfbfbf,
+	-5px -5px 10px #ffffff;
+	display: table;
+	height: fit-content;
+	padding: 12px;
+	margin-top: 12px;
 }

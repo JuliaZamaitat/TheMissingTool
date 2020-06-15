@@ -450,7 +450,7 @@ $(document).ready(function () {
 		if (boardId !== null && boardId !== "") {
 			$.get("/board/" + boardId + "/data", (boardData) => {
 				if (boardData !== "") {
-					var element = document.createElement("LI");
+					var element = document.createElement("p");
 					var text = document.createTextNode(boardData.name);
 					element.appendChild(text);
 					element.id = boardData._id;
@@ -458,7 +458,7 @@ $(document).ready(function () {
 					element.addEventListener("mousedown", function () {
 						setCookieAndChangeLocation(element.id);
 					});
-					document.getElementById("board-links").appendChild(element);
+					document.getElementById("dropdown-content").appendChild(element);
 
 				}
 			});
