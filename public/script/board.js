@@ -14,14 +14,14 @@ function setCookieAndChangeLocation(newBoard) {
 	const url = new URL(window.location.href);
 	let pathname = url.pathname.toString();
 	const currentBoard = pathname.substr(pathname.lastIndexOf("/") + 1);
-	let currentCookie = cookieValue("linkedBoard");
+	let currentCookie = cookieValue("visitedBoards");
 	if (currentCookie === null || currentCookie === "") {
-		document.cookie = "linkedBoard=" + currentBoard;
+		document.cookie = "visitedBoards=" + currentBoard;
 	} else {
-		var arrayOfLinkedBoards = currentCookie.toString().split(",");
-		if (!arrayOfLinkedBoards.includes(newBoard)) {
-			arrayOfLinkedBoards.push(currentBoard);
-			document.cookie = "linkedBoard=" + arrayOfLinkedBoards;
+		var arrayOfVisitedBoards = currentCookie.toString().split(",");
+		if (!arrayOfVisitedBoards.includes(newBoard)) {
+			arrayOfVisitedBoards.push(currentBoard);
+			document.cookie = "visitedBoards=" + arrayOfVisitedBoards;
 		}
 	}
 	location.href = "/board/" + newBoard;

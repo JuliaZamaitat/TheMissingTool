@@ -17,7 +17,6 @@ $.get("/board/" + windowBoardId + "/cards", (cards) => {
 });
 
 socket.on("update-users", (users) => {
-	console.log("IN UPDATE USER");
 	$(".users").empty();
 	for (var i = 0; i < users.length; i++) {
 		let username = document.createElement("p");
@@ -246,7 +245,6 @@ function addListeners(card, data) {
 
 // event listeners for board
 $("#board-name").on("input", function (event) {
-	console.log("In Ajax ");
 	socket.emit("update-board-name", {
 		_id: windowBoardId,
 		name: $(this).text()
@@ -379,7 +377,6 @@ socket.on("display-card", (data) => {
 
 
 socket.on("remove-card", (data) => {
-	console.log(data.id);
 	document.getElementById(data).remove();
 });
 
@@ -446,11 +443,11 @@ $(document).ready(function () {
 
 	socket.emit("join", {boardId: windowBoardId, name: cookieValue("username")});
 
-	let currentParams = cookieValue("linkedBoard");
-	const arrayOfLinkedBoards = currentParams.toString().split(",");
+	let currentParams = cookieValue("visitedBoards");
+	const arrayOfVisitedBoards = currentParams.toString().split(",");
 
-	if (arrayOfLinkedBoards !== null && arrayOfLinkedBoards !== undefined) {
-		arrayOfLinkedBoards.forEach(element => {
+	if (arrayOfVisitedBoards !== null && arrayOfVisitedBoards !== undefined) {
+		arrayOfVisitedBoards.forEach(element => {
 			if (element !== null) {
 				appendNameToBoardList(element);
 			}
@@ -461,7 +458,6 @@ $(document).ready(function () {
 
 		if (boardId !== null && boardId !== "") {
 			$.get("/board/" + boardId + "/data", (boardData) => {
-				console.log(boardData)
 				var element = document.createElement("LI");
 				var text = document.createTextNode(boardData.name);
 				element.appendChild(text);
