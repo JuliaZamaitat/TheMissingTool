@@ -251,14 +251,8 @@ $("#board-name").on("input", function (event) {
 	});
 });
 
-
-$("#share-board").on("click", shareBoard);
 $("#delete-board").on("click", deleteBoard);
 $("#export-board").on("click", exportBoard);
-
-function shareBoard() {
-	// TODO
-}
 
 function deleteBoard() {
 	socket.emit("delete-board", {_id: windowBoardId});
@@ -394,15 +388,6 @@ function addMessage(message) {
 	chatScrollBottom();
 }
 
-// function getRandomColor() {
-// 	var colors = "0123456789ABCDEF";
-// 	var color = "#";
-// 	for (var i = 0; i < 6; i++) {
-// 		color += letters[Math.floor(Math.random() * 16)];
-// 	}
-// 	return color;
-// }
-
 function getRandomColor() {
 	return colors[Math.floor(Math.random() * Math.floor(colors.length))];
 }
@@ -429,7 +414,13 @@ function assignColorsToChange(card) {
 }
 
 function cookieValue(name) {
-	return decodeURIComponent(document.cookie.split("; ").find(row => row.startsWith(name)).split("=")[1]);
+	let rightRow = document.cookie.split("; ").find(row => row.startsWith(name));
+	if (rightRow !== null && rightRow !== undefined) {
+		return decodeURIComponent(rightRow.split("=")[1]);
+	} else {
+		return null;
+	}
+
 }
 
 function typingTimeout() {
@@ -444,22 +435,23 @@ $(document).ready(function () {
 	socket.emit("join", {boardId: windowBoardId, name: cookieValue("username")});
 
 	let currentParams = cookieValue("visitedBoards");
-	const arrayOfVisitedBoards = currentParams.toString().split(",");
-
-	if (arrayOfVisitedBoards !== null && arrayOfVisitedBoards !== undefined) {
-		arrayOfVisitedBoards.forEach(element => {
-			if (element !== null) {
-				appendNameToBoardList(element);
-			}
-		});
+	if (currentParams !== null) {
+		const arrayOfVisitedBoards = currentParams.toString().split(",");
+		if (arrayOfVisitedBoards !== null && arrayOfVisitedBoards !== undefined) {
+			arrayOfVisitedBoards.forEach(element => {
+				if (element !== null && element !== windowBoardId) {
+					appendNameToBoardList(element);
+				}
+			});
+		}
 	}
 
-	function appendNameToBoardList(boardId) {
 
+	function appendNameToBoardList(boardId) {
 		if (boardId !== null && boardId !== "") {
 			$.get("/board/" + boardId + "/data", (boardData) => {
 				var element = document.createElement("LI");
-				var text = document.createTextNode(boardData.name);
+				var text = document.createTextNode(boardData._id);
 				element.appendChild(text);
 				element.id = boardData._id;
 				element.className = "boardLink";

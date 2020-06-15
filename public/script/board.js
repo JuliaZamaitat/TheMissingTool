@@ -1,3 +1,4 @@
+
 window.onload = function () {
 	$("#create-board").on("click", createBoard);
 	$("#share-board").on("click", copyToClipboard);
@@ -11,16 +12,13 @@ function createBoard() {
 }
 
 function setCookieAndChangeLocation(newBoard) {
-	const url = new URL(window.location.href);
-	let pathname = url.pathname.toString();
-	const currentBoard = pathname.substr(pathname.lastIndexOf("/") + 1);
 	let currentCookie = cookieValue("visitedBoards");
 	if (currentCookie === null || currentCookie === "") {
-		document.cookie = "visitedBoards=" + currentBoard;
+		document.cookie = "visitedBoards=" + windowBoardId;
 	} else {
 		var arrayOfVisitedBoards = currentCookie.toString().split(",");
-		if (!arrayOfVisitedBoards.includes(newBoard)) {
-			arrayOfVisitedBoards.push(currentBoard);
+		if (!arrayOfVisitedBoards.includes(windowBoardId)) {
+			arrayOfVisitedBoards.push(windowBoardId);
 			document.cookie = "visitedBoards=" + arrayOfVisitedBoards;
 		}
 	}
@@ -41,14 +39,4 @@ function copyToClipboard() {
 	setTimeout(function () {
 		$(".notifier").removeClass("active");
 	}, 1000);
-}
-
-function cookieValue(name) {
-	let rightRow = document.cookie.split("; ").find(row => row.startsWith(name));
-	if (rightRow !== null && rightRow !== undefined) {
-		return decodeURIComponent(rightRow.split("=")[1]);
-	} else {
-		return null;
-	}
-
 }
