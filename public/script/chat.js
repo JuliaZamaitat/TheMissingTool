@@ -10,6 +10,8 @@ const chatScrollBottom = () => {
 
 //Chat window's open/close mechanism
 $("#chatHeader").click(() => {
+	$("#messageCount").fadeToggle(1);
+	$("#messageCount").text(( messageCount = 0).toString());
 	$("#chatInputContainer").fadeToggle(300);
 	$("#chatBody").slideToggle();
 	chatRescaleContent();

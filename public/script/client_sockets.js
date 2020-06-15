@@ -1,3 +1,4 @@
+
 const url = new URL(window.location.href);
 let pathname = url.pathname.toString();
 window.windowBoardId = pathname.substr(pathname.lastIndexOf("/") + 1);
@@ -8,13 +9,28 @@ let colors = ["#c50c08", "#31a023", "#385bd6", "#d2c72a"];
 let typing = false,
 	timeout = undefined;
 var socket = io();
+var messageCount = 0;
 
 $.get("/board/" + window.windowBoardId + "/messages", (messages) => {
 	messages.forEach(addMessage);
+	$("#messageCount").text(( messageCount = 0).toString());
+
 });
 
 $.get("/board/" + window.windowBoardId + "/cards", (cards) => {
 	cards.forEach(createCard);
+});
+
+
+
+window.addEventListener( "pageshow", function ( event ) {
+
+	const historyTraversal = event.persisted ||
+		(typeof window.performance != "undefined" &&
+			window.performance.navigation.type === 2);
+	if ( historyTraversal ) {
+		window.location.reload();
+	}
 });
 
 socket.on("update-users", (users) => {
@@ -53,8 +69,8 @@ function createCard(data) {
 		card.style.left = data.position.left + "px";
 		card.style.top = data.position.top + "px";
 	} else {
-		card.style.left = 200 + "px";
-		card.style.top = 200 + "px";
+		card.style.left = Math.floor(Math.random() * 301) + 100 + "px";
+		card.style.top = Math.floor(Math.random() * 401) + 100 + "px";
 	}
 	card.style.fontSize = data.fontSize;
 	if (data.text != null) {
@@ -353,6 +369,7 @@ socket.on("board-name-update", (data) => {
 $("#user-name").on("focusout", function (event) {
 	var name = $(this).text();
 	document.cookie = "username=" + name;
+	socket.emit("change-user-list", {boardId: windowBoardId, name: cookieValue("username")});
 });
 
 socket.on("board-deleted", (data) => {
@@ -378,6 +395,7 @@ socket.on("remove-card", (data) => {
 socket.on("message", addMessage);
 
 function addMessage(message) {
+	$("#messageCount").text(( ++messageCount).toString());
 	let usernameEl = $("<b>").text(message.username);
 	let time = new Date(message.time);
 	let timeEl = $("<span>", {class: "text-secondary float-right"}).text(time.getHours() + ":" + time.getMinutes());
@@ -432,6 +450,7 @@ function typingTimeout() {
 //listen for keypress in chatinput and emits typing
 $(document).ready(function () {
 
+
 	socket.emit("join", {boardId: window.windowBoardId, name: cookieValue("username")});
 
 	let currentBoards = cookieValue("visitedBoards");
@@ -465,6 +484,9 @@ $(document).ready(function () {
 		}
 	}
 
+	socket.emit("join", {boardId: windowBoardId, name: cookieValue("username")});
+
+
 	$("#chatInput").keypress((e) => {
 		if (e.which != 13) {
 			typing = true;
@@ -488,5 +510,4 @@ $(document).ready(function () {
 			chatRescaleContent();
 		}
 	});
-
 });
