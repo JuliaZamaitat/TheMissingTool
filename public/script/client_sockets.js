@@ -97,7 +97,7 @@ function convertToLink(card) {
 	card.querySelector(".forward").addEventListener("mousedown", function () {
 		$.get("/get-linked-board/" + card.id, function (data) {
 			if (data !== null && data !== "") {
-				changeLocationAndAppend(data);
+				setCookieAndChangeLocation(data);
 			} else {
 				console.log("No boardId returned");
 			}
@@ -446,31 +446,36 @@ $(document).ready(function () {
 
 	socket.emit("join", {boardId: windowBoardId, name: cookieValue("username")});
 
-	const url = new URL(window.location.href);
-	const params = url.searchParams;
+	let currentParams = cookieValue("linkedBoard");
+	const arrayOfLinkedBoards = currentParams.toString().split(",");
 
-	let currentParams = params.get("linkedBoard");
-	var arrayOfLinkedBoards = currentParams.toString().split(",");
-
-	arrayOfLinkedBoards.forEach(element => {
-		if (element !== null) {
-			appendNameToBoardList(element);
-		}
-	});
+	if (arrayOfLinkedBoards !== null && arrayOfLinkedBoards !== undefined) {
+		arrayOfLinkedBoards.forEach(element => {
+			if (element !== null) {
+				appendNameToBoardList(element);
+			}
+		});
+	}
 
 	function appendNameToBoardList(boardId) {
-		$.get("/board/" + boardId + "/data", (boardData) => {
-			console.log(boardData)
-			var element = document.createElement("LI");
-			var text = document.createTextNode(boardData.name);
-			element.appendChild(text);
-			element.id = boardData._id;
-			element.className = "boardLink";
-			element.addEventListener("mousedown", function () {
-				changeLocationAndAppend(element.id);
+
+		if (boardId !== null && boardId !== "") {
+			$.get("/board/" + boardId + "/data", (boardData) => {
+				console.log(boardData)
+				var element = document.createElement("LI");
+				var text = document.createTextNode(boardData.name);
+				element.appendChild(text);
+				element.id = boardData._id;
+				element.className = "boardLink";
+				element.addEventListener("mousedown", function () {
+					setCookieAndChangeLocation(element.id);
+				});
+				document.getElementById("board-links").appendChild(element);
 			});
-			document.getElementById("board-links").appendChild(element);
-		});
+		}
+
+
+
 	}
 
 	$("#chatInput").keypress((e) => {

@@ -6,28 +6,25 @@ window.onload = function () {
 function createBoard() {
 	$.post("/",
 		function (data) {
-			changeLocationAndAppend(data);
+			setCookieAndChangeLocation(data);
 		});
 }
 
-function changeLocationAndAppend(newBoard) {
+function setCookieAndChangeLocation(newBoard) {
 	const url = new URL(window.location.href);
 	let pathname = url.pathname.toString();
 	const currentBoard = pathname.substr(pathname.lastIndexOf("/") + 1);
-	const params = url.searchParams;
-	let currentParams = params.get("linkedBoard");
-	if (currentParams === null || currentParams === "") {
-		params.set("linkedBoard", currentBoard);
+	let currentCookie = cookieValue("linkedBoard");
+	if (currentCookie === null || currentCookie === "") {
+		document.cookie = "linkedBoard=" + currentBoard;
 	} else {
-		var arrayOfLinkedBoards = currentParams.toString().split(",");
+		var arrayOfLinkedBoards = currentCookie.toString().split(",");
 		if (!arrayOfLinkedBoards.includes(newBoard)) {
 			arrayOfLinkedBoards.push(currentBoard);
-			params.set("linkedBoard", arrayOfLinkedBoards);
+			document.cookie = "linkedBoard=" + arrayOfLinkedBoards;
 		}
 	}
-	url.search = params.toString();
-	url.pathname = "/board/" + newBoard;
-	location.href = url.toString();
+	location.href = "/board/" + newBoard;
 }
 
 function copyToClipboard() {
@@ -44,4 +41,14 @@ function copyToClipboard() {
 	setTimeout(function () {
 		$(".notifier").removeClass("active");
 	}, 1000);
+}
+
+function cookieValue(name) {
+	let rightRow = document.cookie.split("; ").find(row => row.startsWith(name));
+	if (rightRow !== null && rightRow !== undefined) {
+		return decodeURIComponent(rightRow.split("=")[1]);
+	} else {
+		return null;
+	}
+
 }
