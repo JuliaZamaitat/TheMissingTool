@@ -1,4 +1,3 @@
-
 window.onload = function () {
 	$("#create-board").on("click", createBoard);
 	$("#share-board").on("click", copyToClipboard);
@@ -7,12 +6,12 @@ window.onload = function () {
 function createBoard() {
 	$.post("/",
 		function (data) {
-			window.setCookieAndChangeLocation(data);
+			setCookieAndChangeLocation(data);
 		});
 }
 
-window.setCookieAndChangeLocation = (newBoard) => {
-	let currentCookie = window.cookieValue("visitedBoards");
+function setCookieAndChangeLocation(newBoard) {
+	let currentCookie = cookieValue("visitedBoards");
 	if (currentCookie === null || currentCookie === "") {
 		document.cookie = "visitedBoards=" + window.windowBoardId;
 	} else {
@@ -26,8 +25,6 @@ window.setCookieAndChangeLocation = (newBoard) => {
 }
 
 function copyToClipboard() {
-	// need temp since for .execCommand item needs to be selected before and
-	// window.location.href can not be selected
 	const temp = document.createElement("input"), text = window.location.href;
 	document.body.appendChild(temp);
 	temp.value = text;
@@ -39,4 +36,13 @@ function copyToClipboard() {
 	setTimeout(function () {
 		$(".notifier").removeClass("active");
 	}, 1000);
+}
+
+function cookieValue(name) {
+	let rightRow = document.cookie.split("; ").find(row => row.startsWith(name));
+	if (rightRow !== null && rightRow !== undefined) {
+		return decodeURIComponent(rightRow.split("=")[1]);
+	} else {
+		return null;
+	}
 }

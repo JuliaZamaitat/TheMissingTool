@@ -31,7 +31,7 @@ $("#chatInput").on("input keydown", function(e) {
 					text: text,
 					time: time,
 					boardId: window.windowBoardId,
-					username: window.cookieValue("username")
+					username: cookieValue("username")
 				});
 			}
 		}

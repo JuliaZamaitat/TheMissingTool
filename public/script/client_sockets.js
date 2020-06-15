@@ -22,7 +22,7 @@ socket.on("update-users", (users) => {
 	for (var i = 0; i < users.length; i++) {
 		let username = document.createElement("p");
 		username.innerText = users[i];
-		if (users[i] !== window.cookieValue("username")) {
+		if (users[i] !== cookieValue("username")) {
 			$(".users").append(username);
 		}
 	}
@@ -97,7 +97,7 @@ function convertToLink(card) {
 	card.querySelector(".forward").addEventListener("mousedown", function () {
 		$.get("/get-linked-board/" + card.id, function (data) {
 			if (data !== null && data !== "") {
-				window.setCookieAndChangeLocation(data);
+				setCookieAndChangeLocation(data);
 			} else {
 				console.log("No boardId returned");
 			}
@@ -212,7 +212,7 @@ function addListeners(card, data) {
 				sendComment({
 					cardId: card.id,
 					message: $(this).val(),
-					sender: window.cookieValue("username")
+					sender: cookieValue("username")
 				});
 				card.querySelector(".commentInput").value = "";
 			}
@@ -414,17 +414,17 @@ function assignColorsToChange(card) {
 	}
 }
 
-window.cookieValue = (name) => {
+function cookieValue(name) {
 	let rightRow = document.cookie.split("; ").find(row => row.startsWith(name));
 	if (rightRow !== null && rightRow !== undefined) {
 		return decodeURIComponent(rightRow.split("=")[1]);
 	} else {
 		return null;
 	}
-};
+}
 
 function typingTimeout() {
-	let user = window.cookieValue("username");
+	let user = cookieValue("username");
 	typing = false;
 	socket.emit("typing", {user: user, typing: false});
 }
@@ -432,11 +432,11 @@ function typingTimeout() {
 //listen for keypress in chatinput and emits typing
 $(document).ready(function () {
 
-	socket.emit("join", {boardId: window.windowBoardId, name: window.cookieValue("username")});
+	socket.emit("join", {boardId: window.windowBoardId, name: cookieValue("username")});
 
-	let currentParams = window.cookieValue("visitedBoards");
-	if (currentParams !== null) {
-		const arrayOfVisitedBoards = currentParams.toString().split(",");
+	let currentBoards = cookieValue("visitedBoards");
+	if (currentBoards !== null) {
+		const arrayOfVisitedBoards = currentBoards.toString().split(",");
 		if (arrayOfVisitedBoards !== null && arrayOfVisitedBoards !== undefined) {
 			arrayOfVisitedBoards.forEach(element => {
 				if (element !== null && element !== window.windowBoardId) {
@@ -446,29 +446,29 @@ $(document).ready(function () {
 		}
 	}
 
-
 	function appendNameToBoardList(boardId) {
 		if (boardId !== null && boardId !== "") {
 			$.get("/board/" + boardId + "/data", (boardData) => {
-				var element = document.createElement("LI");
-				var text = document.createTextNode(boardData.name);
-				element.appendChild(text);
-				element.id = boardData._id;
-				element.className = "boardLink";
-				element.addEventListener("mousedown", function () {
-					window.setCookieAndChangeLocation(element.id);
-				});
-				document.getElementById("board-links").appendChild(element);
+				if (boardData !== "") {
+					var element = document.createElement("LI");
+					var text = document.createTextNode(boardData.name);
+					element.appendChild(text);
+					element.id = boardData._id;
+					element.className = "boardLink";
+					element.addEventListener("mousedown", function () {
+						setCookieAndChangeLocation(element.id);
+					});
+					document.getElementById("board-links").appendChild(element);
+
+				}
 			});
 		}
-
-
 	}
 
 	$("#chatInput").keypress((e) => {
 		if (e.which != 13) {
 			typing = true;
-			let user = window.cookieValue("username");
+			let user = cookieValue("username");
 			socket.emit("typing", {user: user, typing: true});
 			clearTimeout(timeout);
 			timeout = setTimeout(typingTimeout, 2000);
