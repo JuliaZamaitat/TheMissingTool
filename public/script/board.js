@@ -7,11 +7,11 @@ window.onload = function () {
 function createBoard() {
 	$.post("/",
 		function (data) {
-			setCookieAndChangeLocation(data);
+			window.setCookieAndChangeLocation(data);
 		});
 }
 
-function setCookieAndChangeLocation(newBoard) {
+window.setCookieAndChangeLocation = (newBoard) => {
 	let currentCookie = window.cookieValue("visitedBoards");
 	if (currentCookie === null || currentCookie === "") {
 		document.cookie = "visitedBoards=" + window.windowBoardId;

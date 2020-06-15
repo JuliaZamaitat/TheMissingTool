@@ -97,7 +97,7 @@ function convertToLink(card) {
 	card.querySelector(".forward").addEventListener("mousedown", function () {
 		$.get("/get-linked-board/" + card.id, function (data) {
 			if (data !== null && data !== "") {
-				setCookieAndChangeLocation(data);
+				window.setCookieAndChangeLocation(data);
 			} else {
 				console.log("No boardId returned");
 			}
@@ -451,12 +451,12 @@ $(document).ready(function () {
 		if (boardId !== null && boardId !== "") {
 			$.get("/board/" + boardId + "/data", (boardData) => {
 				var element = document.createElement("LI");
-				var text = document.createTextNode(boardData._id);
+				var text = document.createTextNode(boardData.name);
 				element.appendChild(text);
 				element.id = boardData._id;
 				element.className = "boardLink";
 				element.addEventListener("mousedown", function () {
-					setCookieAndChangeLocation(element.id);
+					window.setCookieAndChangeLocation(element.id);
 				});
 				document.getElementById("board-links").appendChild(element);
 			});
