@@ -32,7 +32,7 @@ $("#chatInput").on("input keydown", function(e) {
 				sendMessage({
 					text: text,
 					time: time,
-					boardId: windowBoardId,
+					boardId: window.windowBoardId,
 					username: cookieValue("username")
 				});
 			}

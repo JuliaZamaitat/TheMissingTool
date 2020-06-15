@@ -1,5 +1,8 @@
-let url = window.location.href;
-let windowBoardId = url.substr(url.lastIndexOf("/") + 1);
+
+const url = new URL(window.location.href);
+let pathname = url.pathname.toString();
+window.windowBoardId = pathname.substr(pathname.lastIndexOf("/") + 1);
+
 let colors = ["#c50c08", "#31a023", "#385bd6", "#d2c72a"];
 
 //typing notification
@@ -8,15 +11,17 @@ let typing = false,
 var socket = io();
 var messageCount = 0;
 
-$.get("/board/" + windowBoardId + "/messages", (messages) => {
+$.get("/board/" + window.windowBoardId + "/messages", (messages) => {
 	messages.forEach(addMessage);
 	$("#messageCount").text(( messageCount = 0).toString());
 
 });
 
-$.get("/board/" + windowBoardId + "/cards", (cards) => {
+$.get("/board/" + window.windowBoardId + "/cards", (cards) => {
 	cards.forEach(createCard);
 });
+
+
 
 window.addEventListener( "pageshow", function ( event ) {
 
@@ -30,7 +35,7 @@ window.addEventListener( "pageshow", function ( event ) {
 
 socket.on("update-users", (users) => {
 	$(".users").empty();
-	for(var i=0; i<users.length; i++) {
+	for (var i = 0; i < users.length; i++) {
 		let username = document.createElement("p");
 		username.innerText = users[i];
 		if (users[i] !== cookieValue("username")) {
@@ -108,7 +113,7 @@ function convertToLink(card) {
 	card.querySelector(".forward").addEventListener("mousedown", function () {
 		$.get("/get-linked-board/" + card.id, function (data) {
 			if (data !== null && data !== "") {
- 				location.href = "/board/" + data;
+				setCookieAndChangeLocation(data);
 			} else {
 				console.log("No boardId returned");
 			}
@@ -257,24 +262,17 @@ function addListeners(card, data) {
 
 // event listeners for board
 $("#board-name").on("input", function (event) {
-	console.log("In Ajax ");
 	socket.emit("update-board-name", {
-		_id: windowBoardId,
+		_id: window.windowBoardId,
 		name: $(this).text()
 	});
 });
 
-
-$("#share-board").on("click", shareBoard);
 $("#delete-board").on("click", deleteBoard);
 $("#export-board").on("click", exportBoard);
 
-function shareBoard() {
-	// TODO
-}
-
 function deleteBoard() {
-	socket.emit("delete-board", {_id: windowBoardId});
+	socket.emit("delete-board", {_id: window.windowBoardId});
 }
 
 function exportBoard() {
@@ -391,9 +389,8 @@ socket.on("display-card", (data) => {
 
 
 socket.on("remove-card", (data) => {
-	console.log(data.id);
 	document.getElementById(data).remove();
-})
+});
 
 socket.on("message", addMessage);
 
@@ -409,15 +406,6 @@ function addMessage(message) {
 	chatRescaleContent();
 	chatScrollBottom();
 }
-
-// function getRandomColor() {
-// 	var colors = "0123456789ABCDEF";
-// 	var color = "#";
-// 	for (var i = 0; i < 6; i++) {
-// 		color += letters[Math.floor(Math.random() * 16)];
-// 	}
-// 	return color;
-// }
 
 function getRandomColor() {
 	return colors[Math.floor(Math.random() * Math.floor(colors.length))];
@@ -445,7 +433,12 @@ function assignColorsToChange(card) {
 }
 
 function cookieValue(name) {
-	return decodeURIComponent(document.cookie.split("; ").find(row => row.startsWith(name)).split("=")[1]);
+	let rightRow = document.cookie.split("; ").find(row => row.startsWith(name));
+	if (rightRow !== null && rightRow !== undefined) {
+		return decodeURIComponent(rightRow.split("=")[1]);
+	} else {
+		return null;
+	}
 }
 
 function typingTimeout() {
@@ -457,7 +450,42 @@ function typingTimeout() {
 //listen for keypress in chatinput and emits typing
 $(document).ready(function () {
 
+
+	socket.emit("join", {boardId: window.windowBoardId, name: cookieValue("username")});
+
+	let currentBoards = cookieValue("visitedBoards");
+	if (currentBoards !== null) {
+		const arrayOfVisitedBoards = currentBoards.toString().split(",");
+		if (arrayOfVisitedBoards !== null && arrayOfVisitedBoards !== undefined) {
+			arrayOfVisitedBoards.forEach(element => {
+				if (element !== null && element !== window.windowBoardId) {
+					appendNameToBoardList(element);
+				}
+			});
+		}
+	}
+
+	function appendNameToBoardList(boardId) {
+		if (boardId !== null && boardId !== "") {
+			$.get("/board/" + boardId + "/data", (boardData) => {
+				if (boardData !== "") {
+					var element = document.createElement("p");
+					var text = document.createTextNode(boardData.name);
+					element.appendChild(text);
+					element.id = boardData._id;
+					element.className = "boardLink";
+					element.addEventListener("mousedown", function () {
+						setCookieAndChangeLocation(element.id);
+					});
+					document.getElementById("dropdown-content").appendChild(element);
+
+				}
+			});
+		}
+	}
+
 	socket.emit("join", {boardId: windowBoardId, name: cookieValue("username")});
+
 
 	$("#chatInput").keypress((e) => {
 		if (e.which != 13) {

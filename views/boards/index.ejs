@@ -1,11 +1,17 @@
 <body>
 <div id="overlay"></div>
 
+
 <div class="input-group mt-4">
-    <div class="mr-2" contenteditable="true" id="board-name"><%= board.name %></div>
+    <div class="neo-container">
+        <p contenteditable="true" id="board-name"><%= board.name %></p><i style="color: purple" id="folder" class="fa fa-angle-down fa-lg" aria-hidden="true"></i>
+        <div id="dropdown-content"></div>
+    </div>
     <div contenteditable="true" id="user-name"><%= username %></div>
-		<div class="users"></div>
+    <div class="users"></div>
 </div>
+
+
 
 <!-- Left toolbar -->
 <div id="toolbar">
@@ -41,7 +47,8 @@
     <button type="button" class="btn btn-outline-primary menu-btn" id="share-board">
         <i class="fa fa-share-alt"></i>
     </button>
-    <button type="button" class="btn btn-outline-danger menu-btn" data-toggle="modal" data-target="#deleteBoardModal">
+    <button type="button" class="btn btn-outline-danger menu-btn" data-toggle="modal"
+            data-target="#deleteBoardModal">
         <i class="fa fa-trash"></i>
     </button>
     <button type="button" class="btn btn-outline-warning menu-btn" id="export-board">
