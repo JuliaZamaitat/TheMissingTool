@@ -1,6 +1,7 @@
 const url = new URL(window.location.href);
 let pathname = url.pathname.toString();
-const windowBoardId = pathname.substr(pathname.lastIndexOf("/") + 1);
+window.windowBoardId = pathname.substr(pathname.lastIndexOf("/") + 1);
+
 let colors = ["#c50c08", "#31a023", "#385bd6", "#d2c72a"];
 
 //typing notification
@@ -8,11 +9,11 @@ let typing = false,
 	timeout = undefined;
 var socket = io();
 
-$.get("/board/" + windowBoardId + "/messages", (messages) => {
+$.get("/board/" + window.windowBoardId + "/messages", (messages) => {
 	messages.forEach(addMessage);
 });
 
-$.get("/board/" + windowBoardId + "/cards", (cards) => {
+$.get("/board/" + window.windowBoardId + "/cards", (cards) => {
 	cards.forEach(createCard);
 });
 
@@ -21,7 +22,7 @@ socket.on("update-users", (users) => {
 	for (var i = 0; i < users.length; i++) {
 		let username = document.createElement("p");
 		username.innerText = users[i];
-		if (users[i] !== cookieValue("username")) {
+		if (users[i] !== window.cookieValue("username")) {
 			$(".users").append(username);
 		}
 	}
@@ -211,7 +212,7 @@ function addListeners(card, data) {
 				sendComment({
 					cardId: card.id,
 					message: $(this).val(),
-					sender: cookieValue("username")
+					sender: window.cookieValue("username")
 				});
 				card.querySelector(".commentInput").value = "";
 			}
@@ -246,7 +247,7 @@ function addListeners(card, data) {
 // event listeners for board
 $("#board-name").on("input", function (event) {
 	socket.emit("update-board-name", {
-		_id: windowBoardId,
+		_id: window.windowBoardId,
 		name: $(this).text()
 	});
 });
@@ -255,7 +256,7 @@ $("#delete-board").on("click", deleteBoard);
 $("#export-board").on("click", exportBoard);
 
 function deleteBoard() {
-	socket.emit("delete-board", {_id: windowBoardId});
+	socket.emit("delete-board", {_id: window.windowBoardId});
 }
 
 function exportBoard() {
@@ -413,18 +414,17 @@ function assignColorsToChange(card) {
 	}
 }
 
-function cookieValue(name) {
+window.cookieValue = (name) => {
 	let rightRow = document.cookie.split("; ").find(row => row.startsWith(name));
 	if (rightRow !== null && rightRow !== undefined) {
 		return decodeURIComponent(rightRow.split("=")[1]);
 	} else {
 		return null;
 	}
-
-}
+};
 
 function typingTimeout() {
-	let user = cookieValue("username");
+	let user = window.cookieValue("username");
 	typing = false;
 	socket.emit("typing", {user: user, typing: false});
 }
@@ -432,14 +432,14 @@ function typingTimeout() {
 //listen for keypress in chatinput and emits typing
 $(document).ready(function () {
 
-	socket.emit("join", {boardId: windowBoardId, name: cookieValue("username")});
+	socket.emit("join", {boardId: window.windowBoardId, name: window.cookieValue("username")});
 
-	let currentParams = cookieValue("visitedBoards");
+	let currentParams = window.cookieValue("visitedBoards");
 	if (currentParams !== null) {
 		const arrayOfVisitedBoards = currentParams.toString().split(",");
 		if (arrayOfVisitedBoards !== null && arrayOfVisitedBoards !== undefined) {
 			arrayOfVisitedBoards.forEach(element => {
-				if (element !== null && element !== windowBoardId) {
+				if (element !== null && element !== window.windowBoardId) {
 					appendNameToBoardList(element);
 				}
 			});
@@ -463,13 +463,12 @@ $(document).ready(function () {
 		}
 
 
-
 	}
 
 	$("#chatInput").keypress((e) => {
 		if (e.which != 13) {
 			typing = true;
-			let user = cookieValue("username");
+			let user = window.cookieValue("username");
 			socket.emit("typing", {user: user, typing: true});
 			clearTimeout(timeout);
 			timeout = setTimeout(typingTimeout, 2000);

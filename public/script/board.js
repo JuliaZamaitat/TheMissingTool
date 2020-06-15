@@ -12,13 +12,13 @@ function createBoard() {
 }
 
 function setCookieAndChangeLocation(newBoard) {
-	let currentCookie = cookieValue("visitedBoards");
+	let currentCookie = window.cookieValue("visitedBoards");
 	if (currentCookie === null || currentCookie === "") {
-		document.cookie = "visitedBoards=" + windowBoardId;
+		document.cookie = "visitedBoards=" + window.windowBoardId;
 	} else {
 		var arrayOfVisitedBoards = currentCookie.toString().split(",");
-		if (!arrayOfVisitedBoards.includes(windowBoardId)) {
-			arrayOfVisitedBoards.push(windowBoardId);
+		if (!arrayOfVisitedBoards.includes(window.windowBoardId)) {
+			arrayOfVisitedBoards.push(window.windowBoardId);
 			document.cookie = "visitedBoards=" + arrayOfVisitedBoards;
 		}
 	}
