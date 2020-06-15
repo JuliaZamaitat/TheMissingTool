@@ -200,8 +200,6 @@ textarea:focus {
 	padding: 1rem;
 	border: none;
 	text-transform: uppercase;
-	position: fixed;
-	bottom: 20px;
 }
 
 .dropdown:hover #dropdown-content {
@@ -604,5 +602,22 @@ textarea:focus {
 	display: table;
 	height: fit-content;
 	padding: 12px;
-	margin-top: 12px;
+}
+
+
+#messageCount {
+	color: white;
+	background-color: red;
+	font-size: 24px;
+	width: 30px;
+	height: 30px;
+	z-index: 999999999;
+	text-align: center;
+	position: fixed;
+	bottom: 0;
+	margin-left: -35px;
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
+	border-radius: 15px;
+	line-height: 30px;
 }
