@@ -2,57 +2,66 @@
 <div id="overlay"></div>
 
 
-<div class="input-group mt-4">
-    <div class="neo-container">
-        <p contenteditable="true" id="board-name"><%= board.name %></p><i style="color: purple" id="folder" class="fa fa-angle-down fa-lg" aria-hidden="true"></i>
-        <div id="dropdown-content"></div>
+<div id="board-input" class="flex-container">
+    <div id="board-names_container">
+        <div class="neu-panel neu-input" id="board-name_input"><p class="neu-title" contenteditable="true" id="board-name"><%= board.name %></p><i id="folder" class="fa fa-angle-down fa-lg glow" aria-hidden="true"></i></div>
+        <div id="dropdown-content" class="neu-float-panel"></div>
     </div>
-    <div contenteditable="true" id="user-name"><%= username %></div>
+    <div class="neu-panel neu-outline neu-input"><p class="neu-title" contenteditable="true" id="user-name"><%= username %></p></div>
     <div class="users"></div>
 </div>
 
 
 
 <!-- Left toolbar -->
-<div id="toolbar">
-    <button type="button" class="btn btn-primary toolbar-btn create-card-btn" id="SQUARE">
-        <i class="fa fa-square" aria-hidden="true"></i><span>Square</span>
+<div id="toolbar" class="neu-panel">
+    <button type="button" class="neu-button toolbar-btn create-card-btn" id="SQUARE">
+        <img src="/icons/square.webp"><span>Square</span>
         <div class="color-options"></div>
     </button>
-    <button type="button" class="btn btn-danger toolbar-btn create-card-btn" id="RECTANGLE">
-        <i class="fa fa-square" aria-hidden="true"></i><span>Rectangle</span>
+    <button type="button" class="neu-button toolbar-btn create-card-btn" id="RECTANGLE">
+        <img src="/icons/rectangle.webp"><span>Rectangle</span>
         <div class="color-options"></div>
     </button>
-    <button type="button" class="btn btn-success toolbar-btn create-card-btn" id="CIRCLE">
-        <i class="fa fa-circle" aria-hidden="true"></i><span>Circle</span>
+    <button type="button" class="neu-button toolbar-btn create-card-btn" id="CIRCLE">
+        <img src="/icons/circle.webp"><span>Circle</span>
         <div class="color-options"></div>
     </button>
-    <button type="button" class="btn btn-info toolbar-btn create-card-btn" id="ELLIPSE">
-        <i class="fa fa-circle" aria-hidden="true"></i><span>Ellipse</span>
+    <button type="button" class="neu-button toolbar-btn create-card-btn" id="ELLIPSE">
+        <img src="/icons/oval.webp"><span>Ellipse</span>
         <div class="color-options"></div>
     </button>
-    <button style="color: white" type="button" class="btn btn-warning toolbar-btn create-card-btn" id="TRIANGLE">
-        <i class="fa fa-caret-up fa-lg" aria-hidden="true"></i><span>Triangle</span>
+    <button type="button" class="neu-button toolbar-btn create-card-btn" id="TRIANGLE">
+        <img src="/icons/triangle.webp"><span>Triangle</span>
         <div class="color-options"></div>
+    </button>
+    <button type="button" class="neu-button toolbar-btn add-text-btn">
+        <img src="/icons/text.webp"><span>Text</span>
+    </button>
+    <button type="button" class="neu-button toolbar-btn add-image-btn">
+        <img src="/icons/image.webp"><span>Image</span>
+    </button>
+    <button type="button" class="neu-button toolbar-btn add-connection-btn">
+        <img src="/icons/arrow.webp"><span>Connect</span>
+    </button>
+    <button type="button" class="neu-button toolbar-btn draw-btn">
+        <img src="/icons/pencil.webp"><span>Draw</span>
     </button>
 </div>
 
 <!-- Top menubar -->
 <div class="notifier"><span>Copied to clipboard</span></div>
-<div id="menubar">
-    <span id="hamburger-bars"><i class="fa fa-bars"></i></span>
-    <button type="button" class="btn btn-outline-success menu-btn" id="create-board">
-        <i class="fa fa-file"></i>
+<div id="menubar" class="neu-color-panel">
+    <img id="hamburger-bars" src="/icons/hamburger.webp">
+    <button type="button" class="menu-btn" id="create-board">
+        <img src="/icons/plus.webp"><span>New Board</span>
     </button>
-    <button type="button" class="btn btn-outline-primary menu-btn" id="share-board">
-        <i class="fa fa-share-alt"></i>
+    <button type="button" class="menu-btn" id="share-board">
+        <img src="/icons/share.webp"><span>Share Board</span>
     </button>
-    <button type="button" class="btn btn-outline-danger menu-btn" data-toggle="modal"
+    <button type="button" class="menu-btn" data-toggle="modal"
             data-target="#deleteBoardModal">
-        <i class="fa fa-trash"></i>
-    </button>
-    <button type="button" class="btn btn-outline-warning menu-btn" id="export-board">
-        <i class="fa fa-cloud-download"></i>
+            <img src="/icons/trash-can.webp"><span>Delete Board</span>
     </button>
 </div>
 

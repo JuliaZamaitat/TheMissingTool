@@ -3,7 +3,7 @@ const url = new URL(window.location.href);
 let pathname = url.pathname.toString();
 window.windowBoardId = pathname.substr(pathname.lastIndexOf("/") + 1);
 
-let colors = ["#c50c08", "#31a023", "#385bd6", "#d2c72a"];
+let colors = ["#FFC8C8", "#FFFDCA", "#CDF4FF", "#EAD4FF"];
 
 //typing notification
 let typing = false,
