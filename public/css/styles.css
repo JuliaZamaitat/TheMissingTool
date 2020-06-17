@@ -1,13 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap');
 
 :root {
-	--light-color: rgba(187, 181, 255, 1);
-	--dark-color: rgba(119, 108, 255, 1);
+	--light-color: rgba(187, 181, 255);
+	--dark-color: rgba(119, 108, 255);
 	--shadow-color: rgba(119, 108, 255, .8);
 	--bg-color: #eee;
-	--panel-color: rgba(240, 240, 240, 1);
-	--input-panel-color: rgba(250, 250, 250);
-	--title-color: rgba(70, 70, 70, 1);
+	--dark-panel-color: #f3f3f3;
+	--light-panel-color: #f6f6f6;
+	--title-color: rgba(70, 70, 70);
 }
 
 * {
@@ -42,7 +42,7 @@ p {
 	box-shadow:
 		3px 3px 6px rgba(0, 0, 0, .2),
 		-5px -5px 10px rgba(255, 255, 255, .9);
-	background-color: var(--panel-color);
+	background-color: var(--dark-panel-color);
 	transition: ease .2s;
 }
 
@@ -53,20 +53,29 @@ p {
 	background-image: linear-gradient(to bottom right, var(--dark-color), var(--light-color));
 }
 
-.neu-input:focus-within {
+.neu-edit-panel:focus-within {
 	box-shadow:
 		inset 3px 3px 5px rgba(0,0,0,.2),
 		inset -3px -3px 5px rgba(255,255,255,.8);
-	background-color: var(--input-panel-color);
+	background-color: var(--light-panel-color);
 }
 
-.neu-input:focus-within p {
+.neu-edit-panel:focus-within p {
 	opacity: .8; 
 	text-shadow: none !important;
+}
+.neu-input {
+	border-radius: 5px;
+	padding: 1rem;
+	box-shadow:
+		inset 2px 2px 5px rgba(0,0,0,.1),
+		inset -2px -2px 5px rgba(255,255,255,.5);
+	background-color: var(--dark-panel-color);
 }
 
 button {
 	border-radius: 5px;
+	border: none;
 }
 
 button:focus {
@@ -93,10 +102,10 @@ p:focus {
 	border: none;
 }
 .neu-button:hover {
-	box-shadow: 5px 5px 8px rgba(0,0,0,.15);
+	box-shadow: 4px 4px 10px rgba(0,0,0,.15);
 }
 .plain {
-	background-color: var(--panel-color);
+	background-color: var(--dark-panel-color);
 	color: var(--title-color) !important;
 }
 .neu-button:active {
@@ -123,7 +132,7 @@ p:focus {
 
 /* BOARD-INPUT */
 #board-input {
-	z-index: 3;
+	z-index: 99999999;
 	position: absolute;
 	top: 1.5rem;
 	left: 1.5rem;
@@ -131,48 +140,46 @@ p:focus {
 	align-items: flex-start;
 	text-transform: capitalize;
 }
-
 #board-input>div {
 	margin-right: 2rem;
 }
-
 #board-name_input {
 	padding: 1rem 1.5rem;
 }
-
 #board-name {
 	cursor: pointer;
 	text-align: center;
 	float: left;
 	margin-right: 1.5rem;
 }
-
+#folder {
+	display: none;
+}
 #board-name_input:focus-within #folder {
 	opacity: 0;
 }
-
 #dropdown-content {
-	background-color: var(--panel-color);
+	background-color: var(--dark-panel-color);
 	width: 100%;
 	display: none;
 	border-radius: 0 0 10px 10px;
 	transform: translateY(-.5rem);
 }
-
 #dropdown-content p {
 	opacity: .5;
 	padding: 1rem 1.5rem;
 	border-top: 1px solid var(--dark-color);
 	margin: 0;
 }
-
 #dropdown-content p:hover
 {
 	cursor: pointer;
 	opacity: 1;
 	color: var(--dark-color);
 }
-
+#username_container {
+	border-radius: 50px;
+}
 #user-name {
 	padding: .8rem 1.3rem;
 }
@@ -181,34 +188,29 @@ p:focus {
 #menubar {
 	position: absolute;
 	top: 1.5rem;
-	right: -8rem;
+	right: -6.5rem;
 	border-radius: 10px 0 0 10px;
-	padding: 1rem;
+	padding: .7rem .5rem;
 	color: white;
 }
-
-img#hamburger-bars {
-	width: 2rem;
-	position: absolute;
-	height: 1.5rem !important;
-	top: 2rem;
-	left: 1.5rem;
+#menubar img {
+	height: 1.2em;
+	margin: 0 1.2rem -.2rem .5rem;
+	float: left;
 }
-
+img#hamburger-bars {
+	position: absolute;
+	top: 1.5rem;
+	left: 1rem;
+}
 #menubar:hover {
 	right: 0
 }
 #menubar:hover #hamburger-bars {
 	opacity: 0;
 }
-
 #menubar:hover .menu-btn {
 	opacity: 1;
-}
-#menubar img {
-	height: 100%;
-	margin-right: 1rem;
-	float: left;
 }
 .menu-btn {
 	position: relative;
@@ -218,16 +220,17 @@ img#hamburger-bars {
 	background: none;
 	color: white;
 	margin: 0;
-	padding: 1rem;
-	width: 3.5rem;
-	height: 3.5rem;
+	padding: .7rem;
+	width: 3rem;
+	height: 3rem;
 	overflow: hidden;
 	transition: ease .2s;
 }
 
 .menu-btn span {
 	opacity: 0;
-	left: 3.5rem;
+	top: .9rem;
+	left: 3rem;
 	width: auto;
 	white-space: nowrap;
 	position: absolute;
@@ -295,7 +298,7 @@ body.modal-open {
 	overflow: visible;
 	border-radius: 0 10px 10px 0;
 	transition: ease-in-out .3s;
-	z-index: 2;
+	z-index: 999999;
 }
 #toolbar img {
 	width: 1.2rem;
@@ -345,7 +348,7 @@ body.modal-open {
 }
 
 .color-btn, .color-change-btn {
-	margin: 0 .5rem;
+	margin: 0 .3rem;
 	padding: 0 !important;
 	width: 1.5rem;
 	height: 1.5rem;
@@ -384,6 +387,18 @@ body.modal-open {
 	-moz-box-shadow: 10px 10px 20px rgb(0,0,0,.1);
 	-webkit-box-shadow: 10px 10px 20px rgb(0,0,0,.1);
 	box-shadow: 10px 10px 20px rgb(0,0,0,.1);
+}
+.forward {
+	width: 2rem;
+	padding: .3rem;
+	opacity: .7;
+	background: none;
+}
+.forward img {
+	width: 100%;
+}
+.forward:hover {
+	opacity: 1;
 }
 .square {
 	width: 150px;
@@ -513,8 +528,12 @@ textarea:hover {
 	position: absolute;
 	top: -6.5rem;
 	padding: 1rem;
-	background-color: var(--input-panel-color);
+	background-color: var(--light-panel-color);
 	flex-wrap: nowrap;
+}
+
+.link-card .buttonContainer {
+	transform: translateX(1.6rem);
 }
 .square .buttonContainer, .circle .buttonContainer {
 	left: -14%;
@@ -526,12 +545,18 @@ textarea:hover {
 	left: -7.5rem;
 }
 .buttonContainer img {
-	height: 1.2rem;
+	width: 100%;
+	height: 100%;
 }
 .buttonContainer span {
-	padding: .5rem;
+	width: 2.2rem;
+	height: 2.2rem;
+	padding: .4rem;
 	margin: 0 .5rem;
 	position: relative;
+}
+.buttonContainer span:hover img {
+	color: var()
 }
 .item:focus-within > .buttonContainer {
 	display: flex;
@@ -549,123 +574,159 @@ textarea:hover {
 .colorChangeOptions .color-change-btn {
 	margin: .2rem 0;
 }
-
 .colorChangeBtn:hover .colorChangeOptions {
 	opacity: 1;
 }
-
-
-#chatWindow {
-	position: absolute;
-	right: 1vw;
-	bottom: 0px;
-	width: 30vw;
-	border-bottom-left-radius: 0px;
-	border-bottom-right-radius: 0px;
-	z-index: 2;
-	border-bottom: none;
-}
-
-#chatHeader {
-	cursor: pointer;
-}
-
-#chatBody {
-	display: none;
-	height: 55vh;
-}
-
-#chatContent {
-	overflow-y: auto;
-	display: flex;
-	flex-direction: column-reverse;
-}
-
-.messageText {
-	white-space: pre-wrap;
-}
-
-#chatInputContainer {
-	display: none;
-	position: absolute;
-	bottom: 0px;
-}
-
-#chatInput {
-	resize: none;
-	box-sizing: border-box;
-	cursor: text;
-	overflow: hidden;
-}
-
 .comments-box {
 	display: none;
 	position: absolute;
-	width: 18rem;
+	bottom: 120%;
 	height: auto;
 	background-color: white;
-	left: 160px;
-	top: -100px;
 	border-radius: 10px;
-	padding: 1rem 1rem .3rem 1rem;
+	padding: 1rem;
 	overflow: hidden;
-	font-size: .8em;
 }
-
+.square .comments-box, .circle .comments-box {
+	width: 200%;
+	left: -50%;
+}
+.rectangle .comments-box, .ellipse .comments-box {
+	width: 150%;
+	left: -25%;
+}
+.triangle .comments-box {
+	width: 20vw;
+	bottom: 25px;
+	left: -11rem;
+}
+.comments-box_header {
+	font-weight: 500;
+	margin-bottom: 1rem;
+}
 .close-commentBox {
 	position: absolute;
-	top: 0rem;
-	right: .5rem;
+	right: 1rem;
+	top: 1rem;
 	font-size: 1.2rem;
+	line-height: 1rem;
 }
-
 .close-commentBox:hover {
-	opacity: .5;
 	cursor: pointer;
+	text-shadow: 0 0 3px var(--shadow-color);
 }
-
+.senderName, .commentMessage {
+	display: inline;
+}
+.senderName {
+	margin-right: .5rem;
+	font-weight: 400;
+}
+.timestamp {
+	font-size: .7em;
+	opacity: .5;
+	font-style: italic;
+}
 .commentField {
-	min-height: 3rem;
 	max-height: 7.5rem;
 	overflow: scroll;
-	padding-bottom: 5px;
-	display: flex;
+	padding: 0 1rem;
 	width: 100%;
 	flex-direction: column-reverse;
 }
-
 .comment-container {
 	max-width: 100%;
 	word-break: break-all;
+	margin: .4rem 0;
 }
-
 .commentInput {
 	height: auto;
 	width: 100%;
 	border: none;
-	border-top: 1px solid grey;
 	outline: none;
-	padding: 10px 0;
+	margin-top: 1rem;
 }
 
-.senderName {
-	font-weight: bold;
-	display: inline;
-	margin: 0 8px 0 0;
+/* CHAT */
+#open-chat {
+	position: fixed;
+	right: 1.5rem;
+	bottom: 1.5rem;
+	width: 4rem;
+	height: 4rem;
+	padding: 1rem;
+	z-index: 99999;
 }
-
-.commentMessage {
-	display: inline;
-	margin: 0 0 0;
+#open-chat img {
+	width: 100%;
 }
-
-.timestamp {
-	font-size: .6em;
-	opacity: .5;
-	font-style: italic;
-	margin-bottom: .3rem;
+#close-chat {
+	position: absolute;
+	right: 1rem;
+	top: .3rem;
+	font-size: 1.5rem;
 }
-
+#close-chat:hover {
+	opacity: .7;
+} 
+#chatWindow {
+	position: absolute;
+	right: 1.5rem;
+	width: 30vw;
+	border-radius: 10px 10px 0 0;
+	z-index: 999999;
+	overflow: hidden;
+	transition: ease .5s;
+	background-color: white;
+}
+#chatWindow.closed {
+	bottom: -100%;
+	height: 3.5rem;
+}
+#chatWindow.opened {
+	bottom: 0;
+	height: 60vh;
+}
+#chatHeader {
+	font-weight: 500;
+	font-size: 1.2rem;
+	padding: .5rem 1rem;
+	cursor: pointer;
+	color: white;
+}
+#chatBody {
+	padding: 1rem;
+	height: calc(100% - 3rem);
+	width: 100%;
+	position: relative;
+}
+#chatContent {
+	padding: 1rem;
+	overflow-y: auto;
+	display: flex;
+	flex-direction: column-reverse;
+	width: 100%;
+}
+.message {
+	margin: .5rem 0;
+}
+#chatInputContainer {
+	position: absolute;
+	bottom: 1rem;
+	width: calc(100% - 2rem);
+}
+.messageText {
+	white-space: pre-wrap;
+}
+#chatInput {
+	border: none;
+	width: 100%;
+	resize: none;
+	cursor: text;
+	overflow: hidden;
+	outline: none;
+	height: 5rem;
+}
 .notifier {
 	position: absolute;
 	bottom: 0px;

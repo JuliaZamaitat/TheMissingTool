@@ -4,10 +4,10 @@
 
 <div id="board-input" class="flex-container">
     <div id="board-names_container">
-        <div class="neu-panel neu-input" id="board-name_input"><p class="neu-title" contenteditable="true" id="board-name"><%= board.name %></p><i id="folder" class="fa fa-angle-down fa-lg glow" aria-hidden="true"></i></div>
+        <div class="neu-panel neu-edit-panel" id="board-name_input"><p class="neu-title" contenteditable="true" id="board-name"><%= board.name %></p><i id="folder" class="fa fa-angle-down fa-lg glow" aria-hidden="true"></i></div>
         <div id="dropdown-content" class="neu-float-panel"></div>
     </div>
-    <div class="neu-panel neu-outline neu-input"><p class="neu-title" contenteditable="true" id="user-name"><%= username %></p></div>
+    <div id="username_container" class="neu-panel neu-outline neu-edit-panel"><p class="neu-title" contenteditable="true" id="user-name"><%= username %></p></div>
     <div id="users"></div>
 </div>
 
@@ -16,56 +16,57 @@
 <!-- Left toolbar -->
 <div id="toolbar" class="neu-panel">
     <button type="button" class="neu-button gradient toolbar-btn create-card-btn" id="SQUARE">
-        <img src="/icons/square.webp"><span>Square</span>
+        <img src="/icons/square.svg"><span>Square</span>
         <div class="color-options"></div>
     </button>
     <button type="button" class="neu-button gradient toolbar-btn create-card-btn" id="RECTANGLE">
-        <img src="/icons/rectangle.webp"><span>Rectangle</span>
+        <img src="/icons/rectangle.svg"><span>Rectangle</span>
         <div class="color-options"></div>
     </button>
     <button type="button" class="neu-button gradient toolbar-btn create-card-btn" id="CIRCLE">
-        <img src="/icons/circle.webp"><span>Circle</span>
+        <img src="/icons/circle.svg"><span>Circle</span>
         <div class="color-options"></div>
     </button>
     <button type="button" class="neu-button gradient toolbar-btn create-card-btn" id="ELLIPSE">
-        <img src="/icons/oval.webp"><span>Ellipse</span>
+        <img src="/icons/oval.svg"><span>Ellipse</span>
         <div class="color-options"></div>
     </button>
     <button type="button" class="neu-button gradient toolbar-btn create-card-btn" id="TRIANGLE">
-        <img src="/icons/triangle.webp"><span>Triangle</span>
+        <img src="/icons/triangle.svg"><span>Triangle</span>
         <div class="color-options"></div>
     </button>
     <button type="button" class="neu-button gradient toolbar-btn add-text-btn">
-        <img src="/icons/text.webp"><span>Text</span>
+        <img src="/icons/text.svg"><span>Text</span>
     </button>
     <button type="button" class="neu-button gradient toolbar-btn add-image-btn">
-        <img src="/icons/image.webp"><span>Image</span>
+        <img src="/icons/image.svg"><span>Image</span>
     </button>
     <button type="button" class="neu-button gradient toolbar-btn add-connection-btn">
-        <img src="/icons/arrow.webp"><span>Connect</span>
+        <img src="/icons/arrow.svg"><span>Connect</span>
     </button>
     <button type="button" class="neu-button gradient toolbar-btn draw-btn">
-        <img src="/icons/pencil.webp"><span>Draw</span>
+        <img src="/icons/pencil.svg"><span>Draw</span>
     </button>
 </div>
 
 <!-- Top menubar -->
 <div class="notifier"><span>Copied to clipboard</span></div>
 <div id="menubar" class="neu-panel gradient">
-    <img id="hamburger-bars" src="/icons/hamburger.webp">
+    <img id="hamburger-bars" src="/icons/hamburger.svg">
     <button type="button" class="menu-btn" id="create-board">
-        <img src="/icons/plus.webp"><span>New Board</span>
+        <img src="/icons/plus.svg"><span>New Board</span>
     </button>
     <button type="button" class="menu-btn" id="share-board">
-        <img src="/icons/share.webp"><span>Share Board</span>
+        <img src="/icons/share.svg"><span>Share Board</span>
     </button>
     <button type="button" class="menu-btn" data-toggle="modal"
             data-target="#deleteBoardModal">
-            <img src="/icons/trash-can.webp"><span>Delete Board</span>
+            <img src="/icons/trash-can.svg"><span>Delete Board</span>
     </button>
 </div>
 
-<div class="modal fade" id="deleteCardModal" tabindex="-1" role="dialog" aria-labelledby="deleteBoardModalLabel"
+<!-- Modal -->
+<div class="modal fade" id="deleteBoardModal" tabindex="-1" role="dialog" aria-labelledby="deleteBoardModalLabel"
      aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -75,15 +76,19 @@
                     <span aria-hidden="true">&times</span>
                 </button>
             </div>
+            <div class="modal-body">
+                All the cards on the board will be lost.
+            </div>
             <div class="modal-footer">
                 <button type="button" class="neu-button plain" data-dismiss="modal">Close</button>
-                <button type="button" class="neu-button gradient deleteBtn">Delete</button>
+                <button type="button" class="neu-button gradient" id="delete-board">Delete</button>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Chat window -->
+<button type="button" id="open-chat" class="neu-button gradient"><img src="/icons/chat.svg"></button>
 <%- include('../partials/chat') %>
 
 <script src="/socket.io/socket.io.js"></script>
