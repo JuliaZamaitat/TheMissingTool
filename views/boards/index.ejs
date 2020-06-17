@@ -92,7 +92,10 @@
 </div>
 
 <!-- Chat window -->
-<button type="button" id="open-chat" class="neu-button gradient"><img src="/icons/chat.svg"></button>
+<button type="button" id="open-chat" class="neu-button gradient">
+    <div id="messageCount" class="neu-float-panel"></div>
+    <img src="/icons/chat.svg">
+</button>
 <%- include('../partials/chat') %>
 
 <script src="/socket.io/socket.io.js"></script>
