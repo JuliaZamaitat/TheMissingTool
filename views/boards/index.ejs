@@ -93,20 +93,20 @@
 
 <% if(!board.name) { %>
 	<div class="modal fade" id="setNameModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-		<div class="modal-dialog" role="document">
+		<div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Please enter a name for the new board.</h5>
+				<div class="modal-header gradient">
+					<h5 class="modal-title" id="setNameModalLabel">Please enter a name for the new board.</h5>
 				</div>
 				<form id="board-name-form">
 					<div class="modal-body">
 							<div class="form-group">
-								<label for="board-name-input" class="col-form-label">Board name:</label>
-								<input type="text" class="form-control" id="board-name-input" maxlength="200">
+								<h5><label class="neu-title" for="board-name-input">Board name:</label></h5><br>
+								<input type="text" class="neu-input" id="board-name-input" placeholder="Type a name..." maxlength="200">
 							</div>
 					</div>
 					<div class="modal-footer">
-						<input type="submit" class="btn btn-primary" disabled value="OK" id="board-name-button">
+						<button type="submit" class="neu-button gradient" id="board-name-button">Create</button>
 					</div>
 			</form>
 			</div>
