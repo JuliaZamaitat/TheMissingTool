@@ -1,27 +1,41 @@
 
+const url = new URL(window.location.href);
+let pathname = url.pathname.toString();
+window.windowBoardId = pathname.substr(pathname.lastIndexOf("/") + 1);
 
-let url = window.location.href;
-let windowBoardId = url.substr(url.lastIndexOf("/") + 1);
 let colors = ["#c50c08", "#31a023", "#385bd6", "#d2c72a"];
 
 //typing notification
 let typing = false,
 	timeout = undefined;
 var socket = io();
+var messageCount = 0;
 
-$.get("/board/" + windowBoardId + "/messages", (messages) => {
+$.get("/board/" + window.windowBoardId + "/messages", (messages) => {
 	messages.forEach(addMessage);
+	$("#messageCount").text(( messageCount = 0).toString());
+
 });
 
-$.get("/board/" + windowBoardId + "/cards", (cards) => {
+$.get("/board/" + window.windowBoardId + "/cards", (cards) => {
 	cards.forEach(createCard);
 });
 
 
+
+window.addEventListener( "pageshow", function ( event ) {
+
+	const historyTraversal = event.persisted ||
+		(typeof window.performance != "undefined" &&
+			window.performance.navigation.type === 2);
+	if ( historyTraversal ) {
+		window.location.reload();
+	}
+});
+
 socket.on("update-users", (users) => {
-	console.log("IN UPDATE USER");
 	$(".users").empty();
-	for(var i=0; i<users.length; i++) {
+	for (var i = 0; i < users.length; i++) {
 		let username = document.createElement("p");
 		username.innerText = users[i];
 		if (users[i] !== cookieValue("username")) {
@@ -55,8 +69,8 @@ function createCard(data) {
 		card.style.left = data.position.left + "px";
 		card.style.top = data.position.top + "px";
 	} else {
-		card.style.left = 200 + "px";
-		card.style.top = 200 + "px";
+		card.style.left = Math.floor(Math.random() * 301) + 100 + "px";
+		card.style.top = Math.floor(Math.random() * 401) + 100 + "px";
 	}
 	card.style.fontSize = data.fontSize;
 	if (data.text != null) {
@@ -99,7 +113,7 @@ function convertToLink(card) {
 	card.querySelector(".forward").addEventListener("mousedown", function () {
 		$.get("/get-linked-board/" + card.id, function (data) {
 			if (data !== null && data !== "") {
-				location.href = "/board/" + data;
+				setCookieAndChangeLocation(data);
 			} else {
 				console.log("No boardId returned");
 			}
@@ -266,7 +280,7 @@ function shareBoard() {
 }
 
 function deleteBoard() {
-	socket.emit("delete-board", {_id: windowBoardId});
+	socket.emit("delete-board", {_id: window.windowBoardId});
 }
 
 function exportBoard() {
@@ -363,6 +377,7 @@ socket.on("board-name-update", (data) => {
 $("#user-name").on("focusout", function (event) {
 	var name = $(this).text();
 	document.cookie = "username=" + name;
+	socket.emit("change-user-list", {boardId: windowBoardId, name: cookieValue("username")});
 });
 
 socket.on("board-deleted", (data) => {
@@ -382,13 +397,13 @@ socket.on("display-card", (data) => {
 
 
 socket.on("remove-card", (data) => {
-	console.log(data.id);
 	document.getElementById(data).remove();
 });
 
 socket.on("message", addMessage);
 
 function addMessage(message) {
+	$("#messageCount").text(( ++messageCount).toString());
 	let usernameEl = $("<b>").text(message.username);
 	let time = new Date(message.time);
 	let timeEl = $("<span>", {class: "text-secondary float-right"}).text(time.getHours() + ":" + time.getMinutes());
@@ -399,15 +414,6 @@ function addMessage(message) {
 	chatRescaleContent();
 	chatScrollBottom();
 }
-
-// function getRandomColor() {
-// 	var colors = "0123456789ABCDEF";
-// 	var color = "#";
-// 	for (var i = 0; i < 6; i++) {
-// 		color += letters[Math.floor(Math.random() * 16)];
-// 	}
-// 	return color;
-// }
 
 function getRandomColor() {
 	return colors[Math.floor(Math.random() * Math.floor(colors.length))];
@@ -435,7 +441,12 @@ function assignColorsToChange(card) {
 }
 
 function cookieValue(name) {
-	return decodeURIComponent(document.cookie.split("; ").find(row => row.startsWith(name)).split("=")[1]);
+	let rightRow = document.cookie.split("; ").find(row => row.startsWith(name));
+	if (rightRow !== null && rightRow !== undefined) {
+		return decodeURIComponent(rightRow.split("=")[1]);
+	} else {
+		return null;
+	}
 }
 
 function typingTimeout() {
@@ -446,6 +457,40 @@ function typingTimeout() {
 
 //listen for keypress in chatinput and emits typing
 $(document).ready(function () {
+
+
+	socket.emit("join", {boardId: window.windowBoardId, name: cookieValue("username")});
+
+	let currentBoards = cookieValue("visitedBoards");
+	if (currentBoards !== null) {
+		const arrayOfVisitedBoards = currentBoards.toString().split(",");
+		if (arrayOfVisitedBoards !== null && arrayOfVisitedBoards !== undefined) {
+			arrayOfVisitedBoards.forEach(element => {
+				if (element !== null && element !== window.windowBoardId) {
+					appendNameToBoardList(element);
+				}
+			});
+		}
+	}
+
+	function appendNameToBoardList(boardId) {
+		if (boardId !== null && boardId !== "") {
+			$.get("/board/" + boardId + "/data", (boardData) => {
+				if (boardData !== "") {
+					var element = document.createElement("p");
+					var text = document.createTextNode(boardData.name);
+					element.appendChild(text);
+					element.id = boardData._id;
+					element.className = "boardLink";
+					element.addEventListener("mousedown", function () {
+						setCookieAndChangeLocation(element.id);
+					});
+					document.getElementById("dropdown-content").appendChild(element);
+
+				}
+			});
+		}
+	}
 
 	socket.emit("join", {boardId: windowBoardId, name: cookieValue("username")});
 
@@ -472,5 +517,4 @@ $(document).ready(function () {
 			chatRescaleContent();
 		}
 	});
-
 });
