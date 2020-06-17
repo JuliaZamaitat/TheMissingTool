@@ -130,7 +130,7 @@ function addListeners(card, data) {
 	function cardMouseDown(e) {
 		card.classList.remove("animate");
 		card.style.position = "absolute";
-		card.style.zIndex = 1000;
+		card.style.zIndex = 998;
 		document.getElementById("overlay").append(card);
 		pos3 = e.clientX;
 		pos4 = e.clientY;
@@ -261,15 +261,23 @@ function addListeners(card, data) {
 }
 
 // event listeners for board
-$("#board-name").on("input", function (event) {
-	socket.emit("update-board-name", {
-		_id: window.windowBoardId,
-		name: $(this).text()
-	});
+$("#board-name").on("focusout", () => {
+	updateBoardName($("#board-name").text());
 });
-
+$("#share-board").on("click", shareBoard);
 $("#delete-board").on("click", deleteBoard);
 $("#export-board").on("click", exportBoard);
+
+function updateBoardName(newName) {
+	socket.emit("update-board-name", {
+		_id: windowBoardId,
+		name: newName
+	});
+}
+
+function shareBoard() {
+	// TODO
+}
 
 function deleteBoard() {
 	socket.emit("delete-board", {_id: window.windowBoardId});
@@ -362,8 +370,8 @@ socket.on("card-to-link", (data) => {
 
 socket.on("board-name-update", (data) => {
 	const name = JSON.parse(data).name;
-	// $("#board-name").val(name);
-	// $("#board-name").css("width", name.length / 1.5 + "rem");
+	$("#board-name").text(name);
+	//$("#board-name").css("width", name.length / 1.5 + "rem");
 });
 
 $("#user-name").on("focusout", function (event) {
@@ -486,7 +494,6 @@ $(document).ready(function () {
 
 	socket.emit("join", {boardId: windowBoardId, name: cookieValue("username")});
 
-
 	$("#chatInput").keypress((e) => {
 		if (e.which != 13) {
 			typing = true;
@@ -503,7 +510,7 @@ $(document).ready(function () {
 	//display a notification when a user is typing
 	socket.on("display", (data) => {
 		if (data.typing == true) {
-			$("#notificationbox").text(data.user + ` is typing`);
+			$("#notificationbox").text(data.user + " is typing");
 			chatRescaleContent();
 		} else {
 			$("#notificationbox").text("");

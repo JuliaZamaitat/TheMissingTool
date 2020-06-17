@@ -78,6 +78,29 @@
     </div>
 </div>
 
+<% if(!board.name) { %>
+	<div class="modal fade" id="setNameModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Please enter a name for the new board.</h5>
+				</div>
+				<form id="board-name-form">
+					<div class="modal-body">
+							<div class="form-group">
+								<label for="board-name-input" class="col-form-label">Board name:</label>
+								<input type="text" class="form-control" id="board-name-input" maxlength="200">
+							</div>
+					</div>
+					<div class="modal-footer">
+						<input type="submit" class="btn btn-primary" disabled value="OK" id="board-name-button">
+					</div>
+			</form>
+			</div>
+		</div>
+	</div>
+<% } %>
+
 <!-- Chat window -->
 <%- include('../partials/chat') %>
 
