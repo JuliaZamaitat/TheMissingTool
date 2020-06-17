@@ -263,6 +263,7 @@ img#hamburger-bars {
 }
 #setNameModal  h5 {
 	text-align: center;
+	width: 100%;
 }
 #board-name-button {
 	padding: .5rem;
