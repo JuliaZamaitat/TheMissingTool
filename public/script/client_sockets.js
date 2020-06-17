@@ -109,6 +109,7 @@ function addListeners(card) {
 	card.onmousedown = cardMouseDown;
 
 	function cardMouseDown(e) {
+		console.log("mousedown");
 		card.classList.remove("animate");
 		card.style.position = "absolute";
 		card.style.zIndex = 1000;
@@ -127,6 +128,14 @@ function addListeners(card) {
 		pos4 = e.clientY;
 		card.style.top = (card.offsetTop - pos2) + "px";
 		card.style.left = (card.offsetLeft - pos1) + "px";
+
+		sendPosChange({
+			_id: card.id,
+			position: {
+				left: card.style.left.replace(/\D/g, ""),
+				top: card.style.top.replace(/\D/g, ""),
+			}
+		});
 	}
 
 	function closeDragCard() {
@@ -322,6 +331,7 @@ socket.on("pos-update", (data) => {
 	cardById.style.left = card.position.left + "px";
 	cardById.style.top = card.position.top + "px";
 });
+
 
 socket.on("text-update", (data) => {
 	const card = JSON.parse(data);
