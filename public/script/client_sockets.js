@@ -3,7 +3,7 @@ const url = new URL(window.location.href);
 let pathname = url.pathname.toString();
 window.windowBoardId = pathname.substr(pathname.lastIndexOf("/") + 1);
 
-let colors = ["#FFC8C8", "#FFFDCA", "#CDF4FF", "#EAD4FF"];
+let colors = ["#FFC8C8", "#FFFDCA", "#CDF4FF", "#EAD4FF"]; // cards colors scheme
 
 //typing notification
 let typing = false,
@@ -21,8 +21,6 @@ $.get("/board/" + window.windowBoardId + "/cards", (cards) => {
 	cards.forEach(createCard);
 });
 
-
-
 window.addEventListener( "pageshow", function ( event ) {
 
 	const historyTraversal = event.persisted ||
@@ -34,12 +32,12 @@ window.addEventListener( "pageshow", function ( event ) {
 });
 
 socket.on("update-users", (users) => {
-	$(".users").empty();
+	$("#users").empty();
 	for (var i = 0; i < users.length; i++) {
 		let username = document.createElement("p");
 		username.innerText = users[i];
 		if (users[i] !== cookieValue("username")) {
-			$(".users").append(username);
+			$("#users").append(username);
 		}
 	}
 });
@@ -57,8 +55,8 @@ function createCard(data) {
 	}
 
 	const buttons = document.createElement("div");
-	buttons.className = "buttonContainer";
-	buttons.innerHTML = "<span type='button' class='btn btn-outline-success link rounded'><i class='fa fa-link'></i></span><span type='button' class='btn btn-outline-primary colorChangeBtn rounded'><div class='colorChangeOptions'></div><i class='fa fa-edit'></i></span><span type='button' class='btn btn-outline-danger deleteBtn rounded'><i class='fa fa-trash-o'></i></span><span type='button' class='btn btn-outline-warning commentBtn rounded'><i class='fa fa-comments'></i></span>";
+	buttons.className = "neu-float-panel buttonContainer";
+	buttons.innerHTML = "<span type='button' class='neu-button plain link'><img src='/icons/link.webp'></span><span type='button' class='neu-button plain colorChangeBtn'><div class='colorChangeOptions'></div><img src='/icons/palette.webp'></span><span type='button' class='neu-button plain commentBtn'><img src='/icons/comment.webp'></span><span type='button' class='neu-button plain deleteBtn'><img src='/icons/bin.webp'></span>";
 	card.innerHTML = "<textarea type='text' value=''></textarea><div class='comments-box'><span class='close-commentBox'>&times;</span><div class='commentField'></div><input placeholder='Add a comment...' class='commentInput'></div>";
 	card.prepend(buttons);
 
@@ -373,7 +371,6 @@ $("#user-name").on("focusout", function (event) {
 });
 
 socket.on("board-deleted", (data) => {
-	alert("Board deleted");
 	location.href = "/";
 });
 
@@ -413,7 +410,7 @@ function getRandomColor() {
 
 function assignColorsToCreate() {
 	for (var i = 0; i < colors.length; i++) {
-		var button = "<button class='btn color-btn' id='" + colors[i] + "' style='background-color:" + colors[i] + "'></button>";
+		var button = "<button class='color-btn' id='" + colors[i] + "' style='background-color:" + colors[i] + "'></button>";
 
 		$(".color-options").each(function () {
 			$(this).append(button);
@@ -424,7 +421,7 @@ function assignColorsToCreate() {
 function assignColorsToChange(card) {
 	for (var i = 0; i < colors.length; i++) {
 		var colorButton = document.createElement("button");
-		colorButton.className = "btn color-change-btn";
+		colorButton.className = "color-change-btn";
 		colorButton.id = colors[i];
 		colorButton.style.backgroundColor = colors[i];
 
