@@ -61,14 +61,15 @@ function setCookieAndChangeLocation(newBoard) {
 			arrayOfVisitedBoards.push(window.windowBoardId);
 		}
 		document.cookie = "visitedBoards=" + arrayOfVisitedBoards;
-	location.href = "/board/" + newBoard;
-}
+		location.href = "/board/" + newBoard;
+	}
 
-function cookieValue(name) {
-	let rightRow = document.cookie.split("; ").find(row => row.startsWith(name));
-	if (rightRow !== null && rightRow !== undefined) {
-		return decodeURIComponent(rightRow.split("=")[1]);
-	} else {
-		return null;
+	function cookieValue(name) {
+		let rightRow = document.cookie.split("; ").find(row => row.startsWith(name));
+		if (rightRow !== null && rightRow !== undefined) {
+			return decodeURIComponent(rightRow.split("=")[1]);
+		} else {
+			return null;
+		}
 	}
 }
