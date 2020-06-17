@@ -67,13 +67,13 @@ function zoomOnclick() {
 	}).mouseup(function() {
 		clearInterval(interval);
 	});
-}
 
-document.getElementById("zoom-slider").addEventListener("input", function() {
-	const zoomVal = document.getElementById("zoom-slider").value;
-	document.getElementById("overlay").style.zoom = zoomVal + "%";
-	document.getElementById("zoom-size").innerHTML = zoomVal + "%";
-});
+	$("#zoom-slider").on("input", function() {
+		const zoomVal = document.getElementById("zoom-slider").value;
+		document.getElementById("overlay").style.zoom = zoomVal + "%";
+		document.getElementById("zoom-size").innerHTML = zoomVal + "%";
+	});
+}
 
 function zoomIn() {
 	zoom++;
