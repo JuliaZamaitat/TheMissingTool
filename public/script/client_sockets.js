@@ -59,20 +59,13 @@ function createCard(data) {
 	const buttons = document.createElement("div");
 	buttons.className = "neu-float-panel buttonContainer";
 	buttons.innerHTML = "<span type='button' class='neu-button plain link'><img src='/icons/link.svg'></span><span type='button' class='neu-button plain colorChangeBtn'><div class='colorChangeOptions'></div><img src='/icons/palette.svg'></span><span type='button' class='neu-button plain commentBtn'><img src='/icons/comment.svg'></span><span type='button' class='neu-button plain deleteBtn'><img src='/icons/bin.svg'></span>";
-	// einen neuen resizeBtn in buttons hinzufuegen
 
 	const commentBox = document.createElement("div");
 	commentBox.className = "comments-box neu-float-panel";
 	commentBox.innerHTML = "<div class='comments-box_header'>Comments<span class='close-commentBox'>&times;</span></div><div class='commentField flex-container'></div><input placeholder='Type a comment...' class='commentInput neu-input'>";
-	
-	// const resizeGroup = document.createElement("div");
-	// resizeGroup.className = "resize-buttons_group";
-	// resizeGroup.innerHTML = "...";
-
 
 	card.prepend(buttons);
 	card.append(commentBox);
-	// card.append(resizeGroup);
 
 	card.id = data._id;
 	assignColorsToChange(card);
@@ -416,7 +409,7 @@ function addComment(comment) {
 	commentContainer.className = "comment-container";
 	const date = new Date(comment.timestamp);
 	const dateString = months[date.getMonth() - 1] + " " + add0(date.getDate()) + ", " + date.getFullYear() + " at " + formatHours(date.getHours(), date.getMinutes());
-	commentContainer.innerHTML = "<p class='senderName'>" + comment.sender + ":</p><p class='commentMessage'>" + comment.message + "</p><p class='timestamp'>" + dateString + "</p>";
+	commentContainer.innerHTML = "<div class='comment-head'><p class='senderName'>" + comment.sender + "</p><p class='timestamp'>" + dateString + "</p></div><p class='commentMessage'>" + comment.message + "</p>";
 	return commentContainer;
 }
 

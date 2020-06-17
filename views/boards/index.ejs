@@ -1,17 +1,14 @@
 <body>
-<div id="overlay"></div>
+    <div id="zoom-container"><div id="overlay"></div></div>
 
-
-<div id="board-input" class="flex-container">
-    <div id="board-names_container">
-        <div class="neu-panel neu-edit-panel" id="board-name_input"><p class="neu-title" contenteditable="true" id="board-name"><%= board.name %></p><i id="folder" class="fa fa-angle-down fa-lg glow" aria-hidden="true"></i></div>
-        <div id="dropdown-content" class="neu-float-panel"></div>
+    <div id="board-input" class="flex-container">
+        <div id="board-names_container">
+            <div class="neu-panel neu-edit-panel" id="board-name_input"><p class="neu-title" contenteditable="true" id="board-name"><%= board.name %></p><i id="folder" class="fa fa-angle-down fa-lg glow" aria-hidden="true"></i></div>
+            <div id="dropdown-content" class="neu-float-panel"></div>
+        </div>
+        <div id="username_container" class="neu-panel neu-outline neu-edit-panel"><p class="neu-title" contenteditable="true" id="user-name"><%= username %></p></div>
+        <div id="users"></div>
     </div>
-    <div id="username_container" class="neu-panel neu-outline neu-edit-panel"><p class="neu-title" contenteditable="true" id="user-name"><%= username %></p></div>
-    <div id="users"></div>
-</div>
-
-
 
 <!-- Left toolbar -->
 <div id="toolbar" class="neu-panel">
@@ -47,6 +44,13 @@
     <button type="button" class="neu-button gradient toolbar-btn draw-btn">
         <img src="/icons/pencil.svg"><span>Draw</span>
     </button>
+</div>
+
+<div id="zoom-btn_container" class="neu-panel flex-container">
+    <button id="zoom-out" class="zoom-btn neu-title neu-link">&mdash;</button>
+    <input type="range" min="1" max="200" step="1" value="100" id="zoom-slider">
+    <button id="zoom-in" class="zoom-btn neu-title neu-link">&plus;</button>
+    <p id="zoom-size" class="neu-title">100%</p>
 </div>
 
 <!-- Top menubar -->

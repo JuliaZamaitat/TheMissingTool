@@ -5,8 +5,8 @@
 	--dark-color: rgba(119, 108, 255);
 	--shadow-color: rgba(119, 108, 255, .8);
 	--bg-color: #eee;
-	--dark-panel-color: #f3f3f3;
-	--light-panel-color: #f6f6f6;
+	--dark-panel-color: rgb(230, 230, 230);
+	--light-panel-color: #f2f2f2;
 	--title-color: rgba(70, 70, 70);
 }
 
@@ -41,8 +41,8 @@ p {
 	border-radius: 10px;
 	box-shadow:
 		3px 3px 6px rgba(0, 0, 0, .2),
-		-5px -5px 10px rgba(255, 255, 255, .9);
-	background-color: var(--dark-panel-color);
+		-5px -5px 10px rgba(255, 255, 255);
+	background-color: var(--light-panel-color);
 	transition: ease .2s;
 }
 
@@ -57,7 +57,7 @@ p {
 	box-shadow:
 		inset 3px 3px 5px rgba(0,0,0,.2),
 		inset -3px -3px 5px rgba(255,255,255,.8);
-	background-color: var(--light-panel-color);
+	background-color: var(--dark-panel-color);
 }
 
 .neu-edit-panel:focus-within p {
@@ -122,6 +122,9 @@ p:focus {
 .glow:hover {
 	cursor: pointer;
 	transform: translateY(2px);
+}
+.neu-link:hover {
+	text-shadow: 0 0 2px var(--shadow-color);
 }
 
 .neu-title {
@@ -358,6 +361,93 @@ body.modal-open {
 
 .color-btn:hover, .color-change-btn:hover {
 	box-shadow: inset 1px 1px 4px rgba(0,0,0,.1);
+}
+
+/* ZOOM */
+#overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+#zoom-container {
+	width: 100vw;
+	height: 100vh;
+	overflow: scroll;
+}
+#zoom-container:hover {
+	cursor: move;
+}
+#zoom-btn_container {
+	position: absolute;
+	left: 1.5rem;
+	bottom: 1.5rem;
+	overflow: hidden;
+	padding: 0 .5rem;
+	align-items: center;
+}
+#zoom-slider {
+	height: .5rem;
+	padding: 0;
+	margin: 0 .5rem;
+	cursor: pointer;
+	color: white;
+	background-color: var(--dark-panel-color);
+	border-radius: 5px;
+	box-shadow: 
+		inset 1px 1px 2px rgba(0,0,0,.2),
+		inset -2px -2px 2px rgba(255,255,255); 
+}
+input[type=range] {
+	-webkit-appearance: none;
+}
+input[type=range]:focus {
+	outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
+  }
+input[type=range]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	width: 1.2rem;
+	height: 1.2rem;
+	border-radius: 50%;
+	box-shadow:
+		3px 3px 6px rgba(0, 0, 0, .2),
+		-5px -5px 10px rgba(255, 255, 255, .9);
+	background-image: linear-gradient(to bottom right, var(--light-color), var(--dark-color));
+	transition: ease .2s;
+	border: 3px solid var(--light-panel-color);	
+}
+input[type=range]::-moz-range-thumb {
+	-webkit-appearance: none;
+	width: 1.2rem;
+	height: 1.2rem;
+	border-radius: 50%;
+	box-shadow:
+		3px 3px 6px rgba(0, 0, 0, .2),
+		-5px -5px 10px rgba(255, 255, 255, .9);
+	background-image: linear-gradient(to bottom right, var(--light-color), var(--dark-color));
+	transition: ease .2s;
+	border: 3px solid var(--light-panel-color);	
+}
+input[type=range]::-ms-thumb {
+	-webkit-appearance: none;
+	width: 1.2rem;
+	height: 1.2rem;
+	border-radius: 50%;
+	box-shadow:
+		3px 3px 6px rgba(0, 0, 0, .2),
+		-5px -5px 10px rgba(255, 255, 255, .9);
+	background-image: linear-gradient(to bottom right, var(--light-color), var(--dark-color));
+	transition: ease .2s;
+	border: 3px solid var(--light-panel-color);	
+}
+.zoom-btn {
+	background: none;
+	font-size: 1.5rem;
+}
+.zoom-btn:hover {
+	color: var(--dark-color);
+}
+#zoom-size {
+	margin: 0 .7rem;
 }
 
 /* CARDS */
@@ -615,7 +705,7 @@ textarea:hover {
 	cursor: pointer;
 	text-shadow: 0 0 3px var(--shadow-color);
 }
-.senderName, .commentMessage {
+.senderName, .timestamp{
 	display: inline;
 }
 .senderName {
@@ -672,7 +762,7 @@ textarea:hover {
 #chatWindow {
 	position: absolute;
 	right: 1.5rem;
-	width: 30vw;
+	width: 25vw;
 	border-radius: 10px 10px 0 0;
 	z-index: 999999;
 	overflow: hidden;
