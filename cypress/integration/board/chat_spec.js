@@ -12,7 +12,7 @@ describe("The Chat", () => {
 		cy.get("#chatContent").should("be.not.visible");
 	});
 	it("shows chat content after click on header", () => {
-		cy.get("#chatHeader").click();
+		cy.get("#open-chat").click();
 		cy.get("#chatContent").should("be.visible");
 	});
 	it("appends messages to chat", () => {
@@ -22,7 +22,7 @@ describe("The Chat", () => {
 		cy.get("#chatContent").should("not.contain", "Some other message");
 	});
 	it("toggles chat content when clicking on header", () => {
-		cy.get("#chatHeader").click();
+		cy.get("#close-chat").click();
 		cy.get("#chatContent").should("be.not.visible");
 	});
 });
