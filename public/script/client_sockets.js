@@ -162,16 +162,8 @@ function addListeners(card, data) {
 
 	function closeDragCard() {
 		isOverlappingAny();
-		sendPosChange({
-			_id: card.id,
-			position: {
-				left: card.style.left.replace(/\D/g, ""),
-				top: card.style.top.replace(/\D/g, ""),
-			}
-		});
 		document.onmouseup = null;
 		document.onmousemove = null;
-
 	}
 
 	function isOverlappingAny() {
