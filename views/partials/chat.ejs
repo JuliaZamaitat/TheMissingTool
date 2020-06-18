@@ -1,17 +1,20 @@
-<div id="chatWindow" class="card">
-    <div id="messageCount"></div>
-    <div id="chatHeader" class="card-header px-2 py-1 font-weight-bold">Chat</div>
-    <div id="chatBody" class="card-body p-0">
-        <div id="chatContent" class="p-1">
-					<div class="text-secondary font-weight-light">
-							New messages will appear here.<br>
-							Press <i>Enter</i> to send your message.<br>
-							Press <i>Shift+Enter</i> for a new line.<br>
-					</div>
-        </div>
+<div id="chatWindow" class="neu-float-panel closed">
+    <div id="chatHeader" class="gradient">
+        Chat
+        <span id="close-chat" aria-hidden="true">&times</span>
     </div>
-    <div id="chatInputContainer" class="card-footer input-group p-1">
-        <div id="notificationbox" rows="1" placeholder=""></div>
-        <textarea id="chatInput" class="form-control" rows="1" placeholder="Enter a message..."></textarea>
+    <div id="chatBody">
+        <div id="chatContent">
+			<div id="chat-hint">
+				New messages will appear here.<br>
+				Press <i>Enter</i> to send your message.<br>
+				Press <i>Shift+Enter</i> for a new line.<br>
+			</div>
+        </div>
+
+        <div id="chatInputContainer">
+            <div id="notificationbox" placeholder=""></div>
+            <textarea id="chatInput" class="neu-input" placeholder="Join the conversation..."></textarea>
+        </div>
     </div>
 </div>

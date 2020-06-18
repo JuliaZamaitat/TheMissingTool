@@ -1,4 +1,16 @@
-//Adjust chat content height, in case input height changes
+$("#open-chat").click(function() {
+	$("#chatWindow").removeClass("closed");
+	$("#chatWindow").addClass("opened");
+	$(this).fadeOut();
+});
+
+$("#close-chat").click(function() {
+	$("#open-chat").fadeIn();
+	$("#chatWindow").removeClass("opened");
+	$("#chatWindow").addClass("closed");
+});
+
+// Adjust chat content height, in case input height changes
 const chatRescaleContent = () => {
 	$("#chatContent").css("height", "calc(100% - " + $("#chatInputContainer").outerHeight() + "px)");
 };
@@ -9,14 +21,14 @@ const chatScrollBottom = () => {
 };
 
 //Chat window's open/close mechanism
-$("#chatHeader").click(() => {
-	$("#messageCount").fadeToggle(1);
-	$("#messageCount").text(( messageCount = 0).toString());
-	$("#chatInputContainer").fadeToggle(300);
-	$("#chatBody").slideToggle();
-	chatRescaleContent();
-	chatScrollBottom();
-});
+// $("#chatHeader").click(() => {
+// 	$("#messageCount").fadeToggle(1);
+// 	$("#messageCount").text(( messageCount = 0).toString());
+// 	$("#chatInputContainer").fadeToggle(300);
+// 	$("#chatBody").slideToggle();
+// 	chatRescaleContent();
+// 	chatScrollBottom();
+// });
 
 //Listens for chat keyboard input
 $("#chatInput").on("input keydown", function(e) {
@@ -39,7 +51,7 @@ $("#chatInput").on("input keydown", function(e) {
 		}
 	}
 
-	//Rescale textarea and chat
+	// Rescale textarea and chat
 	$(this).css("height", "unset").height(this.scrollHeight-10);
 	chatRescaleContent();
 });

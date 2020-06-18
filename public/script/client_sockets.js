@@ -3,7 +3,7 @@ const url = new URL(window.location.href);
 let pathname = url.pathname.toString();
 window.windowBoardId = pathname.substr(pathname.lastIndexOf("/") + 1);
 
-let colors = ["#c50c08", "#31a023", "#385bd6", "#d2c72a"];
+let colors = ["#FFC8C8", "#FFFDCA", "#CDF4FF", "#EAD4FF"]; // cards colors scheme
 
 //typing notification
 let typing = false,
@@ -21,8 +21,6 @@ $.get("/board/" + window.windowBoardId + "/cards", (cards) => {
 	cards.forEach(createCard);
 });
 
-
-
 window.addEventListener( "pageshow", function ( event ) {
 
 	const historyTraversal = event.persisted ||
@@ -34,12 +32,12 @@ window.addEventListener( "pageshow", function ( event ) {
 });
 
 socket.on("update-users", (users) => {
-	$(".users").empty();
+	$("#users").empty();
 	for (var i = 0; i < users.length; i++) {
 		let username = document.createElement("p");
 		username.innerText = users[i];
 		if (users[i] !== cookieValue("username")) {
-			$(".users").append(username);
+			$("#users").append(username);
 		}
 	}
 });
@@ -56,11 +54,18 @@ function createCard(data) {
 		card.style.backgroundColor = "transparent";
 	}
 
+	card.innerHTML = "<textarea type='text' value=''></textarea>";
+
 	const buttons = document.createElement("div");
-	buttons.className = "buttonContainer";
-	buttons.innerHTML = "<span type='button' class='btn btn-outline-success link rounded'><i class='fa fa-link'></i></span><span type='button' class='btn btn-outline-primary colorChangeBtn rounded'><div class='colorChangeOptions'></div><i class='fa fa-edit'></i></span><span type='button' class='btn btn-outline-danger deleteBtn rounded'><i class='fa fa-trash-o'></i></span><span type='button' class='btn btn-outline-warning commentBtn rounded'><i class='fa fa-comments'></i></span>";
-	card.innerHTML = "<textarea type='text' value=''></textarea><div class='comments-box'><span class='close-commentBox'>&times;</span><div class='commentField'></div><input placeholder='Add a comment...' class='commentInput'></div>";
+	buttons.className = "neu-float-panel buttonContainer";
+	buttons.innerHTML = "<span type='button' class='neu-button plain link'><img src='/icons/link.svg'></span><span type='button' class='neu-button plain colorChangeBtn'><div class='colorChangeOptions'></div><img src='/icons/palette.svg'></span><span type='button' class='neu-button plain commentBtn'><img src='/icons/comment.svg'></span><span type='button' class='neu-button plain deleteBtn'><img src='/icons/bin.svg'></span>";
+
+	const commentBox = document.createElement("div");
+	commentBox.className = "comments-box neu-float-panel";
+	commentBox.innerHTML = "<div class='comments-box_header'>Comments<span class='close-commentBox'>&times;</span></div><div class='commentField flex-container'></div><input placeholder='Type a comment...' class='commentInput neu-input'>";
+
 	card.prepend(buttons);
+	card.append(commentBox);
 
 	card.id = data._id;
 	assignColorsToChange(card);
@@ -78,10 +83,9 @@ function createCard(data) {
 	}
 
 	let comments = data.comments;
-	for (let i = comments.length - 1; i > 0; i--) {
-		const comment = document.createElement("div");
-		comment.innerHTML = "<div class='comment-container'><p class='senderName'>" + comments[i].sender + "</p><p class='commentMessage'>" + comments[i].message + "</p><p class='timestamp'>" + new Date(comments[i].timestamp).toGMTString() + "</p></div>";
-		card.querySelector(".commentField").appendChild(comment);
+	for (let i = 0; i < comments.length  ; i++) {
+		const commentContainer  = addComment(comments[i]);
+		card.querySelector(".commentField").prepend(commentContainer);
 	}
 
 	if (data.linkId !== null && data.linkId !== undefined) {
@@ -101,14 +105,15 @@ function createCard(data) {
 }
 
 function convertToLink(card) {
+	card.classList.add("link-card");
 	const link = card.querySelector(".link");
 	if (card.querySelector(".link"))
 		link.remove();
-	const element = document.createElement("span");
-	element.className = "forward";
+	const element = document.createElement("button");
 	element.type = "button";
-	element.innerHTML = "<i class='fa fa-arrow-right'></i>";
-	card.append(element);
+	element.className = "forward";
+	element.innerHTML = "<img src='/icons/link.svg'>";
+	card.appendChild(element);
 	// Listener for forwarding to new board
 	card.querySelector(".forward").addEventListener("mousedown", function () {
 		$.get("/get-linked-board/" + card.id, function (data) {
@@ -120,7 +125,6 @@ function convertToLink(card) {
 		});
 	});
 }
-
 
 function addListeners(card, data) {
 	// Moving card listener
@@ -217,7 +221,7 @@ function addListeners(card, data) {
 		socket.emit("delete-card", cardToDelete);
 	});
 
-	// Show chat
+	// Show comment
 	card.querySelector(".commentBtn").addEventListener("mousedown", function () {
 		$("#" + card.id + " .comments-box").fadeIn();
 	});
@@ -266,7 +270,6 @@ $("#board-name").on("focusout", () => {
 });
 $("#share-board").on("click", shareBoard);
 $("#delete-board").on("click", deleteBoard);
-$("#export-board").on("click", exportBoard);
 
 function updateBoardName(newName) {
 	socket.emit("update-board-name", {
@@ -281,10 +284,6 @@ function shareBoard() {
 
 function deleteBoard() {
 	socket.emit("delete-board", {_id: window.windowBoardId});
-}
-
-function exportBoard() {
-	// TODO
 }
 
 // event listener for toolbar buttons
@@ -371,7 +370,6 @@ socket.on("card-to-link", (data) => {
 socket.on("board-name-update", (data) => {
 	const name = JSON.parse(data).name;
 	$("#board-name").text(name);
-	//$("#board-name").css("width", name.length / 1.5 + "rem");
 });
 
 $("#user-name").on("focusout", function (event) {
@@ -381,14 +379,12 @@ $("#user-name").on("focusout", function (event) {
 });
 
 socket.on("board-deleted", (data) => {
-	alert("Board deleted");
 	location.href = "/";
 });
 
 socket.on("comment", (data) => {
-	const comment = document.createElement("div");
-	comment.innerHTML = "<p class='senderName'>" + data.sender + "</p><p class='commentMessage'>" + data.message + "</p><p class='timestamp'>" + new Date(data.timestamp).toGMTString() + "</p>";
-	document.getElementById(data.cardId).querySelector(".commentField").appendChild(comment);
+	const commentContainer = addComment(data);
+	document.getElementById(data.cardId).querySelector(".commentField").prepend(commentContainer);
 });
 
 socket.on("display-card", (data) => {
@@ -404,15 +400,46 @@ socket.on("message", addMessage);
 
 function addMessage(message) {
 	$("#messageCount").text(( ++messageCount).toString());
+	$("#chat-hint").fadeOut();
 	let usernameEl = $("<b>").text(message.username);
 	let time = new Date(message.time);
-	let timeEl = $("<span>", {class: "text-secondary float-right"}).text(time.getHours() + ":" + time.getMinutes());
-	let messageHeadEl = $("<small>", {class: "messageHead"}).append(usernameEl, timeEl);
+	let timeEl = $("<small>", {class: "text-secondary float-right"}).text(formatHours(time.getHours(), time.getMinutes()));
+	let messageHeadEl = $("<div>", {class: "messageHead"}).append(usernameEl, timeEl);
 	let messageTextEl = $("<div>", {class: "messageText"}).text(message.text);
-	let messageEl = $("<div>", {class: "message mt-2"}).append(messageHeadEl, messageTextEl);
+	let messageEl = $("<div>", {class: "message"}).append(messageHeadEl, messageTextEl);
 	$("#chatContent").prepend(messageEl);
 	chatRescaleContent();
 	chatScrollBottom();
+}
+
+let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+function addComment(comment) {
+	const commentContainer = document.createElement("div");
+	commentContainer.className = "comment-container";
+	const date = new Date(comment.timestamp);
+	const dateString = months[date.getMonth() - 1] + " " + add0(date.getDate()) + ", " + date.getFullYear() + " at " + formatHours(date.getHours(), date.getMinutes());
+	commentContainer.innerHTML = "<div class='comment-head'><p class='senderName'>" + comment.sender + "</p><p class='timestamp'>" + dateString + "</p></div><p class='commentMessage'>" + comment.message + "</p>";
+	return commentContainer;
+}
+
+function add0(val) {
+	if (val < 10) {
+		return "0" + val;
+	} else {
+		return val;
+	}
+}
+
+function formatHours(hour, minutes) {
+	if (hour > 12) {
+		return add0(hour-12) + ":" + add0(minutes) + "pm";
+	} else if (hour == 12) {
+		return hour + ":" + add0(minutes) + "pm";
+	} else if (hour == 0) {
+		return "12:" + add0(minutes) + "am";
+	} else {
+		return add0(hour) + ":" + add0(minutes) + "am";
+	}
 }
 
 function getRandomColor() {
@@ -421,7 +448,7 @@ function getRandomColor() {
 
 function assignColorsToCreate() {
 	for (var i = 0; i < colors.length; i++) {
-		var button = "<button class='btn color-btn' id='" + colors[i] + "' style='background-color:" + colors[i] + "'></button>";
+		var button = "<button class='color-btn' id='" + colors[i] + "' style='background-color:" + colors[i] + "'></button>";
 
 		$(".color-options").each(function () {
 			$(this).append(button);
@@ -432,7 +459,7 @@ function assignColorsToCreate() {
 function assignColorsToChange(card) {
 	for (var i = 0; i < colors.length; i++) {
 		var colorButton = document.createElement("button");
-		colorButton.className = "btn color-change-btn";
+		colorButton.className = "color-change-btn";
 		colorButton.id = colors[i];
 		colorButton.style.backgroundColor = colors[i];
 
@@ -458,13 +485,13 @@ function typingTimeout() {
 //listen for keypress in chatinput and emits typing
 $(document).ready(function () {
 
-
 	socket.emit("join", {boardId: window.windowBoardId, name: cookieValue("username")});
 
 	let currentBoards = cookieValue("visitedBoards");
 	if (currentBoards !== null) {
 		const arrayOfVisitedBoards = currentBoards.toString().split(",");
 		if (arrayOfVisitedBoards !== null && arrayOfVisitedBoards !== undefined) {
+			$("#folder").fadeIn();
 			arrayOfVisitedBoards.forEach(element => {
 				if (element !== null && element !== window.windowBoardId) {
 					appendNameToBoardList(element);

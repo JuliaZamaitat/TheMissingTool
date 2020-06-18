@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="22px" height="17px" viewBox="0 0 22 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.5 (67469) - http://www.bohemiancoding.com/sketch -->
+    <title>Photo</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="0%" y1="50%" x2="100%" y2="50%" id="linearGradient-1">
+            <stop stop-color="#FFADAD" offset="0%"></stop>
+            <stop stop-color="#00A1D9" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="New-card-hovered/Card-samples" transform="translate(-24.000000, -584.000000)" stroke="#FFFFFF" stroke-width="2">
+            <g id="Toolbar" transform="translate(0.000000, 288.000000)">
+                <g id="Buttons" transform="translate(15.000000, 20.000000)">
+                    <g id="Image" transform="translate(1.000000, 265.000000)">
+                        <g id="Photo" transform="translate(8.000000, 11.000000)">
+                            <circle id="Oval" fill="#FFFFFF" cx="17" cy="5" r="1"></circle>
+                            <rect id="Rectangle" x="1" y="1" width="20" height="15" rx="2"></rect>
+                            <polyline id="Path-3" points="1.02577858 14.9366223 7.96463174 6.94609616 11.7410301 10.9413592 14.0842569 8.85821832 20.1176617 14.367623"></polyline>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
