@@ -6,7 +6,6 @@ exports.get_port = function () {
 };
 
 exports.get_username = (req, res, next) => {
-	console.log("Cookies: ", req.cookies);
 	generateUsername(req, res);
 	next();
 };
@@ -17,8 +16,6 @@ function generateUsername(req, res) {
 		cookie = faker.name.findName();
 		res.cookie("username", cookie);
 		req.cookies.username = cookie;
-	} else {
-		console.log("cookie exists", cookie);
 	}
 	res.locals.username = cookie;
 }

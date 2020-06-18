@@ -56,8 +56,8 @@ function createCard(data) {
 
 	} else {
 		let querySelector = card.querySelector(".link");
-		querySelector.addEventListener("mousedown", function (event) {
-			$.post("/",
+		querySelector.addEventListener("mousedown", function () {
+			$.post("/board/" + window.windowBoardId,
 				function (boardId) {
 					socket.emit("add-link", {linkId: boardId, cardId: card.id});
 				});
@@ -66,26 +66,6 @@ function createCard(data) {
 	addCardListeners(card, data);
 	document.getElementById("overlay").appendChild(card);
 
-
-	function convertToLink(card) {
-		card.classList.add("link-card");
-		const link = card.querySelector(".link");
-		if (card.querySelector(".link"))
-			link.remove();
-		const element = document.createElement("button");
-		element.type = "button";
-		element.className = "forward";
-		element.innerHTML = "<img src='/icons/link.svg'>";
-		card.appendChild(element);
-		// Listener for forwarding to new board
-		card.querySelector(".forward").addEventListener("mousedown", function () {
-			$.get("/get-linked-board/" + card.id, function (data) {
-				if (data !== null && data !== "") {
-					setCookieAndChangeLocation(data);
-				}
-			});
-		});
-	}
 
 	function addCardListeners(card, data) {
 		// Moving card listener
@@ -227,9 +207,30 @@ function createCard(data) {
 
 }
 
+function convertToLink(card) {
+	card.classList.add("link-card");
+	const link = card.querySelector(".link");
+	if (card.querySelector(".link"))
+		link.remove();
+	const element = document.createElement("button");
+	element.type = "button";
+	element.className = "forward";
+	element.innerHTML = "<img src='/icons/link.svg'>";
+	card.appendChild(element);
+	// Listener for forwarding to new board
+	card.querySelector(".forward").addEventListener("mousedown", function () {
+		$.get("/get-linked-board/" + card.id, function (data) {
+			if (data !== null && data !== "") {
+				setCookieAndChangeLocation(data);
+			}
+		});
+	});
+}
+
 assignColorsToCreate();
 
 createCardOnClick();
+
 function createCardOnClick() {
 	var color_picked = false;
 

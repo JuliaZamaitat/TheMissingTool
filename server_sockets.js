@@ -35,7 +35,6 @@ module.exports = {
 				if(!users[board].includes(username)) {
 					users[board].push(username);
 				}
-				console.log(users);
 				io.to(board).emit("update-users", users[board]);
 			}
 
@@ -244,7 +243,6 @@ module.exports = {
 						if (error) {
 							console.log(error);
 						} else {
-							console.log(success);
 						}
 					});
 

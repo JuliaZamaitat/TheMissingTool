@@ -2,7 +2,6 @@
 <div id="zoom-container">
     <div id="overlay"></div>
 </div>
-
 <div id="board-input" class="flex-container">
     <div id="board-names_container">
         <div class="neu-panel neu-edit-panel" id="board-name_input"><p class="neu-title" contenteditable="true"
@@ -10,11 +9,10 @@
                     id="folder" class="fa fa-angle-down fa-lg glow" aria-hidden="true"></i></div>
         <div id="dropdown-content" class="neu-float-panel"></div>
     </div>
-    <div id="username_container" class="neu-panel neu-outline neu-edit-panel"><p class="neu-title"
-                                                                                 contenteditable="true"
-                                                                                 id="user-name"><%= username %></p>
+    <div id="username_container" class="neu-panel neu-outline neu-edit-panel"><p class="neu-title" contenteditable="true" id="user-name"><%= username %></p>
     </div>
     <div id="users"></div>
+    <div id="board_path"></div>
 </div>
 
 <!-- Left toolbar -->
@@ -64,7 +62,7 @@
 <div class="notifier"><span>Copied to clipboard</span></div>
 <div id="menubar" class="neu-panel gradient">
     <img id="hamburger-bars" src="/icons/hamburger.svg">
-    <button type="button" class="menu-btn" id="create-board">
+    <button type="button" class="menu-btn" id="create-child-board">
         <img src="/icons/plus.svg"><span>New Board</span>
     </button>
     <button type="button" class="menu-btn" id="share-board">

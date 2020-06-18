@@ -1,6 +1,26 @@
 var zoom = "100";
 
 $(document).ready(function () {
+
+	$.get("/board/" + window.windowBoardId + "/path", (path) => {
+		console.log(path)
+		for (let i = 0; i < path.length; i++) {
+			var boardId = path[i];
+			$.get("/board/" + boardId + "/data", (boardData) => {
+				if (boardData !== "") {
+					var element = document.createElement("p");
+					var text = document.createTextNode( "/" + boardData.name);
+					element.appendChild(text);
+					element.id = boardData._id;
+					element.addEventListener("mousedown", function () {
+						setCookieAndChangeLocation(element.id);
+					});
+					document.getElementById("board_path").appendChild(element);
+				}
+			});
+		}
+	});
+
 	let currentBoards = cookieValue("visitedBoards");
 	if (currentBoards !== null) {
 		const arrayOfVisitedBoards = currentBoards.toString().split(",");
@@ -48,8 +68,8 @@ window.onload = function () {
 		$("#setNameModal").modal("hide");
 		updateBoardName($("#board-name-input").val().trim());
 	});
-
 	$("#create-board").on("click", createBoard);
+	$("#create-child-board").on("click", createChildBoardAndForward);
 	$("#share-board").on("click", copyToClipboard);
 	$("#folder").on("click", showOrHide);
 	zoomOnclick();
@@ -57,6 +77,13 @@ window.onload = function () {
 
 function createBoard() {
 	$.post("/",
+		function (data) {
+			setCookieAndChangeLocation(data);
+		});
+}
+
+function createChildBoardAndForward() {
+	$.post("/board/" + window.windowBoardId,
 		function (data) {
 			setCookieAndChangeLocation(data);
 		});

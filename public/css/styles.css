@@ -62,7 +62,7 @@ p {
 }
 
 .neu-edit-panel:focus-within p {
-	opacity: .8; 
+	opacity: .8;
 	text-shadow: none !important;
 }
 .neu-input {
@@ -174,12 +174,15 @@ p:focus {
 	display: none;
 	border-radius: 0 0 10px 10px;
 	transform: translateY(-.5rem);
+	z-index: 999999;
 }
 #dropdown-content p {
 	opacity: .5;
 	padding: 1rem 1.5rem;
 	border-top: 1px solid var(--dark-color);
 	margin: 0;
+	z-index: 999999;
+
 }
 #dropdown-content p:hover
 {
@@ -411,9 +414,9 @@ body.modal-open {
 	color: white;
 	background-color: var(--dark-panel-color);
 	border-radius: 5px;
-	box-shadow: 
+	box-shadow:
 		inset 1px 1px 2px rgba(0,0,0,.2),
-		inset -2px -2px 2px rgba(255,255,255); 
+		inset -2px -2px 2px rgba(255,255,255);
 }
 input[type=range] {
 	-webkit-appearance: none;
@@ -431,7 +434,7 @@ input[type=range]::-webkit-slider-thumb {
 		-5px -5px 10px rgba(255, 255, 255, .9);
 	background-image: linear-gradient(to bottom right, var(--light-color), var(--dark-color));
 	transition: ease .2s;
-	border: 3px solid var(--light-panel-color);	
+	border: 3px solid var(--light-panel-color);
 }
 input[type=range]::-moz-range-thumb {
 	-webkit-appearance: none;
@@ -443,7 +446,7 @@ input[type=range]::-moz-range-thumb {
 		-5px -5px 10px rgba(255, 255, 255, .9);
 	background-image: linear-gradient(to bottom right, var(--light-color), var(--dark-color));
 	transition: ease .2s;
-	border: 3px solid var(--light-panel-color);	
+	border: 3px solid var(--light-panel-color);
 }
 input[type=range]::-ms-thumb {
 	-webkit-appearance: none;
@@ -455,7 +458,7 @@ input[type=range]::-ms-thumb {
 		-5px -5px 10px rgba(255, 255, 255, .9);
 	background-image: linear-gradient(to bottom right, var(--light-color), var(--dark-color));
 	transition: ease .2s;
-	border: 3px solid var(--light-panel-color);	
+	border: 3px solid var(--light-panel-color);
 }
 .zoom-btn {
 	background: none;
@@ -776,7 +779,7 @@ textarea:hover {
 }
 #close-chat:hover {
 	opacity: .7;
-} 
+}
 #chatWindow {
 	position: absolute;
 	right: 1.5rem;
@@ -903,4 +906,13 @@ textarea:hover {
 	}
 }
 
+#board_path {
+	margin: auto;
+	width: auto;
+	height: 40px;
+}
 
+#board_path p {
+	float: left;
+	font-size: x-large;
+}
