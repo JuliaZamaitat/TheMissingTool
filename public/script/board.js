@@ -120,13 +120,16 @@ function zoomOnclick() {
 
 // change location and append current board to lastVisited cookie
 function setCookieAndChangeLocation(newBoard) {
+	let arrayOfVisitedBoards = [];
 	let currentCookie = cookieValue("visitedBoards");
+
 	if (currentCookie === null || currentCookie === "" || currentCookie === undefined) {
 		if (window.windowBoardId !== undefined) {
 			document.cookie = "visitedBoards=" + window.windowBoardId;
+			location.href = "/board/" + newBoard;
 		}
 	} else {
-		let arrayOfVisitedBoards = currentCookie.toString().split(",");
+		arrayOfVisitedBoards = currentCookie.toString().split(",");
 		if (arrayOfVisitedBoards === undefined) {
 			arrayOfVisitedBoards = "";
 		}
@@ -140,9 +143,9 @@ function setCookieAndChangeLocation(newBoard) {
 		if (window.windowBoardId !== undefined) {
 			arrayOfVisitedBoards.push(window.windowBoardId);
 		}
-		document.cookie = "visitedBoards=" + arrayOfVisitedBoards;
-		location.href = "/board/" + newBoard;
 	}
+	document.cookie = "visitedBoards=" + arrayOfVisitedBoards;
+	location.href = "/board/" + newBoard;
 }
 
 // update board name
