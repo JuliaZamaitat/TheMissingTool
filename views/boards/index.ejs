@@ -1,14 +1,21 @@
 <body>
-    <div id="zoom-container"><div id="overlay"></div></div>
+<div id="zoom-container">
+    <div id="overlay"></div>
+</div>
 
-    <div id="board-input" class="flex-container">
-        <div id="board-names_container">
-            <div class="neu-panel neu-edit-panel" id="board-name_input"><p class="neu-title" contenteditable="true" id="board-name"><%= board.name %></p><i id="folder" class="fa fa-angle-down fa-lg glow" aria-hidden="true"></i></div>
-            <div id="dropdown-content" class="neu-float-panel"></div>
-        </div>
-        <div id="username_container" class="neu-panel neu-outline neu-edit-panel"><p class="neu-title" contenteditable="true" id="user-name"><%= username %></p></div>
-        <div id="users"></div>
+<div id="board-input" class="flex-container">
+    <div id="board-names_container">
+        <div class="neu-panel neu-edit-panel" id="board-name_input"><p class="neu-title" contenteditable="true"
+                                                                       id="board-name"><%= board.name %></p><i
+                    id="folder" class="fa fa-angle-down fa-lg glow" aria-hidden="true"></i></div>
+        <div id="dropdown-content" class="neu-float-panel"></div>
     </div>
+    <div id="username_container" class="neu-panel neu-outline neu-edit-panel"><p class="neu-title"
+                                                                                 contenteditable="true"
+                                                                                 id="user-name"><%= username %></p>
+    </div>
+    <div id="users"></div>
+</div>
 
 <!-- Left toolbar -->
 <div id="toolbar" class="neu-panel">
@@ -65,7 +72,7 @@
     </button>
     <button type="button" class="menu-btn" data-toggle="modal"
             data-target="#deleteBoardModal">
-            <img src="/icons/trash-can.svg"><span>Delete Board</span>
+        <img src="/icons/trash-can.svg"><span>Delete Board</span>
     </button>
 </div>
 
@@ -92,26 +99,28 @@
 </div>
 
 <% if(!board.name) { %>
-	<div class="modal fade" id="setNameModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-		<div class="modal-dialog modal-dialog-centered" role="document">
-			<div class="modal-content">
-				<div class="modal-header gradient">
-					<h5 class="modal-title" id="setNameModalLabel">Please enter a name for the new board.</h5>
-				</div>
-				<form id="board-name-form">
-					<div class="modal-body">
-							<div class="form-group">
-								<h5><label class="neu-title" for="board-name-input">Board name:</label></h5><br>
-								<input type="text" class="neu-input" id="board-name-input" placeholder="Type a name..." maxlength="200">
-							</div>
-					</div>
-					<div class="modal-footer">
-						<button type="submit" class="neu-button gradient" id="board-name-button">Create</button>
-					</div>
-			</form>
-			</div>
-		</div>
-	</div>
+    <div class="modal fade" id="setNameModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header gradient">
+                    <h5 class="modal-title" id="setNameModalLabel">Please enter a name for the new board.</h5>
+                </div>
+                <form id="board-name-form">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <h5><label class="neu-title" for="board-name-input">Board name:</label></h5><br>
+                            <input type="text" class="neu-input" id="board-name-input" placeholder="Type a name..."
+                                   maxlength="200">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="neu-button gradient" id="board-name-button">Create</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 <% } %>
 
 <!-- Chat window -->
@@ -120,9 +129,11 @@
     <img src="/icons/chat.svg">
 </button>
 <%- include('../partials/chat') %>
-
 <script src="/socket.io/socket.io.js"></script>
-<script type="text/javascript" src="/script/client_sockets.js"></script>
+<script type="text/javascript" src="/script/common.js"></script>
+<script type="text/javascript" src="/script/colors.js"></script>
+<script type="text/javascript" src="/script/comments.js"></script>
+<script type="text/javascript" src="/script/cards.js"></script>
+<script type="text/javascript" src="/script/communication.js"></script>
 <script type="text/javascript" src="/script/board.js"></script>
-<script type="text/javascript" src="/script/chat.js"></script>
 </body>

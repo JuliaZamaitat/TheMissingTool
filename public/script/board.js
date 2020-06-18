@@ -1,6 +1,41 @@
+var zoom = "100";
+
+$(document).ready(function () {
+	let currentBoards = cookieValue("visitedBoards");
+	if (currentBoards !== null) {
+		const arrayOfVisitedBoards = currentBoards.toString().split(",");
+		if (arrayOfVisitedBoards !== null && arrayOfVisitedBoards !== undefined) {
+			$("#folder").fadeIn();
+			arrayOfVisitedBoards.forEach(element => {
+				if (element !== null && element !== window.windowBoardId) {
+					appendNameToBoardList(element);
+				}
+			});
+		}
+	}
+
+	function appendNameToBoardList(boardId) {
+		if (boardId !== null && boardId !== "") {
+			$.get("/board/" + boardId + "/data", (boardData) => {
+				if (boardData !== "") {
+					var element = document.createElement("p");
+					var text = document.createTextNode(boardData.name);
+					element.appendChild(text);
+					element.id = boardData._id;
+					element.className = "boardLink";
+					element.addEventListener("mousedown", function () {
+						setCookieAndChangeLocation(element.id);
+					});
+					document.getElementById("dropdown-content").appendChild(element);
+				}
+			});
+		}
+	}
+});
+
 window.onload = function () {
 	//If the modal for the board name is rendered then show it
-	if($("#setNameModal")) {
+	if ($("#setNameModal")) {
 		$("#setNameModal").modal("show");
 		//Keep submit button disabled as long as input is empty
 		$("#board-name-input").on("input", () => {
@@ -27,24 +62,6 @@ function createBoard() {
 		});
 }
 
-function showOrHide() {
-	$("#dropdown-content").fadeToggle();
-}
-
-function setCookieAndChangeLocation(newBoard) {
-	let currentCookie = cookieValue("visitedBoards");
-	if (currentCookie === null || currentCookie === "") {
-		document.cookie = "visitedBoards=" + window.windowBoardId;
-	} else {
-		var arrayOfVisitedBoards = currentCookie.toString().split(",");
-		if (!arrayOfVisitedBoards.includes(window.windowBoardId)) {
-			arrayOfVisitedBoards.push(window.windowBoardId);
-			document.cookie = "visitedBoards=" + arrayOfVisitedBoards;
-		}
-	}
-	location.href = "/board/" + newBoard;
-}
-
 function copyToClipboard() {
 	const temp = document.createElement("input"), text = window.location.href;
 	document.body.appendChild(temp);
@@ -59,50 +76,97 @@ function copyToClipboard() {
 	}, 1000);
 }
 
-function cookieValue(name) {
-	let rightRow = document.cookie.split("; ").find(row => row.startsWith(name));
-	if (rightRow !== null && rightRow !== undefined) {
-		return decodeURIComponent(rightRow.split("=")[1]);
-	} else {
-		return null;
-	}
+function showOrHide() {
+	$("#dropdown-content").fadeToggle();
 }
 
-var zoom = "100";
+// zooming
 function zoomOnclick() {
 	var interval = 0;
-	$("#zoom-in").mousedown(function() {
+	$("#zoom-in").mousedown(function () {
 		interval = setInterval(zoomIn(), 50);
-	}).mouseup(function() {
-		clearInterval(interval);
-	});
-	
-	$("#zoom-out").mousedown(function() {
-		interval = setInterval(zoomOut(), 50);
-	}).mouseup(function() {
+	}).mouseup(function () {
 		clearInterval(interval);
 	});
 
-	$("#zoom-slider").on("input", function() {
+	$("#zoom-out").mousedown(function () {
+		interval = setInterval(zoomOut(), 50);
+	}).mouseup(function () {
+		clearInterval(interval);
+	});
+
+	$("#zoom-slider").on("input", function () {
 		const zoomVal = document.getElementById("zoom-slider").value;
 		document.getElementById("overlay").style.zoom = zoomVal + "%";
 		document.getElementById("zoom-size").innerHTML = zoomVal + "%";
 	});
+
+	function zoomIn() {
+		zoom++;
+		document.getElementById("overlay").style.zoom = zoom + "%";
+		document.getElementById("zoom-slider").value = zoom;
+		document.getElementById("zoom-size").innerHTML = zoom + "%";
+		if (zoom > 200) return;
+	}
+
+	function zoomOut() {
+		zoom--;
+		document.getElementById("overlay").style.zoom = zoom + "%";
+		document.getElementById("zoom-slider").value = zoom;
+		document.getElementById("zoom-size").innerHTML = zoom + "%";
+		if (zoom < 1) return;
+	}
 }
 
-function zoomIn() {
-	zoom++;
-	document.getElementById("overlay").style.zoom = zoom + "%";
-	document.getElementById("zoom-slider").value = zoom;
-	document.getElementById("zoom-size").innerHTML = zoom + "%";
-	if (zoom > 200) return;
+// change location and append current board to lastVisited cookie
+function setCookieAndChangeLocation(newBoard) {
+	let currentCookie = cookieValue("visitedBoards");
+	if (currentCookie === null || currentCookie === "" || currentCookie === undefined) {
+		if (window.windowBoardId !== undefined) {
+			document.cookie = "visitedBoards=" + window.windowBoardId;
+		}
+	} else {
+		let arrayOfVisitedBoards = currentCookie.toString().split(",");
+		if (arrayOfVisitedBoards === undefined) {
+			arrayOfVisitedBoards = "";
+		}
+		if (arrayOfVisitedBoards.includes(window.windowBoardId)) {
+			for (let i = 0; i < arrayOfVisitedBoards.length; i++) {
+				if (arrayOfVisitedBoards[i] === window.windowBoardId) {
+					arrayOfVisitedBoards.splice(i, 1);
+				}
+			}
+		}
+		if (window.windowBoardId !== undefined) {
+			arrayOfVisitedBoards.push(window.windowBoardId);
+		}
+		document.cookie = "visitedBoards=" + arrayOfVisitedBoards;
+		location.href = "/board/" + newBoard;
+	}
 }
 
-function zoomOut() {
-	zoom--;
-	document.getElementById("overlay").style.zoom = zoom + "%";
-	document.getElementById("zoom-slider").value = zoom;
-	document.getElementById("zoom-size").innerHTML = zoom + "%";
-	if (zoom < 1) return;
+// update board name
+$("#board-name").on("focusout", () => {
+	updateBoardName($("#board-name").text());
+});
+
+function updateBoardName(newName) {
+	socket.emit("update-board-name", {
+		_id: windowBoardId,
+		name: newName
+	});
 }
 
+socket.on("board-name-update", (data) => {
+	const name = JSON.parse(data).name;
+	$("#board-name").text(name);
+});
+
+// delete board
+$("#delete-board").on("click", () => {
+	socket.emit("delete-board", {_id: window.windowBoardId});
+});
+
+socket.on("board-deleted", () => {
+	location.href = "/";
+});
