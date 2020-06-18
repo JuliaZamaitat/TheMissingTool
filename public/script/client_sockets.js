@@ -150,20 +150,20 @@ function addListeners(card, data) {
 		pos4 = e.clientY;
 		card.style.top = (card.offsetTop - pos2) + "px";
 		card.style.left = (card.offsetLeft - pos1) + "px";
+
+		sendPosChange({
+		_id: card.id,
+			position: {
+			left: card.style.left.replace(/\D/g, ""),
+				top: card.style.top.replace(/\D/g, ""),
+			}
+		});
 	}
 
 	function closeDragCard() {
 		isOverlappingAny();
-		sendPosChange({
-			_id: card.id,
-			position: {
-				left: card.style.left.replace(/\D/g, ""),
-				top: card.style.top.replace(/\D/g, ""),
-			}
-		});
 		document.onmouseup = null;
 		document.onmousemove = null;
-
 	}
 
 	function isOverlappingAny() {
