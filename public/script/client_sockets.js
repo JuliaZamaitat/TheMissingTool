@@ -369,6 +369,7 @@ socket.on("card-to-link", (data) => {
 
 socket.on("board-name-update", (data) => {
 	const name = JSON.parse(data).name;
+	$("#board-name").text(name);
 });
 
 $("#user-name").on("focusout", function (event) {
@@ -432,6 +433,10 @@ function add0(val) {
 function formatHours(hour, minutes) {
 	if (hour > 12) {
 		return add0(hour-12) + ":" + add0(minutes) + "pm";
+	} else if (hour == 12) {
+		return hour + ":" + add0(minutes) + "pm";
+	} else if (hour == 0) {
+		return "12:" + add0(minutes) + "am";
 	} else {
 		return add0(hour) + ":" + add0(minutes) + "am";
 	}

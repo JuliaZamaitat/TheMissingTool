@@ -266,7 +266,7 @@ img#hamburger-bars {
 	width: 100%;
 }
 #board-name-button {
-	padding: .5rem;
+	padding: .5rem .8rem;
 }
 .modal-content {
 	border-radius: 10px;
@@ -321,7 +321,7 @@ body.modal-open {
 	z-index: 999;
 }
 #toolbar img {
-	width: 1.2rem;
+	width: 1.3rem;
 	float: left;
 }
 
@@ -330,7 +330,7 @@ body.modal-open {
 	height: 2.5rem;
 	margin: .5rem 0;
 	position: relative;
-	padding-left: .7rem;
+	padding: .6rem;
 	transition: ease-in-out .3s !important;
 	color: white;
 }
