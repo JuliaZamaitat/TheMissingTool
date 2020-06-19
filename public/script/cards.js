@@ -91,7 +91,10 @@ function createCard(data) {
 			pos4 = e.clientY;
 			card.style.top = (card.offsetTop - pos2) + "px";
 			card.style.left = (card.offsetLeft - pos1) + "px";
+		}
 
+		function closeDragCard() {
+			isOverlappingAny();
 			sendPosChange({
 				_id: card.id,
 				position: {
@@ -99,10 +102,6 @@ function createCard(data) {
 					top: card.style.top.replace(/\D/g, ""),
 				}
 			});
-		}
-
-		function closeDragCard() {
-			isOverlappingAny();
 			document.onmouseup = null;
 			document.onmousemove = null;
 		}
