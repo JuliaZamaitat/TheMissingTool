@@ -1,21 +1,23 @@
 var zoom = "100";
 
 $(document).ready(function () {
-
 	$.get("/board/" + window.windowBoardId + "/path", (path) => {
 		for (let i = 0; i < path.length; i++) {
-			var boardId = path[i];
-			$.get("/board/" + boardId + "/data", (boardData) => {
-				if (boardData !== "") {
-					var element = document.createElement("p");
-					var text = document.createTextNode("/" + boardData.name);
-					element.appendChild(text);
-					element.id = boardData._id;
-					element.addEventListener("mousedown", function () {
-						setCookieAndChangeLocation(element.id);
-					});
-					document.getElementById("board_path").appendChild(element);
-				}
+			$.get({
+				url: "/board/" + path[i] + "/data",
+				success: function(boardData) {
+					if (boardData !== "") {
+						var element = document.createElement("p");
+						var text = document.createTextNode("/" + boardData.name);
+						element.appendChild(text);
+						element.id = boardData._id;
+						element.addEventListener("mousedown", function () {
+							setCookieAndChangeLocation(element.id);
+						});
+						document.getElementById("board_path").appendChild(element);
+					}
+				},
+				async:false
 			});
 		}
 	});
