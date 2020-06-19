@@ -3,13 +3,12 @@ var zoom = "100";
 $(document).ready(function () {
 
 	$.get("/board/" + window.windowBoardId + "/path", (path) => {
-		console.log(path)
 		for (let i = 0; i < path.length; i++) {
 			var boardId = path[i];
 			$.get("/board/" + boardId + "/data", (boardData) => {
 				if (boardData !== "") {
 					var element = document.createElement("p");
-					var text = document.createTextNode( "/" + boardData.name);
+					var text = document.createTextNode("/" + boardData.name);
 					element.appendChild(text);
 					element.id = boardData._id;
 					element.addEventListener("mousedown", function () {
@@ -51,9 +50,7 @@ $(document).ready(function () {
 			});
 		}
 	}
-});
 
-window.onload = function () {
 	//If the modal for the board name is rendered then show it
 	if ($("#setNameModal")) {
 		$("#setNameModal").modal("show");
@@ -69,11 +66,14 @@ window.onload = function () {
 		updateBoardName($("#board-name-input").val().trim());
 	});
 	$("#create-board").on("click", createBoard);
+
 	$("#create-child-board").on("click", createChildBoardAndForward);
 	$("#share-board").on("click", copyToClipboard);
 	$("#folder").on("click", showOrHide);
+	$("#back-button").on("click", goToParent);
 	zoomOnclick();
-};
+});
+
 
 function createBoard() {
 	$.post("/",
@@ -105,6 +105,16 @@ function copyToClipboard() {
 
 function showOrHide() {
 	$("#dropdown-content").fadeToggle();
+}
+
+function goToParent() {
+	$.get("/board/" + window.windowBoardId + "/path",
+		function (path) {
+			let parentBoard = path[path.length - 1];
+			if (parentBoard !== undefined) {
+				setCookieAndChangeLocation(parentBoard);
+			}
+		});
 }
 
 // zooming

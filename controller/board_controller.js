@@ -43,7 +43,6 @@ exports.create_child_board = function (req, res) {
 exports.get_path = function (req, res) {
 	const filter = {_id: mongoose.Types.ObjectId(req.params.boardId)};
 	Board.findOne(filter, (err, savedBoard) => {
-		console.log(savedBoard.path);
 		res.send(savedBoard.path);
 	});
 };

@@ -916,3 +916,11 @@ textarea:hover {
 	float: left;
 	font-size: x-large;
 }
+
+#back-button {
+	height: 50px;
+	width: auto;
+	position: fixed;
+	left: 100px;
+	bottom: 100px;
+}
