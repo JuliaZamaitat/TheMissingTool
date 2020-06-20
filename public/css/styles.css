@@ -309,9 +309,8 @@ body.modal-open {
 /* TOOLBAR */
 #toolbar {
 	position: absolute;
-	left: 0;
-	top: 0;
-	transform: translateY(50%);
+	left: -.2rem;
+	top: 33%;
 	padding: 1.2rem 1rem;
 	width: 4.5rem;
 	height: auto;
