@@ -11,8 +11,12 @@ describe("The Chat", () => {
 	it("does not show hidden chat content", () => {
 		cy.get("#chatContent").should("be.not.visible");
 	});
-	it("shows chat content after click on header", () => {
+	it("shows chat content after click on open chat button", () => {
 		cy.get("#open-chat").click();
+		cy.get("#chatContent").should("be.visible");
+	});
+	it("hides chat content after click on chat Header", () => {
+		cy.get("#chatHeader").click();
 		cy.get("#chatContent").should("be.visible");
 	});
 	it("appends messages to chat", () => {
@@ -21,7 +25,7 @@ describe("The Chat", () => {
 		cy.get("#chatContent").should("not.contain", "Some other username");
 		cy.get("#chatContent").should("not.contain", "Some other message");
 	});
-	it("toggles chat content when clicking on header", () => {
+	it("hides chat content when clicking on close button", () => {
 		cy.get("#close-chat").click();
 		cy.get("#chatContent").should("be.not.visible");
 	});

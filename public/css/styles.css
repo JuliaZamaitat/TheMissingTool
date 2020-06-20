@@ -193,6 +193,28 @@ p:focus {
 #user-name {
 	padding: .8rem 1.3rem;
 }
+#username-hint {
+	position: absolute;
+	left: 90%;
+	top: .5rem;
+	white-space: nowrap;
+	background-color: var(--title-color);
+	color: white;
+	padding: .5rem 1rem;
+	display: none;
+}
+#username-hint:before {
+	content: "";
+	width: 0px;
+	height: 0px;
+	position: absolute;
+	border-left: 5px solid transparent;
+	border-right: 10px solid var(--title-color);
+	border-top: 5px solid transparent;
+	border-bottom: 5px solid transparent;
+	left: -13px;
+	top: .8rem;
+}
 
 /* MENUBAR */
 #menubar {
@@ -237,16 +259,13 @@ img#hamburger-bars {
 	overflow: hidden;
 	transition: ease .2s;
 }
-
 .menu-btn span {
 	opacity: 0;
 	top: .9rem;
 	left: 3rem;
-	width: auto;
 	white-space: nowrap;
 	position: absolute;
 }
-
 .menu-btn:hover {
 	margin: 0 1rem;
 	width: 10rem;
@@ -254,10 +273,11 @@ img#hamburger-bars {
 		inset 2px 2px 5px rgba(0,0,0,.2),
 		inset -2px -2px 5px rgba(255,255,255,.5);
 }
-
 .menu-btn:hover span {
 	opacity: 1;
 }
+
+/* MODAL */
 #setNameModal {
 	z-index: 9999;
 }
@@ -340,8 +360,9 @@ body.modal-open {
 	left: 3rem;
 	white-space: nowrap;
 	opacity: 0;
-	transition: ease-in-out .5s;
+	transition: ease-in-out 1s;
 	color: white;
+	display: none;
 }
 
 .toolbar-btn:hover {
@@ -350,10 +371,12 @@ body.modal-open {
 
 .toolbar-btn:hover span {
 	opacity: 1;
+	display: inline-block;
 }
 
 .toolbar-btn:hover .color-options {
 	opacity: 1;
+	display: block;
 }
 
 .color-options {
@@ -364,6 +387,7 @@ body.modal-open {
 	transition: ease-in-out .5s;
 	opacity: 0;
 	top: .5rem;
+	display: none;
 }
 
 .color-btn, .color-change-btn {

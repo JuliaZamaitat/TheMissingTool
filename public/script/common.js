@@ -6,6 +6,10 @@ window.windowBoardId = pathname.substr(pathname.lastIndexOf("/") + 1);
 
 $(document).ready(function () {
 	socket.emit("join", {boardId: window.windowBoardId, name: cookieValue("username")});
+	$("#username-hint").fadeIn();
+	setTimeout(function() {
+		$("#username-hint").fadeOut();
+	},3000);
 });
 
 let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];

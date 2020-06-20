@@ -202,6 +202,8 @@ function createCard(data) {
 				});
 			});
 		});
+	
+	
 	}
 
 }
@@ -209,8 +211,12 @@ function createCard(data) {
 function convertToLink(card) {
 	const newBoardName = card.querySelector("textarea").value;
 	if (newBoardName.length == 0) {
+		document.onmouseup = null;
+		document.onmousemove = null;
 		alert("Please enter a name for the new board on the card.");
 	} else if (newBoardName.length >= 201) {
+		document.onmouseup = null;
+		document.onmousemove = null;
 		alert("Board name cannot be longer than 200 characters.");
 	} else {
 		card.classList.add("link-card");
