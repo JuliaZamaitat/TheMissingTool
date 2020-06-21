@@ -1,6 +1,7 @@
 const mongoose = require("mongoose"),
 	Card = require("./models/card"),
 	Board = require("./models/board");
+const { ResumeToken } = require("mongodb");
 var users = {};
 
 module.exports = {
@@ -248,10 +249,13 @@ module.exports = {
 				else
 					socket.broadcast.emit("display", data);
 			});
+			
+			socket.on("mouse_movement", (data) => {
+				console.log(data)
+				socket.broadcast.emit("all_mouse_movements", {id: socket.id, coords: data})
+			})
 
-			socket.on('editing', (data) => {
-				socket.broadcast.emit('card-display', data)
-			});
+			
 
 		});
 	}

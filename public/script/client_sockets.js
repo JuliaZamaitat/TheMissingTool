@@ -8,7 +8,6 @@ let colors = ["#c50c08", "#31a023", "#385bd6", "#d2c72a"];
 let typing = false,
 	timeout = undefined;
 var socket = io();
-var editing = false
 
 $.get("/board/" + windowBoardId + "/messages", (messages) => {
 	messages.forEach(addMessage);
@@ -46,7 +45,7 @@ function createCard(data) {
 	const buttons = document.createElement("div");
 	buttons.className = "buttonContainer";
 	buttons.innerHTML = "<span type='button' class='btn btn-outline-success link rounded'><i class='fa fa-link'></i></span><span type='button' class='btn btn-outline-primary colorChangeBtn rounded'><div class='colorChangeOptions'></div><i class='fa fa-edit'></i></span><span type='button' class='btn btn-outline-danger deleteBtn rounded'><i class='fa fa-trash-o'></i></span><span type='button' class='btn btn-outline-warning commentBtn rounded'><i class='fa fa-comments'></i></span>";
-	card.innerHTML = "<textarea type='text' value='' id='txt-typed'></textarea><div class='editing'>User is working on card...</div><div class='comments-box'><span class='close-commentBox'>&times;</span><div class='commentField'></div><input placeholder='Add a comment...' class='commentInput'></div>";
+	card.innerHTML = "<textarea type='text' value='' id='txt-typed'></textarea><div class='editing'></div><div class='comments-box'><span class='close-commentBox'>&times;</span><div class='commentField'></div><input placeholder='Add a comment...' class='commentInput'></div>";
 	card.prepend(buttons);
 
 	card.id = data._id;
@@ -234,19 +233,6 @@ function addListeners(card, data) {
 		});
 	});
 
-	// Notify card if user is typing
-	card.querySelector("#txt-typed").addEventListener("keypress", function (event) {
-		if(event.which!=13){
-			editing = true
-			socket.emit('editing', {editing: true})
-			clearTimeout(timeout)
-			timeout = setTimeout(editingTimeout, 1500)
-		}
-		else{
-			clearTimeout(timeout)
-			editingTimeout()
-		}
-	});
 
 	// Change card color
 	let colorButtons = card.querySelectorAll(".color-change-btn");
@@ -415,15 +401,6 @@ function addMessage(message) {
 }
 
 
-socket.on('card-display', (data) => {
-	if(data.editing==true){
-		$('.editing').text("User is typing...")
-	}
-	else{
-		$('.editing').text("")
-	}
-})
-
 // function getRandomColor() {
 // 	var colors = "0123456789ABCDEF";
 // 	var color = "#";
@@ -468,6 +445,7 @@ function typingTimeout() {
 	socket.emit("typing", {user: user, typing: false});
 }
 
+
 //listen for keypress in chatinput and emits typing
 $(document).ready(function () {
 
@@ -485,6 +463,7 @@ $(document).ready(function () {
 			typingTimeout();
 		}
 	});
+	
 
 	//display a notification when a user is typing
 	socket.on("display", (data) => {
@@ -500,8 +479,41 @@ $(document).ready(function () {
 });
 
 
-function editingTimeout() {
-	//let user = cookieValue("username");
-	editing = false;
-	socket.emit("editing", {editing: false});
+function getCursorElement(id) {
+	var user = cookieValue("username");
+	var elementId = 'mvcursor-' + id;
+	var element = document.getElementById(elementId);
+	if(element == null) {
+		element = document.createElement('div');
+		element.id = elementId
+		element.className = 'mvcursor';
+		element.innerHTML = '<p>"'+user+'"</p>';
+
+		//document.prepend(element);
+	}
+	return element;
 }
+
+
+//send actual mouse pos to server
+
+$(document).on('mousemove', function(event){
+	socket.emit("mouse_movement", {x: event.pageX, y: event.pageY, user: cookieValue("username")});
+});
+
+
+socket.on("all_mouse_movements", (data) => {
+	console.log(data);
+	var el = getCursorElement(data.id);
+	console.log(el);
+	el.style.left = data.coords.x + "px";
+	el.style.top = data.coords.y + "px";
+	$('body').append(el);
+	//$('body').append('<div class="mvcursor" id="cursor-'+ data.id+'"></div>')
+
+})
+
+
+
+
+

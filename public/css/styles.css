@@ -175,6 +175,15 @@ textarea:focus {
 	opacity: 1;
 }
 
+.mvcursor {
+	position: absolute;
+	background: rgb(230, 18, 18);
+	width: 20px;
+	height: 20px;
+	border-radius: 10px;
+
+}
+
 #remove {
 	background-color: red;
 	width: 30px;
