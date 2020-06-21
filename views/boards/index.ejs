@@ -5,14 +5,14 @@
 
 <div id="board-input" class="flex-container">
     <div id="board-names_container">
-        <div class="neu-panel neu-edit-panel" id="board-name_input"><p class="neu-title" contenteditable="true"
-                                                                       id="board-name"><%= board.name %></p><i
-                    id="folder" class="fa fa-angle-down fa-lg glow" aria-hidden="true"></i></div>
+        <div class="neu-panel neu-edit-panel" id="board-name_input">
+            <p class="neu-title" contenteditable="true" id="board-name"><%= board.name %></p>
+            <i id="folder" class="fa fa-angle-down fa-lg glow" aria-hidden="true"></i></div>
         <div id="dropdown-content" class="neu-float-panel"></div>
     </div>
-    <div id="username_container" class="neu-panel neu-outline neu-edit-panel"><p class="neu-title"
-                                                                                 contenteditable="true"
-                                                                                 id="user-name"><%= username %></p>
+    <div id="username_container" class="neu-panel neu-outline neu-edit-panel">
+        <p class="neu-title" contenteditable="true" id="user-name"><%= username %></p>
+        <span class="neu-hint neu-float-panel" id="username-hint">Edit your username</span>
     </div>
     <div id="users"></div>
 </div>
@@ -39,17 +39,8 @@
         <img src="/icons/triangle.svg"><span>Triangle</span>
         <div class="color-options"></div>
     </button>
-    <button type="button" class="neu-button gradient toolbar-btn add-text-btn">
-        <img src="/icons/text.svg"><span>Text</span>
-    </button>
-    <button type="button" class="neu-button gradient toolbar-btn add-image-btn">
-        <img src="/icons/image.svg"><span>Image</span>
-    </button>
     <button type="button" class="neu-button gradient toolbar-btn add-connection-btn">
         <img src="/icons/arrow.svg"><span>Connect</span>
-    </button>
-    <button type="button" class="neu-button gradient toolbar-btn draw-btn">
-        <img src="/icons/pencil.svg"><span>Draw</span>
     </button>
 </div>
 
