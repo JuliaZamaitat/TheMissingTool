@@ -1,3 +1,5 @@
+let username = cookieValue("username");
+
 $.get("/board/" + window.windowBoardId + "/cards", (cards) => {
 	cards.forEach(createCard);
 });
@@ -31,8 +33,12 @@ function createCard(data) {
 
 	var commentBox = createCommentBox();
 
+	const visitor = document.createElement("div");
+	visitor.className = "visitorContainer";
+
 	card.prepend(buttons);
 	card.append(commentBox);
+	card.append(visitor);
 	card.id = data._id;
 
 	assignColorsToChange(card);
@@ -56,7 +62,7 @@ function createCard(data) {
 
 	} else {
 		let querySelector = card.querySelector(".link");
-		querySelector.addEventListener("mousedown", function (event) {
+		querySelector.addEventListener("mousedown", function () {
 			$.post("/",
 				function (boardId) {
 					socket.emit("add-link", {linkId: boardId, cardId: card.id});
@@ -66,8 +72,16 @@ function createCard(data) {
 	addCardListeners(card, data);
 	document.getElementById("overlay").appendChild(card);
 
-
 	function addCardListeners(card, data) {
+
+		// Focus listeners
+		card.querySelector("textarea").addEventListener("focusin", function () {
+			socket.emit("focus-in", {cardId: card.id, username: username});
+		});
+		card.querySelector("textarea").addEventListener("focusout", function () {
+			socket.emit("focus-out", {cardId: card.id, username: username});
+		});
+
 		// Moving card listener
 		let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
 		card.onmousedown = cardMouseDown;
@@ -172,7 +186,7 @@ function createCard(data) {
 					sendComment({
 						cardId: card.id,
 						message: $(this).val(),
-						sender: cookieValue("username")
+						sender: username
 					});
 					card.querySelector(".commentInput").value = "";
 				}
@@ -202,8 +216,6 @@ function createCard(data) {
 				});
 			});
 		});
-	
-	
 	}
 
 }
@@ -246,6 +258,7 @@ function convertToLink(card) {
 assignColorsToCreate();
 
 createCardOnClick();
+
 function createCardOnClick() {
 	var color_picked = false;
 
@@ -320,6 +333,19 @@ socket.on("display-card", (data) => {
 
 socket.on("remove-card", (data) => {
 	document.getElementById(data).remove();
+});
+
+socket.on("focus-in", (data) => {
+	let card = document.getElementById(data.cardId);
+	let container = card.querySelector(".visitorContainer");
+	container.style.display = "block";
+	container.innerText = data.username;
+});
+
+socket.on("focus-out", (data) => {
+	let card = document.getElementById(data.cardId);
+	let container = card.querySelector(".visitorContainer");
+	container.style.display = "none";
 });
 
 

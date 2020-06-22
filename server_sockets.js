@@ -18,21 +18,21 @@ module.exports = {
 			});
 
 			socket.on("disconnect", function () {
-				refreshUserNameList()
+				refreshUserNameList();
 			});
 
 			socket.on("change-user-list", function (obj) {
-				refreshUserNameList()
+				refreshUserNameList();
 				updateUserNames(obj.name);
 			});
 
 
-			function updateUserNames(username){
+			function updateUserNames(username) {
 				socket.user = username;
 				if (!(board in users)) {
 					users[board] = [];
 				}
-				if(!users[board].includes(username)) {
+				if (!users[board].includes(username)) {
 					users[board].push(username);
 				}
 				console.log(users);
@@ -40,11 +40,11 @@ module.exports = {
 			}
 
 			function refreshUserNameList() {
-				if (users[board] != null){
+				if (users[board] != null) {
 					const currentUsers = Object.values(users[board]);
-					for (var i=0; i<currentUsers.length; i++){
+					for (var i = 0; i < currentUsers.length; i++) {
 						if (currentUsers[i] == socket.user) {
-							currentUsers.splice(i,1);
+							currentUsers.splice(i, 1);
 							users[board] = currentUsers;
 						}
 					}
@@ -162,7 +162,7 @@ module.exports = {
 				);
 			});
 
-			socket.on("update-color", function(req) {
+			socket.on("update-color", function (req) {
 				const filter = {_id: mongoose.Types.ObjectId(req._id)};
 				const update = {backgroundColor: req.backgroundColor};
 
@@ -257,10 +257,18 @@ module.exports = {
 			});
 
 			socket.on("typing", (data) => {
-				if(data.typing==true)
-					socket.broadcast.emit("display", data);
+				if (data.typing === true)
+					socket.to(board).emit("display", data);
 				else
-					socket.broadcast.emit("display", data);
+					socket.to(board).emit("display", data);
+			});
+
+			socket.on("focus-in", (data) => {
+				socket.to(board).emit("focus-in", data);
+			});
+
+			socket.on("focus-out", (data) => {
+				socket.to(board).emit("focus-out", data);
 			});
 
 		});
