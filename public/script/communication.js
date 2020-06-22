@@ -67,13 +67,22 @@ function toggleChatWindow() {
 		$("#chatWindow").addClass("opened");
 		$("#open-chat").fadeOut();
 	}
-	
+
 	function closeChat() {
 		$("#open-chat").fadeIn();
 		$("#chatWindow").removeClass("opened");
 		$("#chatWindow").addClass("closed");
 	}
 }
+
+$("#user-list").on("click", function(){
+	let list = document.getElementById("users");
+	if (list.style.display != "none"){
+		list.style.display = "none";
+	}
+	else { list.style.display = "block"}
+	console.log("user-list");
+});
 
 // Adjust chat content height, in case input height changes
 const chatRescaleContent = () => {
