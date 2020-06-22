@@ -27,6 +27,8 @@ $(document).ready(function () {
 			chatRescaleContent();
 		}
 	});
+
+	toggleChatWindow();
 });
 
 $.get("/board/" + window.windowBoardId + "/messages", (messages) => {
@@ -55,17 +57,23 @@ function addMessage(message) {
 	chatScrollBottom();
 }
 
-$("#open-chat").click(function () {
-	$("#chatWindow").removeClass("closed");
-	$("#chatWindow").addClass("opened");
-	$(this).fadeOut();
-});
+function toggleChatWindow() {
+	$("#open-chat").click(openChat);
+	$("#chatHeader").click(closeChat);
+	$("#close-chat").click(closeChat);
 
-$("#close-chat").click(function () {
-	$("#open-chat").fadeIn();
-	$("#chatWindow").removeClass("opened");
-	$("#chatWindow").addClass("closed");
-});
+	function openChat() {
+		$("#chatWindow").removeClass("closed");
+		$("#chatWindow").addClass("opened");
+		$("#open-chat").fadeOut();
+	}
+	
+	function closeChat() {
+		$("#open-chat").fadeIn();
+		$("#chatWindow").removeClass("opened");
+		$("#chatWindow").addClass("closed");
+	}
+}
 
 // Adjust chat content height, in case input height changes
 const chatRescaleContent = () => {
