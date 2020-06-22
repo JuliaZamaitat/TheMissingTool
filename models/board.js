@@ -6,6 +6,7 @@ const boardSchema = new Schema({
 	name: {type: String, required: false, max: 200},
 	path: [mongoose.ObjectId],
 	messages: [{text: String, time: Date, username : String}],
+	connectors: [{from: String, to: String}]
 });
 
 module.exports = mongoose.model("Board", boardSchema);

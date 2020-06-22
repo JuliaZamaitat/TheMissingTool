@@ -81,3 +81,10 @@ exports.get_messages = function (req, res) {
 		res.send(board.messages);
 	});
 };
+
+exports.get_connectors = function (req, res) {
+	const filter = {_id: mongoose.Types.ObjectId(req.params.boardId)};
+	Board.findById(filter, (err, board) => {
+		res.send(board.connectors);
+	});
+};
