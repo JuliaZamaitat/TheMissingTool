@@ -8,7 +8,7 @@ $(document).ready(function () {
 				success: function(boardData) {
 					if (boardData !== "") {
 						var element = document.createElement("p");
-						var text = document.createTextNode("/" + boardData.name);
+						var text = document.createTextNode(boardData.name + "/");
 						element.appendChild(text);
 						element.id = boardData._id;
 						element.addEventListener("mousedown", function () {
