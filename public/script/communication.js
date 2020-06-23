@@ -1,6 +1,8 @@
 let typing = false,
 	timeout = undefined,
 	messageCount = 0;
+let userList = [];
+
 
 $(document).ready(function () {
 
@@ -59,7 +61,7 @@ function addMessage(message) {
 
 function toggleChatWindow() {
 	$("#open-chat").click(openChat);
-	$("#chatHeader").click(closeChat);
+	//$("#chatHeader").click(closeChat);
 	$("#close-chat").click(closeChat);
 
 	function openChat() {
@@ -74,15 +76,16 @@ function toggleChatWindow() {
 		$("#chatWindow").addClass("closed");
 	}
 }
-
-$("#user-list").on("click", function(){
+/*
+$("#user-list-button").on("click", function(){
 	let list = document.getElementById("users");
 	if (list.style.display != "none"){
-		list.style.display = "none";
+		list.setAttribute("style", "display: none;");
+		//list.style.display = "none";
 	}
-	else { list.style.display = "block"}
+	else {list.setAttribute("style", "display: inline;");}
 	console.log("user-list");
-});
+});*/
 
 // Adjust chat content height, in case input height changes
 const chatRescaleContent = () => {
@@ -127,13 +130,9 @@ function typingTimeout() {
 }
 
 socket.on("update-users", (users) => {
-	$("#users").empty();
-	for (var i = 0; i < users.length; i++) {
-		let username = document.createElement("p");
-		username.innerText = users[i];
-		if (users[i] !== cookieValue("username")) {
-			$("#users").append(username);
-		}
+	userList.length = 0;
+	for (let i = 0; i < users.length; i++) {
+		userList.push(users[i]);
 	}
 });
 
@@ -143,4 +142,18 @@ $("#user-name").on("focusout", function (event) {
 	socket.emit("change-user-list", {boardId: windowBoardId, name: cookieValue("username")});
 });
 
+$(document).ready(function(){
+	$(".pop-user-list").popover({
+		placement: "top",
+		trigger: "hover",
+		html: true,
+		content: function(){
+			let result = $();
+			for (let i = 0; i< userList.length; i++){
+				result = result.add("<p>" + userList[i] + "</p>");
+			}
+			return result;
+		}
+	});
+});
 

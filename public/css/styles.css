@@ -801,14 +801,16 @@ textarea:hover {
 	opacity: .7;
 }
 
-#user-list {
-	position: absolute;
-	left: 4rem;
-	top: .8rem;
-	font-size: 1rem;
-}
 #user-list:hover {
 	opacity: .7;
+}
+
+.user-list{
+	display: none;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: 10;
 }
 
 #chatWindow {
@@ -937,4 +939,7 @@ textarea:hover {
 	}
 }
 
+.popover {
+	z-index: 9999;
+}
 
