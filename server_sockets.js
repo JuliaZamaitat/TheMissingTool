@@ -244,19 +244,15 @@ module.exports = {
 			});
 
 			socket.on("typing", (data) => {
-				if(data.typing==true)
+				if(data.typing===true)
 					socket.broadcast.emit("display", data);
 				else
 					socket.broadcast.emit("display", data);
 			});
-			
+
 			socket.on("mouse_movement", (data) => {
-				console.log(data)
-				socket.broadcast.emit("all_mouse_movements", {id: socket.id, coords: data})
-			})
-
-			
-
+				socket.broadcast.to(board).emit("all_mouse_movements", data);
+			});
 		});
 	}
 };

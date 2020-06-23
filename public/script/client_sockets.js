@@ -1,5 +1,3 @@
-
-
 let url = window.location.href;
 let windowBoardId = url.substr(url.lastIndexOf("/") + 1);
 let colors = ["#c50c08", "#31a023", "#385bd6", "#d2c72a"];
@@ -21,7 +19,7 @@ $.get("/board/" + windowBoardId + "/cards", (cards) => {
 socket.on("update-users", (users) => {
 	console.log("IN UPDATE USER");
 	$(".users").empty();
-	for(var i=0; i<users.length; i++) {
+	for (var i = 0; i < users.length; i++) {
 		let username = document.createElement("p");
 		username.innerText = users[i];
 		if (users[i] !== cookieValue("username")) {
@@ -384,7 +382,7 @@ socket.on("display-card", (data) => {
 socket.on("remove-card", (data) => {
 	console.log(data.id);
 	document.getElementById(data).remove();
-})
+});
 
 socket.on("message", addMessage);
 
@@ -450,7 +448,7 @@ function typingTimeout() {
 $(document).ready(function () {
 
 	socket.emit("join", {boardId: windowBoardId, name: cookieValue("username")});
-	
+
 	$("#chatInput").keypress((e) => {
 		if (e.which != 13) {
 			typing = true;
@@ -463,12 +461,12 @@ $(document).ready(function () {
 			typingTimeout();
 		}
 	});
-	
+
 
 	//display a notification when a user is typing
 	socket.on("display", (data) => {
 		if (data.typing == true) {
-			$("#notificationbox").text(data.user + ` is typing`);
+			$("#notificationbox").text(data.user + " is typing");
 			chatRescaleContent();
 		} else {
 			$("#notificationbox").text("");
@@ -478,40 +476,30 @@ $(document).ready(function () {
 
 });
 
+//send actual mouse pos to server
 
-function getCursorElement(id) {
-	var user = cookieValue("username");
-	var elementId = 'mvcursor-' + id;
-	var element = document.getElementById(elementId);
-	if(element == null) {
-		element = document.createElement('div');
-		element.id = elementId
-		element.className = 'mvcursor';
-		element.innerHTML = '<p>"'+user+'"</p>';
+$(document).on("mousemove", function (event) {
+	socket.emit("mouse_movement", {coords: {x: event.pageX, y: event.pageY}, username: cookieValue("username")});
+});
 
-		//document.prepend(element);
+socket.on("all_mouse_movements", (data) => {
+	var el = getCursorElement(data);
+	el.style.left = data.coords.x + "px";
+	el.style.top = data.coords.y + "px";
+	$("body").append(el);
+});
+
+function getCursorElement(data) {
+	let username = data.username;
+	let element = document.getElementById(username);
+	if (element == null) {
+		element = document.createElement("div");
+		element.id = username;
+		element.className = "mvcursor";
+		element.innerHTML = "<p>" + username + "</p>";
 	}
 	return element;
 }
-
-
-//send actual mouse pos to server
-
-$(document).on('mousemove', function(event){
-	socket.emit("mouse_movement", {x: event.pageX, y: event.pageY, user: cookieValue("username")});
-});
-
-
-socket.on("all_mouse_movements", (data) => {
-	console.log(data);
-	var el = getCursorElement(data.id);
-	console.log(el);
-	el.style.left = data.coords.x + "px";
-	el.style.top = data.coords.y + "px";
-	$('body').append(el);
-	//$('body').append('<div class="mvcursor" id="cursor-'+ data.id+'"></div>')
-
-})
 
 
 
