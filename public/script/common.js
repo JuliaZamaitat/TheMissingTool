@@ -3,9 +3,10 @@ const socket = io();
 const url = new URL(window.location.href);
 let pathname = url.pathname.toString();
 window.windowBoardId = pathname.substr(pathname.lastIndexOf("/") + 1);
+window.username = cookieValue("username");
 
 $(document).ready(function () {
-	socket.emit("join", {boardId: window.windowBoardId, name: cookieValue("username")});
+	socket.emit("join", {boardId: window.windowBoardId, name: window.username});
 	$("#username-hint").fadeIn();
 	setTimeout(function() {
 		$("#username-hint").fadeOut();
