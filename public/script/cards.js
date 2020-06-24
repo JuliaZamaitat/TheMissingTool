@@ -27,7 +27,7 @@ function createCard(data) {
 
 	const buttons = document.createElement("div");
 	buttons.className = "neu-float-panel buttonContainer";
-	buttons.innerHTML = "<span type='button' class='neu-button plain link'><img src='/icons/link.svg'></span><span type='button' class='neu-button plain colorChangeBtn'><div class='colorChangeOptions'></div><img src='/icons/palette.svg'></span><span type='button' class='neu-button plain commentBtn'><img src='/icons/comment.svg'></span><span type='button' class='neu-button plain deleteBtn'><img src='/icons/bin.svg'></span>";
+	buttons.innerHTML = "<span type='button' class='neu-button plain link'><img src='/icons/link.svg'></span><span type='button' class='neu-button plain colorChangeBtn'><div class='colorChangeOptions'></div><img src='/icons/palette.svg'></span><span type='button' class='neu-button plain commentBtn'><img src='/icons/comment.svg'></span><span type='button' class='neu-button plain deleteBtn'><img src='/icons/bin.svg'></span><span type='button' class='resizeCardBtn rounded'><i class='fa fa-arrows-h'></i></span>\"";
 
 	var commentBox = createCommentBox();
 
@@ -202,8 +202,22 @@ function createCard(data) {
 				});
 			});
 		});
-	
-	
+
+		//resize card listener
+		card.querySelector(".resizeCardBtn").addEventListener("mousedown", function () {
+			const resizeGroup = document.createElement("div");
+			resizeGroup.className = "resize-button_group";
+			resizeGroup.innerHTML =   "<div class='resizers'>\n" +
+				"<div class='resizer top-left'></div>\n" +
+				"<div class='resizer top-right'></div>\n" +
+				"<div class='resizer bottom-left'></div>\n " +
+				"<div class='resizer bottom-right'></div> </div>";
+			card.prepend(resizeGroup);
+			let cardToResize = card.id;
+			makeResizableDiv(cardToResize);
+		});
+
+
 	}
 
 }
@@ -321,5 +335,32 @@ socket.on("display-card", (data) => {
 socket.on("remove-card", (data) => {
 	document.getElementById(data).remove();
 });
+
+function makeResizableDiv(div){
+	const element = document.getElementById(div);
+	const resizers = document.getElementById("#" + div + ".resizer");
+	console.log(resizers);
+	console.log(element);
+	for (let i = 0;i < resizers.length; i++) {
+		const currentResizer = resizers[i];
+		currentResizer.addEventListener("mousedown", function(e) {
+			e.preventDefault();
+			window.addEventListener("mousemove", resize);
+			window.addEventListener("mouseup", stopResize);
+		});
+
+		function resize(e) {
+			if (currentResizer.classList.contains("bottom-right")) {
+				console.log("gotHere");
+
+				element.style.width = e.pageX - element.getBoundingClientRect().left + "px";
+			}
+		}
+
+		function stopResize() {
+			window.removeEventListener("mousemove", resize);
+		}
+	}
+}
 
 
