@@ -669,22 +669,22 @@ textarea:hover {
 	border: 2px solid #4286f4;
 	position: absolute;
 }
-.item .resizers .resizer.top-left {
+.item .resizers .resizer.top_left {
 	left: -5px;
 	top: -5px;
 	cursor: nwse-resize; /*resizer cursor*/
 }
-.item .resizers .resizer.top-right {
+.item .resizers .resizer.top_right {
 	right: -5px;
 	top: -5px;
 	cursor: nesw-resize;
 }
-.item .resizers .resizer.bottom-left {
+.item .resizers .resizer.bottom_left {
 	left: -5px;
 	bottom: -5px;
 	cursor: nesw-resize;
 }
-.item .resizers .resizer.bottom-right {
+.item .resizers .resizer.bottom_right {
 	right: -5px;
 	bottom: -5px;
 	cursor: nwse-resize;

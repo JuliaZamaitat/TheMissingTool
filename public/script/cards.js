@@ -70,7 +70,7 @@ function createCard(data) {
 	function addCardListeners(card, data) {
 		// Moving card listener
 		let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-		card.onmousedown = cardMouseDown;
+		card.querySelector("textarea").onmousedown = cardMouseDown;
 
 		function cardMouseDown(e) {
 			card.classList.remove("animate");
@@ -207,19 +207,48 @@ function createCard(data) {
 		card.querySelector(".resizeCardBtn").addEventListener("mousedown", function () {
 			const resizeGroup = document.createElement("div");
 			resizeGroup.className = "resize-button_group";
-			resizeGroup.innerHTML =   "<div class='resizers'>\n" +
-				"<div class='resizer top-left'></div>\n" +
-				"<div class='resizer top-right'></div>\n" +
-				"<div class='resizer bottom-left'></div>\n " +
-				"<div class='resizer bottom-right'></div> </div>";
-			card.prepend(resizeGroup);
-			let cardToResize = card.id;
-			makeResizableDiv(cardToResize);
+
+			const top_left = document.createElement("div");
+			top_left.className = "resizer top_left";
+			addResizeListener(top_left);
+			const top_right = document.createElement("div");
+			top_right.className = "resizer top_right";
+			addResizeListener(top_right);
+			const bottom_left = document.createElement("div");
+			bottom_left.className = "resizer bottom_left";
+			addResizeListener(bottom_left);
+			const bottom_right = document.createElement("div");
+			bottom_right.className = "resizer bottom_right";
+			addResizeListener(bottom_right);
+
+			const resizers = document.createElement("div");
+			resizers.className = "resizers";
+			resizers.append(top_left, top_right, bottom_left, bottom_right);
+
+			resizeGroup.append(resizers);
+
+			card.append(resizeGroup);
 		});
 
+		function addResizeListener(button) {
+			button.addEventListener("mousedown", function (e) {
+				e.preventDefault();
+				window.addEventListener("mousemove", resize);
+				window.addEventListener("mouseup", stopResize);
+			});
 
+			function resize(e) {
+				card.querySelector("textarea").style.width = (e.clientX - card.offsetLeft) + 'px';
+				card.style.width = (e.clientX - card.offsetLeft) + 'px';
+				card.querySelector("textarea").style.height = (e.clientY - card.offsetTop) + 'px';
+				card.style.height = (e.clientY - card.offsetTop) + 'px';
+			}
+			function stopResize() {
+				window.removeEventListener('mousemove', resize, false);
+				window.removeEventListener('mouseup', stopResize, false);
+			}
+		}
 	}
-
 }
 
 function convertToLink(card) {
@@ -260,6 +289,7 @@ function convertToLink(card) {
 assignColorsToCreate();
 
 createCardOnClick();
+
 function createCardOnClick() {
 	var color_picked = false;
 
@@ -336,31 +366,6 @@ socket.on("remove-card", (data) => {
 	document.getElementById(data).remove();
 });
 
-function makeResizableDiv(div){
-	const element = document.getElementById(div);
-	const resizers = document.getElementById("#" + div + ".resizer");
-	console.log(resizers);
-	console.log(element);
-	for (let i = 0;i < resizers.length; i++) {
-		const currentResizer = resizers[i];
-		currentResizer.addEventListener("mousedown", function(e) {
-			e.preventDefault();
-			window.addEventListener("mousemove", resize);
-			window.addEventListener("mouseup", stopResize);
-		});
 
-		function resize(e) {
-			if (currentResizer.classList.contains("bottom-right")) {
-				console.log("gotHere");
-
-				element.style.width = e.pageX - element.getBoundingClientRect().left + "px";
-			}
-		}
-
-		function stopResize() {
-			window.removeEventListener("mousemove", resize);
-		}
-	}
-}
 
 
