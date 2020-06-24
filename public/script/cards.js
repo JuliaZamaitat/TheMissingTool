@@ -68,9 +68,36 @@ function createCard(data) {
 
 
 	function addCardListeners(card, data) {
+
+		var resizer = document.createElement('div');
+		resizer.style.width = '10px';
+		resizer.style.height = '10px';
+		resizer.style.background = 'red';
+		resizer.style.position = 'absolute';
+		resizer.style.right = '-10px';
+		resizer.style.bottom = '-10px';
+		resizer.style.cursor = 'se-resize';
+		card.appendChild(resizer);
+		resizer.addEventListener('mousedown', initResize, false);
+
+		function initResize() {
+			window.addEventListener('mousemove', Resize, false);
+			window.addEventListener('mouseup', stopResize, false);
+		}
+		function Resize(e) {
+			card.querySelector("textarea").style.width = (e.clientX - card.offsetLeft) + 'px';
+			card.style.width = (e.clientX - card.offsetLeft) + 'px';
+			card.querySelector("textarea").style.height = (e.clientY - card.offsetTop) + 'px';
+			card.style.height = (e.clientY - card.offsetTop) + 'px';
+		}
+		function stopResize() {
+			window.removeEventListener('mousemove', Resize, false);
+			window.removeEventListener('mouseup', stopResize, false);
+		}
+
 		// Moving card listener
 		let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-		card.onmousedown = cardMouseDown;
+		card.querySelector("textarea").onmousedown = cardMouseDown;
 
 		function cardMouseDown(e) {
 			card.classList.remove("animate");
@@ -202,8 +229,8 @@ function createCard(data) {
 				});
 			});
 		});
-	
-	
+
+
 	}
 
 }
