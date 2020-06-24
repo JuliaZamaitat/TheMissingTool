@@ -205,46 +205,82 @@ function createCard(data) {
 
 		//resize card listener
 		card.querySelector(".resizeCardBtn").addEventListener("mousedown", function () {
-			const resizeGroup = document.createElement("div");
-			resizeGroup.className = "resize-button_group";
 
-			// TODO: change back to html
 			const top_left = document.createElement("div");
 			top_left.className = "resizer top_left";
+			top_left.id = "top_left";
+
 			const top_right = document.createElement("div");
 			top_right.className = "resizer top_right";
+			top_right.id = "top_right";
+
 			const bottom_left = document.createElement("div");
 			bottom_left.className = "resizer bottom_left";
+			bottom_left.id = "bot_left";
+
 			const bottom_right = document.createElement("div");
+			bottom_right.id = "bot_right";
 			bottom_right.className = "resizer bottom_right";
+
 
 			const resizers = document.createElement("div");
 			resizers.className = "resizers";
-			resizers.append(top_left, top_right, bottom_left, bottom_right);
+			resizers.id ="resizers";
+			resizers.append(bottom_right);
 			addResizeListener(resizers);
 
-			resizeGroup.append(resizers);
-
-			card.append(resizeGroup);
+			card.append(resizers);
 		});
 
 		function addResizeListener(button) {
-			button.addEventListener("mousedown", function (e) {
-				e.preventDefault();
-				window.addEventListener("mousemove", resize);
-				window.addEventListener("mouseup", stopResize);
-			});
+			console.log(button);
+			for (let i = 0; i < button.childElementCount; i++) {
+				const currentResizer = button.children[i];
+				currentResizer.addEventListener("mousedown", function (e) {
+					current = currentResizer;
+					e.preventDefault();
+					window.addEventListener("mousemove", resize);
+					window.addEventListener("mouseup", stopResize);
+					console.log("eventAdded");
 
-			function resize(e) {
-				card.querySelector("textarea").style.width = (e.clientX - card.offsetLeft) + "px";
-				card.style.width = (e.clientX - card.offsetLeft) + "px";
-				card.querySelector("textarea").style.height = (e.clientY - card.offsetTop) + "px";
-				card.style.height = (e.clientY - card.offsetTop) + "px";
+				});
 			}
 
-			function stopResize() {
+			function resize(e) {
+				let original_width = card.style.width.replace("px", "");
+				let original_x = card.offsetLeft;
+				let original_mouse_x = e.clientX;
+
+				if (current === document.getElementById("bot_right")) {
+
+					//card.querySelector("textarea").style.height = (e.clientY - card.offsetTop) + "px";
+					//card.style.height = (e.clientY - card.offsetTop) + "px";
+					card.querySelector("textarea").style.width = e.clientX - card.offsetLeft + "px";
+					card.style.width = e.clientX - card.offsetLeft + "px";
+
+					card.querySelector("textarea").style.height = e.clientX - card.offsetLeft + "px";
+
+					card.style.height = e.clientX - card.offsetLeft + "px";
+				}
+				else if (current === document.getElementById("bot_left")) {
+					card.querySelector("textarea").style.width = original_width - ((e.clientX) - card.offsetLeft) + "px";
+					card.style.width = original_width - (e.clientX - card.offsetLeft) + "px";
+					card.style.left = original_x + (e.clientX - original_mouse_x) + "px";
+				}
+				else if (current === document.getElementById("top_right")) {
+					card.querySelector("textarea").style.width = (e.pageX - card.getBoundingClientRect().left) + "px";
+					card.style.width = e.pageX - card.getBoundingClientRect().left + "px";
+				}
+				else if (current === document.getElementById("top_left")) {
+					console.log("top_left");
+				}
+			}
+
+			function stopResize(resizers) {
 				window.removeEventListener("mousemove", resize, false);
 				window.removeEventListener("mouseup", stopResize, false);
+				resizers = document.getElementById("resizers");
+				resizers.remove();
 			}
 		}
 	}
