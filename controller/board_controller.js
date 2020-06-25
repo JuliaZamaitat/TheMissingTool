@@ -17,6 +17,36 @@ exports.create_board = function (req, res) {
 	});
 };
 
+exports.create_child_board = function (req, res) {
+
+	let parentBoardId = req.params.boardId;
+
+	Board.findById(parentBoardId, (err, parentBoard) => {
+		const newPath = parentBoard.path;
+		newPath.push(parentBoardId);
+		const newBoard =
+			new Board({
+				_id: new mongoose.mongo.ObjectId(),
+				name: "",
+				path: newPath
+			});
+		newBoard.save((err) => {
+			if (err) {
+				console.log("Error creating board");
+			} else {
+				res.send(newBoard._id);
+			}
+		});
+	});
+};
+
+exports.get_path = function (req, res) {
+	const filter = {_id: mongoose.Types.ObjectId(req.params.boardId)};
+	Board.findOne(filter, (err, savedBoard) => {
+		res.send(savedBoard.path);
+	});
+};
+
 exports.get_board = function (req, res) {
 	const filter = {_id: mongoose.Types.ObjectId(req.params.boardId)};
 	Board.findOne(filter, (err, savedBoard) => {

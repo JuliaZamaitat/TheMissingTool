@@ -60,8 +60,8 @@ function createCard(data) {
 
 	} else {
 		let querySelector = card.querySelector(".link");
-		querySelector.addEventListener("mousedown", function (event) {
-			$.post("/",
+		querySelector.addEventListener("mousedown", function () {
+			$.post("/board/" + window.windowBoardId,
 				function (boardId) {
 					socket.emit("add-link", {linkId: boardId, cardId: card.id});
 				});

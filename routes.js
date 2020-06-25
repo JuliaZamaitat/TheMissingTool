@@ -7,6 +7,8 @@ var appController = require("./controller/app_controller");
 
 router.get("/", indexController.get_index);
 router.post("/", boardController.create_board);
+router.post("/board/:boardId", boardController.create_child_board);
+router.get("/board/:boardId/path", boardController.get_path);
 router.get("/board/:boardId", appController.get_username, boardController.get_board);
 router.get("/board/:boardId/data", boardController.get_board_data);
 router.get("/board/:boardId/cards", boardController.get_cards);

@@ -11,6 +11,7 @@ $(document).ready(function () {
 	setTimeout(function() {
 		$("#username-hint").fadeOut();
 	},3000);
+	toggleBoardPath();
 });
 
 let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -44,4 +45,18 @@ function cookieValue(name) {
 	} else {
 		return null;
 	}
+}
+
+function toggleBoardPath() {
+	$("#collapse-path").click(function() {
+		$("#board_path").hide();
+		$(this).hide();
+		$("#expand-path").show();
+	});
+
+	$("#expand-path").click(function() {
+		$("#board_path").show();
+		$(this).hide();
+		$("#collapse-path").show();
+	});
 }
