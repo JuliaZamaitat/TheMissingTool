@@ -31,8 +31,12 @@ function createCard(data) {
 
 	var commentBox = createCommentBox();
 
+	const visitor = document.createElement("div");
+	visitor.className = "visitorContainer";
+
 	card.prepend(buttons);
 	card.append(commentBox);
+	card.append(visitor);
 	card.id = data._id;
 
 	assignColorsToChange(card);
@@ -68,6 +72,15 @@ function createCard(data) {
 
 
 	function addCardListeners(card, data) {
+
+		// Focus listeners
+		card.querySelector("textarea").addEventListener("focusin", function () {
+			socket.emit("focus-in", {cardId: card.id, username: window.username});
+		});
+		card.querySelector("textarea").addEventListener("focusout", function () {
+			socket.emit("focus-out", {cardId: card.id, username: window.username});
+		});
+
 		// Moving card listener
 		let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
 		card.onmousedown = cardMouseDown;
@@ -172,7 +185,7 @@ function createCard(data) {
 					sendComment({
 						cardId: card.id,
 						message: $(this).val(),
-						sender: cookieValue("username")
+						sender: window.username
 					});
 					card.querySelector(".commentInput").value = "";
 				}
@@ -202,8 +215,8 @@ function createCard(data) {
 				});
 			});
 		});
-	
-	
+
+
 	}
 
 }
@@ -323,4 +336,13 @@ socket.on("remove-card", (data) => {
 	document.getElementById(data).remove();
 });
 
+$(document).on("mousemove", function (event) {
+	socket.emit("mouse_movement", {coords: {x: event.pageX, y: event.pageY}, username: window.username});
+});
 
+socket.on("all_mouse_movements", (data) => {
+	var el = getCursorElement(data);
+	el.style.left = data.coords.x + "px";
+	el.style.top = data.coords.y + "px";
+	$("body").append(el);
+});

@@ -7,7 +7,7 @@ $(document).ready(function () {
 	$("#chatInput").keypress((e) => {
 		if (e.which !== 13) {
 			typing = true;
-			let user = cookieValue("username");
+			let user = window.username;
 			socket.emit("typing", {user: user, typing: true});
 			clearTimeout(timeout);
 			timeout = setTimeout(typingTimeout, 2000);
@@ -67,7 +67,7 @@ function toggleChatWindow() {
 		$("#chatWindow").addClass("opened");
 		$("#open-chat").fadeOut();
 	}
-	
+
 	function closeChat() {
 		$("#open-chat").fadeIn();
 		$("#chatWindow").removeClass("opened");
@@ -100,7 +100,7 @@ $("#chatInput").on("input keydown", function (e) {
 					text: text,
 					time: time,
 					boardId: window.windowBoardId,
-					username: cookieValue("username")
+					username: window.username
 				});
 			}
 		}
@@ -112,7 +112,7 @@ $("#chatInput").on("input keydown", function (e) {
 });
 
 function typingTimeout() {
-	let user = cookieValue("username");
+	let user = window.username;
 	typing = false;
 	socket.emit("typing", {user: user, typing: false});
 }
@@ -122,16 +122,47 @@ socket.on("update-users", (users) => {
 	for (var i = 0; i < users.length; i++) {
 		let username = document.createElement("p");
 		username.innerText = users[i];
-		if (users[i] !== cookieValue("username")) {
+		if (users[i] !== window.username) {
 			$("#users").append(username);
 		}
 	}
 });
 
-$("#user-name").on("focusout", function (event) {
-	var name = $(this).text();
-	document.cookie = "username=" + name;
-	socket.emit("change-user-list", {boardId: windowBoardId, name: cookieValue("username")});
+$("#user-name").on("focusout", function () {
+	var oldName = window.username
+	document.cookie = "username=" +  $(this).text();
+	window.username = cookieValue("username");
+	socket.emit("change-user-list", {oldName: oldName, newName: window.username});
 });
 
+function getCursorElement(data) {
+	let username = data.username;
+	let element = document.getElementById(username);
+	if (element == null) {
+		element = document.createElement("div");
+		element.id = username;
+		element.className = "mvcursor";
+		element.innerHTML = "<p>" + username + "</p>";
+	}
+	return element;
+}
+
+socket.on("focus-in", (data) => {
+	let card = document.getElementById(data.cardId);
+	card.querySelector("textarea").style.border = "1px solid red";
+	let container = card.querySelector(".visitorContainer");
+	container.style.display = "block";
+	container.innerText = data.username;
+});
+
+socket.on("focus-out", (data) => {
+	let card = document.getElementById(data.cardId);
+	card.querySelector("textarea").style.border = "none";
+	let container = card.querySelector(".visitorContainer");
+	container.style.display = "none";
+});
+
+socket.on("delete-courser", username => {
+	document.getElementById(username).remove();
+})
 

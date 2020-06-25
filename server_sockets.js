@@ -10,40 +10,51 @@ module.exports = {
 			console.log("a user connected with id %s", socket.id);
 
 			socket.on("join", function (obj) {
+				console.log(obj);
 				let username = obj.name;
 				let room = obj.boardId;
 				socket.join(room);
 				board = room;
-				updateUserNames(username, board);
+				updateUserNames({oldName: null, newName: username});
 			});
 
 			socket.on("disconnect", function () {
-				refreshUserNameList()
+				refreshUserNameList();
 			});
 
 			socket.on("change-user-list", function (obj) {
-				refreshUserNameList()
-				updateUserNames(obj.name);
+				refreshUserNameList();
+				updateUserNames(obj);
+				deleteCourser(obj.oldName);
 			});
 
+			function deleteCourser(name) {
+				socket.broadcast.to(board).emit("delete-courser", name);
+			}
 
-			function updateUserNames(username){
-				socket.user = username;
+			function updateUserNames(names) {
+				for (let i = 0; i < users[board]; i++) {
+					if (users[board][i] === names.oldName) {
+						users[board].splice(i, 1);
+						i--;
+					}
+				}
+				socket.user = names.newName;
 				if (!(board in users)) {
 					users[board] = [];
 				}
-				if(!users[board].includes(username)) {
-					users[board].push(username);
+				if (!users[board].includes(names.newName)) {
+					users[board].push(names.newName);
 				}
 				io.to(board).emit("update-users", users[board]);
 			}
 
 			function refreshUserNameList() {
-				if (users[board] != null){
+				if (users[board] != null) {
 					const currentUsers = Object.values(users[board]);
-					for (var i=0; i<currentUsers.length; i++){
+					for (var i = 0; i < currentUsers.length; i++) {
 						if (currentUsers[i] == socket.user) {
-							currentUsers.splice(i,1);
+							currentUsers.splice(i, 1);
 							users[board] = currentUsers;
 						}
 					}
@@ -161,7 +172,7 @@ module.exports = {
 				);
 			});
 
-			socket.on("update-color", function(req) {
+			socket.on("update-color", function (req) {
 				const filter = {_id: mongoose.Types.ObjectId(req._id)};
 				const update = {backgroundColor: req.backgroundColor};
 
@@ -255,12 +266,23 @@ module.exports = {
 			});
 
 			socket.on("typing", (data) => {
-				if(data.typing==true)
-					socket.broadcast.emit("display", data);
+				if (data.typing === true)
+					socket.broadcast.to(board).emit("display", data);
 				else
-					socket.broadcast.emit("display", data);
+					socket.broadcast.to(board).emit("display", data);
 			});
 
+			socket.on("mouse_movement", (data) => {
+				socket.broadcast.to(board).emit("all_mouse_movements", data);
+			});
+
+			socket.on("focus-in", (data) => {
+				socket.broadcast.to(board).emit("focus-in", data);
+			});
+
+			socket.on("focus-out", (data) => {
+				socket.broadcast.to(board).emit("focus-out", data);
+			});
 		});
 	}
 };

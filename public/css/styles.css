@@ -949,6 +949,7 @@ textarea:hover {
 	}
 }
 
+
 #back-button {
 	height: 50px;
 	width: auto;
@@ -956,3 +957,10 @@ textarea:hover {
 	left: 100px;
 	bottom: 100px;
 }
+
+.mvcursor {
+	position: absolute;
+	width: auto;
+	height: auto;
+}
+
