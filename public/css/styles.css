@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap');
-
 :root {
 	--light-color: rgba(187, 181, 255);
 	--dark-color: rgba(119, 108, 255);
@@ -79,7 +78,7 @@ p {
 	outline: none;
 }
 
-button {
+button{
 	border-radius: 5px;
 	border: none;
 }
@@ -108,7 +107,7 @@ p:focus {
 	border: none;
 	cursor: pointer;
 }
-.neu-button:hover {
+.neu-button {
 	box-shadow: 4px 4px 10px rgba(0,0,0,.15);
 }
 .plain {
@@ -218,43 +217,42 @@ p:focus {
 
 /* MENUBAR */
 #menubar {
-	position: absolute;
+	position: fixed;
 	top: 1.5rem;
 	right: -5rem;
-	margin: 5px;
+	display: block;
+	/* margin: 5px;*/
 	border-radius: 25px 0 0 25px;
 	padding: .9rem .6rem;
 	color: white;
 	z-index: 999;
 }
-.line{
-	width: 30px;
-	height: 3px;
-	background: white;
-	margin: 5px;
-}
-#menubar img {
+
+#menubar img{
 	width: 25px;
 	height: 1.3em;
 	margin: 0 1.2rem -.2rem .5rem;
 	float: left;
-	/*transform: translate(-5%, -50%);*/
+	transition-duration: 1s;
 }
 img#hamburger-bars {
 	position: absolute;
 	top: 1.5rem;
 	left: 1rem;
 }
+
 #menubar:hover {
 	right: 0
 }
+
 #menubar:hover #hamburger-bars {
 	opacity: 0;
 }
 #menubar:hover .menu-btn {
 	opacity: 1;
+	transition-duration: 1s;
 }
-.menu-btn {
+.menu-btn{
 	position: relative;
 	opacity: 0;
 	border-radius: 10px;
@@ -267,13 +265,31 @@ img#hamburger-bars {
 	height: 3rem;
 	overflow: hidden;
 	transition: ease .1s;
+	justify-content: space-around;
 }
+/*#menubar ul{
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+}
+#menubar ul li{
+	width: 20%;
+	text-align: center;
+}*/
 .menu-btn span {
 	opacity: 0;
 	top: .9rem;
 	left: 3.2rem;
 	white-space: nowrap;
 	position: absolute;
+}
+.neu-panel:hover gradient{
+	right: 0;
+}
+#menubar:hover div{
+	right: 0;
 }
 .menu-btn:hover {
 	margin: 0 1rem;
@@ -867,7 +883,7 @@ textarea:hover {
 	outline: none;
 	height: 5rem;
 }
-.notifier {
+.notifier{
 	position: absolute;
 	bottom: 0px;
 	width: 50%;

@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bcea6a4c-169e-4dd4-b32e-e58e5d4c8380" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/boards/index.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/views/boards/index.ejs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,7 +41,7 @@
     <property name="nodejs.jest.jest_package" value="$PROJECT_DIR$/node_modules/jest" />
     <property name="nodejs_package_manager_path" value="npm" />
   </component>
-  <component name="RunManager" selected="Jest.MyTestSuite">
+  <component name="RunManager" selected="Jest.The Board Index Page">
     <configuration name="MyTestSuite" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
       <node-interpreter value="project" />
       <node-options value="" />
@@ -67,30 +69,30 @@
       </test-names>
       <method v="2" />
     </configuration>
-    <configuration name="insert" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+    <configuration name="The Board Index Page" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
       <node-interpreter value="project" />
       <node-options value="" />
       <jest-package value="$PROJECT_DIR$/node_modules/jest" />
       <working-dir value="$PROJECT_DIR$" />
       <envs />
       <scope-kind value="SUITE" />
-      <test-file value="$PROJECT_DIR$/test/api/mongo.test.js" />
+      <test-file value="$PROJECT_DIR$/cypress/integration/board/index_spec.js" />
       <test-names>
-        <test-name value="insert" />
+        <test-name value="The Board Index Page" />
       </test-names>
       <method v="2" />
     </configuration>
-    <configuration name="insert.should delete a doc from the collection" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+    <configuration name="The Board Index Page.shows the toolbar" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
       <node-interpreter value="project" />
       <node-options value="" />
       <jest-package value="$PROJECT_DIR$/node_modules/jest" />
       <working-dir value="$PROJECT_DIR$" />
       <envs />
       <scope-kind value="TEST" />
-      <test-file value="$PROJECT_DIR$/test/api/mongo.test.js" />
+      <test-file value="$PROJECT_DIR$/cypress/integration/board/index_spec.js" />
       <test-names>
-        <test-name value="insert" />
-        <test-name value="should delete a doc from the collection" />
+        <test-name value="The Board Index Page" />
+        <test-name value="shows the toolbar" />
       </test-names>
       <method v="2" />
     </configuration>
@@ -110,11 +112,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Jest.The Board Index Page" />
+        <item itemvalue="Jest.The Board Index Page.shows the toolbar" />
         <item itemvalue="Jest.MyTestSuite" />
         <item itemvalue="Jest.MyTestSuite.verify Title of Board" />
         <item itemvalue="Jest.insert.should insert a doc into collection" />
-        <item itemvalue="Jest.insert.should delete a doc from the collection" />
-        <item itemvalue="Jest.insert" />
       </list>
     </recent_temporary>
   </component>
@@ -132,7 +134,9 @@
       <workItem from="1591710398728" duration="5040000" />
       <workItem from="1592240600273" duration="19278000" />
       <workItem from="1592407229471" duration="67000" />
-      <workItem from="1592407299945" duration="28892000" />
+      <workItem from="1592407299945" duration="42183000" />
+      <workItem from="1593077420486" duration="181000" />
+      <workItem from="1593077821719" duration="1060000" />
     </task>
     <servers />
   </component>
@@ -144,21 +148,29 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="590" y="349" key="#ESLint/0.0.1440.900@0.0.1440.900" timestamp="1592477337216" />
-    <state width="1419" height="231" key="GridCell.Tab.0.bottom" timestamp="1592240236800">
-      <screen x="0" y="23" width="1440" height="877" />
+    <state x="354" y="135" key="#Inspections" timestamp="1592999855452">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
+    <state x="354" y="135" key="#Inspections/0.0.1440.900@0.0.1440.900" timestamp="1592999855452" />
+    <state width="1419" height="245" key="GridCell.Tab.0.bottom" timestamp="1593077384006">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state width="1419" height="245" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1593077384006" />
     <state width="1419" height="231" key="GridCell.Tab.0.bottom/0.23.1440.877@0.23.1440.877" timestamp="1592240236800" />
-    <state width="1419" height="231" key="GridCell.Tab.0.center" timestamp="1592240236797">
-      <screen x="0" y="23" width="1440" height="877" />
+    <state width="1419" height="245" key="GridCell.Tab.0.center" timestamp="1593077384002">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
+    <state width="1419" height="245" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1593077384002" />
     <state width="1419" height="231" key="GridCell.Tab.0.center/0.23.1440.877@0.23.1440.877" timestamp="1592240236797" />
-    <state width="1419" height="231" key="GridCell.Tab.0.left" timestamp="1592240236795">
-      <screen x="0" y="23" width="1440" height="877" />
+    <state width="1419" height="245" key="GridCell.Tab.0.left" timestamp="1593077383998">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
+    <state width="1419" height="245" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1593077383998" />
     <state width="1419" height="231" key="GridCell.Tab.0.left/0.23.1440.877@0.23.1440.877" timestamp="1592240236795" />
-    <state width="1419" height="231" key="GridCell.Tab.0.right" timestamp="1592240236798">
-      <screen x="0" y="23" width="1440" height="877" />
+    <state width="1419" height="245" key="GridCell.Tab.0.right" timestamp="1593077384003">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
+    <state width="1419" height="245" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1593077384003" />
     <state width="1419" height="231" key="GridCell.Tab.0.right/0.23.1440.877@0.23.1440.877" timestamp="1592240236798" />
     <state x="488" y="170" key="git4idea.branch.GitSmartOperationDialog" timestamp="1592938937279">
       <screen x="0" y="0" width="1440" height="900" />
