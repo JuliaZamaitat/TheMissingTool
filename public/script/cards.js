@@ -226,7 +226,7 @@ function createCard(data) {
 			const resizers = document.createElement("div");
 			resizers.className = "resizers";
 			resizers.id ="resizers";
-			resizers.append(bottom_right);
+			resizers.append(bottom_right, bottom_left, top_right, top_left);
 			addResizeListener(resizers);
 
 			card.append(resizers);
