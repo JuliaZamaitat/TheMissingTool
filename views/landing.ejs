@@ -1,21 +1,43 @@
 <body>
+<div class="centered">
     <button type="button" class="btn btn-success" id="create-board">
         <i class="fa fa-plus-circle"></i>
         <span>Create a new board</span>
     </button>
-    <script src="/socket.io/socket.io.js"></script>
-    <script type="text/javascript" src="/script/common.js"></script>
-    <script type="text/javascript" src="/script/board.js"></script>
+   <div id="lastSeenContainer">
+       <p>Last seen</p>
+       <ul id="visitedBoards" class="list-group" >
+       </ul>
+   </div>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script type="text/javascript" src="/script/common.js"></script>
+<script type="text/javascript" src="/script/landing.js"></script>
+<script type="text/javascript" src="/script/board.js"></script>
 </body>
+<style>
+    #create-board {
+        background-color: var(--dark-color);
+        border: var(--dark-color);
+    }
 
-<style scoped>
-#create-board {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-}
-#create-btn span {
-    margin-left: .5rem;
-}
+    .centered {
+        top: 50vh;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    #lastSeenContainer {
+        margin-top: 20px;
+        width: 145px;
+    }
+
+    #lastSeenContainer p {
+        font-size: large;
+    }
+
+    #create-btn span {
+        margin-left: .5rem;
+    }
 </style>
