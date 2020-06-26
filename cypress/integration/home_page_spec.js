@@ -1,6 +1,6 @@
 describe("The Home Page", () => {
 	beforeEach(() => {
-		cy.visit("/");
+		cy.visit("/board");
 	});
 
 	it("shows a button to create a new board", () => {
