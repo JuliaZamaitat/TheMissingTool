@@ -959,6 +959,7 @@ textarea:hover {
 }
 
 .mvcursor {
+	display: inline;
 	position: absolute;
 	width: auto;
 	height: auto;
@@ -966,4 +967,15 @@ textarea:hover {
 
 .visitorContainer {
 	text-align: center;
+}
+
+.mvcursor img{
+	margin-top: 4px;
+	float: left;
+	width: 13px;
+	height: 13px;
+}
+
+.mvcursor p {
+	display: inline;
 }

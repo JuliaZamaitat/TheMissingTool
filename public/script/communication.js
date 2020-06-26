@@ -142,7 +142,7 @@ function getCursorElement(data) {
 		element = document.createElement("div");
 		element.id = username;
 		element.className = "mvcursor";
-		element.innerHTML = "<p>" + username + "</p>";
+		element.innerHTML = "<img src='/icons/pointer.svg'><p>" + username + "</p>";
 	}
 	return element;
 }
