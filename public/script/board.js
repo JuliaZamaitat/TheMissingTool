@@ -2,9 +2,8 @@ var zoom = "100";
 
 $(document).ready(function () {
 	if (window.windowBoardId !== "board") {
-		addBoardToLastVisited();
-		console.log(window.windowBoardId);
 		$.get("/board/" + window.windowBoardId + "/path", (path) => {
+			addToLoastVisitedCookie(path[0]);
 			for (let i = 0; i < path.length; i++) {
 				$.get({
 					url: "/board/" + path[i] + "/data",
@@ -130,14 +129,17 @@ function zoomOnclick() {
 	}
 }
 
-function addBoardToLastVisited() {
+function addToLoastVisitedCookie(parentBoard) {
+	if (parentBoard === undefined) {
+		parentBoard = window.windowBoardId;
+	}
 	let arrayOfVisitedBoards = [];
 	let currentCookie = cookieValue("visitedBoards");
 	if (currentCookie !== null) {
 		arrayOfVisitedBoards = currentCookie.toString().split(",");
 	}
-	if (!arrayOfVisitedBoards.includes(window.windowBoardId)) {
-		arrayOfVisitedBoards.push(window.windowBoardId);
+	if (!arrayOfVisitedBoards.includes(parentBoard)) {
+		arrayOfVisitedBoards.push(parentBoard);
 		document.cookie = "visitedBoards=" + arrayOfVisitedBoards;
 	}
 }
