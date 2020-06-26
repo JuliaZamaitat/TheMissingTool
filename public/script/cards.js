@@ -309,6 +309,7 @@ function createLine(x1, y1, x2, y2) {
 	return line;
 }
 
+let deleteConnectorBtn = $("#deleteConnectorBtn");
 // Draw connector between two cards
 function drawConnector(id, from, to) {
 	let card1 = document.getElementById(from);
@@ -323,35 +324,35 @@ function drawConnector(id, from, to) {
 
 	$("#connectors").append(connectorEl);
 	$(connectorEl).hover(e => {
-		$("#deleteConnectorBtn").trigger("mouseenter");
+		deleteConnectorBtn.trigger("mouseenter");
 		selectedConnector = id;
-		const h = $("#deleteConnectorBtn").height()/2, w = $("#deleteConnectorBtn").width()/2;
-		$("#deleteConnectorBtn").css({ top:  e.clientY - h, left:  e.clientX - w });
-		$("#deleteConnectorBtn").on("click", function(e) {
+		const h = deleteConnectorBtn.height()/2, w = deleteConnectorBtn.width()/2;
+		deleteConnectorBtn.css({ top:  e.clientY - h, left:  e.clientX - w });
+		deleteConnectorBtn.on("click", function(e) {
 			if(e.which === 1) {
 				socket.emit("delete-connector", selectedConnector);
 				deleteConnectorById(selectedConnector);
-				$("#deleteConnectorBtn").trigger("mouseleave");
+				deleteConnectorBtn.trigger("mouseleave");
 			}
 		});
 	});
 }
 
 $("#connector .line").on("mouseleave", function(e) {
-	$("#deleteConnectorBtn").trigger("mouseleave");
+	deleteConnectorBtn.trigger("mouseleave");
 });
-$("#deleteConnectorBtn").on("mouseenter", function(e) {
-	$("#deleteConnectorBtn").css("display", "inline");
+deleteConnectorBtn.on("mouseenter", function(e) {
+	deleteConnectorBtn.css("display", "inline");
 });
-$("#deleteConnectorBtn").on("mouseleave", function(e) {
-	$("#deleteConnectorBtn").css("display", "none");
+deleteConnectorBtn.on("mouseleave", function(e) {
+	deleteConnectorBtn.css("display", "none");
 });
 
 // Observer to recalculate all connectors on zoom change
 let observer = new MutationObserver(() => {
 	document.getElementById("connectors").childNodes.forEach(function(c) {
-		fromCardCenter = getCenter(document.getElementById(c.dataset.from));
-		toCardCenter = getCenter(document.getElementById(c.dataset.to));
+		let fromCardCenter = getCenter(document.getElementById(c.dataset.from));
+		let toCardCenter = getCenter(document.getElementById(c.dataset.to));
 		c.style = calcLineStyleFromCoords(fromCardCenter.x, fromCardCenter.y, toCardCenter.x, toCardCenter.y);
 	});
 });
@@ -366,8 +367,8 @@ function getConnectorsByCardId(cardId) {
 function adjustConnectorsByCardId(cardId) {
 	getConnectorsByCardId(cardId).forEach(c => {
 		let otherCardId = c.dataset.from == cardId ? c.dataset.to : c.dataset.from;
-		cardCenter = getCenter(document.getElementById(cardId));
-		otherCardCenter = getCenter(document.getElementById(otherCardId));
+		let cardCenter = getCenter(document.getElementById(cardId));
+		let otherCardCenter = getCenter(document.getElementById(otherCardId));
 		c.style = calcLineStyleFromCoords(cardCenter.x, cardCenter.y, otherCardCenter.x, otherCardCenter.y);
 	});
 }
