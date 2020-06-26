@@ -148,11 +148,13 @@ function getCursorElement(data) {
 }
 
 socket.on("focus-in", (data) => {
+	var username = data.username;
+	document.getElementById(username).style.display = "none";
 	let card = document.getElementById(data.cardId);
 	card.querySelector("textarea").style.border = "2px solid " + getFocusColor(card.style.backgroundColor);
 	let container = card.querySelector(".visitorContainer");
 	container.style.display = "block";
-	container.innerText = data.username;
+	container.innerText = username;
 
 	function getFocusColor(color) {
 		switch (color) {
@@ -170,6 +172,8 @@ socket.on("focus-in", (data) => {
 });
 
 socket.on("focus-out", (data) => {
+	var username = data.username;
+	document.getElementById(username).style.display = "block";
 	let card = document.getElementById(data.cardId);
 	card.querySelector("textarea").style.border = "none";
 	let container = card.querySelector(".visitorContainer");
