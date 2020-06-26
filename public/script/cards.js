@@ -1,5 +1,12 @@
+let selectedConnector = null;
+
 $.get("/board/" + window.windowBoardId + "/cards", (cards) => {
 	cards.forEach(createCard);
+	$.get("/board/" + window.windowBoardId + "/connectors", connectors => {
+		connectors.forEach(function(c) {
+			drawConnector(c._id, c.from, c.to);
+		});
+	});
 });
 
 window.addEventListener("pageshow", function (event) {
@@ -27,7 +34,7 @@ function createCard(data) {
 
 	const buttons = document.createElement("div");
 	buttons.className = "neu-float-panel buttonContainer";
-	buttons.innerHTML = "<span type='button' class='neu-button plain link'><img src='/icons/link.svg'></span><span type='button' class='neu-button plain colorChangeBtn'><div class='colorChangeOptions'></div><img src='/icons/palette.svg'></span><span type='button' class='neu-button plain commentBtn'><img src='/icons/comment.svg'></span><span type='button' class='neu-button plain deleteBtn'><img src='/icons/bin.svg'></span>";
+	buttons.innerHTML = "<span type='button' class='neu-button plain link'><img src='/icons/link.svg'></span><span type='button' class='neu-button plain colorChangeBtn'><div class='colorChangeOptions'></div><img src='/icons/palette.svg'></span><span type='button' class='neu-button plain connectBtn'><img src='/icons/arrow-black.svg'></span><span type='button' class='neu-button plain commentBtn'><img src='/icons/comment.svg'></span><span type='button' class='neu-button plain deleteBtn'><img src='/icons/bin.svg'></span>";
 
 	var commentBox = createCommentBox();
 
@@ -104,6 +111,7 @@ function createCard(data) {
 			pos4 = e.clientY;
 			card.style.top = (card.offsetTop - pos2) + "px";
 			card.style.left = (card.offsetLeft - pos1) + "px";
+			adjustConnectorsByCardId(card.id);
 		}
 
 		function closeDragCard() {
@@ -167,6 +175,40 @@ function createCard(data) {
 			return false;
 		};
 
+		// Connect card listener
+		card.querySelector(".connectBtn").addEventListener("mousedown", function (event) {
+			event.stopPropagation();
+			const card1 = event.currentTarget.parentElement.parentElement;
+			const card1Center = getCenter(card1);
+
+			// Line that continuously follows cursor until further action
+			$(document).mousemove(e => {
+				const connector = createLine(card1Center.x, card1Center.y, e.clientX, e.clientY);
+				connector.id = "temp";
+				$("#connectors + #temp").remove();
+				$("#connectors").after(connector);
+			});
+
+
+			$(document).mousedown(e => {
+				$(document).off("mousemove mousedown");
+				elementMouseIsOver = document.elementFromPoint(e.clientX, e.clientY);
+				while(elementMouseIsOver !== null && !elementMouseIsOver.classList.contains("item"))
+					elementMouseIsOver = elementMouseIsOver.parentElement;
+				const card2 = elementMouseIsOver;
+				$("#connectors + #temp").remove();
+
+				if(card2 !== null && card1.id !== card2.id) { // If neither aborted nor connected to same card
+					const connector = {
+						boardId: window.windowBoardId,
+						from: card1.id,
+						to: card2.id
+					};
+					socket.emit("add-connector", connector);
+				}
+			});
+		});
+
 		// Delete card listener
 		card.querySelector(".deleteBtn").addEventListener("mousedown", function (event) {
 			event.stopPropagation();  //prevent bubbling process so the whole card doesn't start dragging
@@ -218,7 +260,130 @@ function createCard(data) {
 
 
 	}
+}
 
+// Get center coordinates of element
+function getCenter(el) {
+	//Eventually consider zoom for calculations
+	let zoom = document.getElementById("overlay").style.zoom;
+	if(!zoom)
+		zoom = 1;
+	else
+		zoom = zoom.replace("%", "") / 100;
+	let width = el.clientWidth | $(el).outerWidth(), //Special cases for triangle shape
+		height = el.clientHeight | $(el).outerHeight(),
+		offsetLeft = el.offsetLeft,
+		offsetTop = el.offsetTop;
+	return {
+		x: zoom * (offsetLeft + width / 2),
+		y: zoom * (offsetTop + height / 2)
+	};
+}
+
+// Calculate styling for a potential line, given the coordinates
+function calcLineStyleFromCoords(x1, y1, x2, y2) {
+	let a = x1 - x2,
+		b = y1 - y2,
+		length = Math.sqrt(a * a + b * b);
+	let sx = (x1 + x2) / 2,
+		sy = (y1 + y2) / 2;
+	let x = sx - length / 2,
+		y = sy;
+	let angle = Math.PI - Math.atan2(-b, a);
+
+	return "width: " + length + "px; "
+				+ "-moz-transform: rotate(" + angle + "rad); "
+				+ "-webkit-transform: rotate(" + angle + "rad); "
+				+ "-o-transform: rotate(" + angle + "rad); "
+				+ "-ms-transform: rotate(" + angle + "rad); "
+				+ "top: " + y + "px; "
+				+ "left: " + x + "px; ";
+}
+
+// Create a line with the necessary syling
+function createLine(x1, y1, x2, y2) {
+	let line = document.createElement("div");
+	line.classList.add("line");
+	let styles = calcLineStyleFromCoords(x1, y1, x2, y2);
+	line.setAttribute("style", styles);
+	return line;
+}
+
+// Draw connector between two cards
+function drawConnector(id, from, to) {
+	let card1 = document.getElementById(from);
+	let card2 = document.getElementById(to);
+	let card1Center = getCenter(card1);
+	let card2Center = getCenter(card2);
+
+	let connectorEl = createLine(card1Center.x, card1Center.y, card2Center.x, card2Center.y);
+	connectorEl.setAttribute("data-from", card1.id);
+	connectorEl.setAttribute("data-to", card2.id);
+	connectorEl.id = id;
+
+	$("#connectors").append(connectorEl);
+	$(connectorEl).hover(e => {
+		$("#deleteConnectorBtn").trigger("mouseenter");
+		selectedConnector = id;
+		const h = $("#deleteConnectorBtn").height()/2, w = $("#deleteConnectorBtn").width()/2;
+		$("#deleteConnectorBtn").css({ top:  e.clientY - h, left:  e.clientX - w });
+		$("#deleteConnectorBtn").on("click", function(e) {
+			if(e.which === 1) {
+				socket.emit("delete-connector", selectedConnector);
+				deleteConnectorById(selectedConnector);
+				$("#deleteConnectorBtn").trigger("mouseleave");
+			}
+		});
+	});
+}
+
+$("#connector .line").on("mouseleave", function(e) {
+	$("#deleteConnectorBtn").trigger("mouseleave");
+});
+$("#deleteConnectorBtn").on("mouseenter", function(e) {
+	$("#deleteConnectorBtn").css("display", "inline");
+});
+$("#deleteConnectorBtn").on("mouseleave", function(e) {
+	$("#deleteConnectorBtn").css("display", "none");
+});
+
+// Observer to recalculate all connectors on zoom change
+let observer = new MutationObserver(() => {
+	document.getElementById("connectors").childNodes.forEach(function(c) {
+		fromCardCenter = getCenter(document.getElementById(c.dataset.from));
+		toCardCenter = getCenter(document.getElementById(c.dataset.to));
+		c.style = calcLineStyleFromCoords(fromCardCenter.x, fromCardCenter.y, toCardCenter.x, toCardCenter.y);
+	});
+});
+observer.observe(document.getElementById("overlay"), { attributeFilter : ["style"] });
+
+// Get all connectors attached to this card
+function getConnectorsByCardId(cardId) {
+	return document.querySelectorAll(".line[data-from='" + cardId + "'],.line[data-to='" + cardId + "']");
+}
+
+// Recalculate all connectors attached to this card
+function adjustConnectorsByCardId(cardId) {
+	getConnectorsByCardId(cardId).forEach(c => {
+		let otherCardId = c.dataset.from == cardId ? c.dataset.to : c.dataset.from;
+		cardCenter = getCenter(document.getElementById(cardId));
+		otherCardCenter = getCenter(document.getElementById(otherCardId));
+		c.style = calcLineStyleFromCoords(cardCenter.x, cardCenter.y, otherCardCenter.x, otherCardCenter.y);
+	});
+}
+
+// Delete a connector by its ID
+function deleteConnectorById(id) {
+	let c = document.getElementById(id);
+	if(c === null) return;
+	c.parentNode.removeChild(c);
+}
+
+// Delete all connectors attached to this card
+function deleteConnectorsByCardId(cardId) {
+	getConnectorsByCardId(cardId).forEach(c => {
+		c.parentNode.removeChild(c);
+	});
 }
 
 function convertToLink(card) {
@@ -300,6 +465,7 @@ socket.on("pos-update", (data) => {
 	let cardById = document.getElementById(card._id);
 	cardById.style.left = card.position.left + "px";
 	cardById.style.top = card.position.top + "px";
+	adjustConnectorsByCardId(card._id);
 });
 
 socket.on("text-update", (data) => {
@@ -321,6 +487,7 @@ socket.on("color-update", (data) => {
 socket.on("delete-card", (data) => {
 	const card = JSON.parse(data);
 	$("#" + card._id).remove(); //remove the card element by its ID
+	deleteConnectorsByCardId(card._id); //remove all connectors associated with card
 });
 
 socket.on("card-to-link", (data) => {
@@ -332,8 +499,9 @@ socket.on("display-card", (data) => {
 	createCard(data);
 });
 
-socket.on("remove-card", (data) => {
-	document.getElementById(data).remove();
+socket.on("remove-card", (cardId) => {
+	document.getElementById(cardId).remove();
+	deleteConnectorsByCardId(cardId); //remove all connectors associated with card
 });
 
 $(document).on("mousemove", function (event) {
@@ -345,4 +513,13 @@ socket.on("all_mouse_movements", (data) => {
 	el.style.left = data.coords.x + "px";
 	el.style.top = data.coords.y + "px";
 	$("body").append(el);
+});
+
+socket.on("add-connector", connector => {
+	connector = JSON.parse(connector);
+	drawConnector(connector._id, connector.from, connector.to);
+});
+
+socket.on("delete-connector", connectorId => {
+	deleteConnectorById(connectorId);
 });
