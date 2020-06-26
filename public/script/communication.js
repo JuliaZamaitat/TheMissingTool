@@ -129,8 +129,8 @@ socket.on("update-users", (users) => {
 });
 
 $("#user-name").on("focusout", function () {
-	var oldName = window.username
-	document.cookie = "username=" +  $(this).text();
+	var oldName = window.username;
+	document.cookie = "username=" + $(this).text();
 	window.username = cookieValue("username");
 	socket.emit("change-user-list", {oldName: oldName, newName: window.username});
 });
@@ -149,10 +149,24 @@ function getCursorElement(data) {
 
 socket.on("focus-in", (data) => {
 	let card = document.getElementById(data.cardId);
-	card.querySelector("textarea").style.border = "1px solid red";
+	card.querySelector("textarea").style.border = "2px solid " + getFocusColor(card.style.backgroundColor);
 	let container = card.querySelector(".visitorContainer");
 	container.style.display = "block";
 	container.innerText = data.username;
+
+	function getFocusColor(color) {
+		switch (color) {
+		case "rgb(255, 200, 200)":
+			return "#ff7d8e";
+		case "rgb(255, 253, 202)":
+			return "#fff801";
+		case "rgb(205, 244, 255)":
+			return "#669fff";
+		case "rgb(234, 212, 255)":
+			return "#f16eff";
+		default:
+		}
+	}
 });
 
 socket.on("focus-out", (data) => {
@@ -164,5 +178,5 @@ socket.on("focus-out", (data) => {
 
 socket.on("delete-courser", username => {
 	document.getElementById(username).remove();
-})
+});
 

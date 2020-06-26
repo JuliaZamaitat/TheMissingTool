@@ -964,3 +964,6 @@ textarea:hover {
 	height: auto;
 }
 
+.visitorContainer {
+	text-align: center;
+}

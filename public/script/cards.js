@@ -215,10 +215,7 @@ function createCard(data) {
 				});
 			});
 		});
-
-
 	}
-
 }
 
 function convertToLink(card) {
