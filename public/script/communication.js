@@ -129,7 +129,7 @@ socket.on("update-users", (users) => {
 });
 
 $("#user-name").on("focusout", function () {
-	var oldName = window.username
+	var oldName = window.username;
 	document.cookie = "username=" +  $(this).text();
 	window.username = cookieValue("username");
 	socket.emit("change-user-list", {oldName: oldName, newName: window.username});
@@ -164,5 +164,5 @@ socket.on("focus-out", (data) => {
 
 socket.on("delete-courser", username => {
 	document.getElementById(username).remove();
-})
+});
 
