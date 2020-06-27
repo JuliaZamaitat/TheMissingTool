@@ -519,7 +519,7 @@ input[type=range]::-ms-thumb {
 	position: absolute;
 	-webkit-animation-name: fadeIn;
 	animation-name: fadeIn;
-	z-index: 0;
+	z-index: 1;
 }
 .item textarea {
 	display: block;
@@ -690,13 +690,13 @@ textarea:hover {
 	transform: translateX(1.6rem);
 }
 .square .buttonContainer, .circle .buttonContainer {
-	left: -14%;
+	left: -28%;
 }
-.oval .buttonContainer, .rectangle .buttonContainer {
-	left: 1%;
+.ellipse .buttonContainer, .rectangle .buttonContainer {
+	left: -9%;
 }
 .triangle .buttonContainer {
-	left: -7.5rem;
+	left: -9rem;
 }
 .buttonContainer img {
 	width: 1.3rem;
@@ -949,6 +949,12 @@ textarea:hover {
 	}
 }
 
+.line {
+	z-index: 0;
+	position: absolute;
+	height: 1px;
+	border: 1px solid black;
+}
 
 #back-button {
 	height: 50px;
@@ -978,4 +984,17 @@ textarea:hover {
 
 .mvcursor p {
 	display: inline;
+
+  #deleteConnectorBtn {
+	cursor: pointer;
+	text-align: center;
+	font-weight: bold;
+	z-index: 1;
+	position: absolute;
+	font-size: 1.2em;
+	width: 1.2em;
+	line-height: 1.2em;
+	border-radius: 50%;
+	display: none;
+
 }
