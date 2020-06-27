@@ -965,12 +965,27 @@ textarea:hover {
 }
 
 .mvcursor {
+	display: inline;
 	position: absolute;
 	width: auto;
 	height: auto;
 }
 
-#deleteConnectorBtn {
+.visitorContainer {
+	text-align: center;
+}
+
+.mvcursor img{
+	margin-top: 4px;
+	float: left;
+	width: 13px;
+	height: 13px;
+}
+
+.mvcursor p {
+	display: inline;
+
+  #deleteConnectorBtn {
 	cursor: pointer;
 	text-align: center;
 	font-weight: bold;
@@ -981,4 +996,5 @@ textarea:hover {
 	line-height: 1.2em;
 	border-radius: 50%;
 	display: none;
+
 }

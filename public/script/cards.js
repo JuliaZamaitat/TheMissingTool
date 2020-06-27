@@ -291,8 +291,6 @@ function createCard(data) {
 				});
 			});
 		});
-
-
 	}
 }
 
