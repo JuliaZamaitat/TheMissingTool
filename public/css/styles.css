@@ -226,6 +226,8 @@ p:focus {
 	padding: .9rem .6rem;
 	color: white;
 	z-index: 999;
+
+
 }
 
 #menubar img{
@@ -250,7 +252,6 @@ img#hamburger-bars {
 }
 #menubar:hover .menu-btn {
 	opacity: 1;
-	transition-duration: 1s;
 }
 .menu-btn{
 	position: relative;
@@ -264,7 +265,7 @@ img#hamburger-bars {
 	width: 3rem;
 	height: 3rem;
 	overflow: hidden;
-	transition: ease .1s;
+	transition: ease .4s;
 	justify-content: space-around;
 }
 /*#menubar ul{
@@ -292,7 +293,7 @@ img#hamburger-bars {
 	right: 0;
 }
 .menu-btn:hover {
-	margin: 0 1rem;
+	margin: 0 0rem;
 	width: 10rem;
 	box-shadow:
 		inset 2px 2px 5px rgba(0,0,0,.9),
