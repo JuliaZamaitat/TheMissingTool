@@ -330,10 +330,9 @@ module.exports = {
 				Card.findOneAndUpdate(
 					filter,
 					{$push: {comments: comment}},
-					function (error, success) {
+					function (error) {
 						if (error) {
 							console.log(error);
-						} else {
 						}
 					});
 
