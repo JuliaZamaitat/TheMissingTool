@@ -77,6 +77,35 @@ function createCard(data) {
 	addCardListeners(card, data);
 	document.getElementById("overlay").appendChild(card);
 
+	//Flip card elements to the bottom side if the card is too high up
+	function adjustCardButtons() {
+		let colorChangeOptions = buttons.querySelector(".colorChangeOptions");
+		let buttonsFullHeight = $(".buttonContainer").outerHeight(true);
+		if(card.getBoundingClientRect().top - 2.2*buttonsFullHeight < 0) {
+			colorChangeOptions.style.top = "3.5rem";
+			colorChangeOptions.style.bottom = "auto";
+			if(card.getBoundingClientRect().top - buttonsFullHeight < 0) {
+				buttons.style.bottom = "-6.5rem";
+				buttons.style.top = "auto";
+			} else {
+				buttons.style.bottom = "auto";
+				buttons.style.top = "-6.5rem";
+			}
+		} else {
+			colorChangeOptions.style.top = "auto";
+			colorChangeOptions.style.bottom = "3.5rem";
+		}
+	}
+	function adjustCommentsBox() {
+		let commentsBox = card.querySelector(".comments-box");
+		if(card.getBoundingClientRect().top - $(".comments-box").outerHeight(true) < 0) {
+			commentsBox.style.top = "120%";
+			commentsBox.style.bottom = "auto";
+		} else {
+			commentsBox.style.top = "auto";
+			commentsBox.style.bottom = "120%";
+		}
+	}
 
 	function addCardListeners(card, data) {
 
@@ -101,6 +130,7 @@ function createCard(data) {
 			pos4 = e.clientY;
 			document.onmouseup = closeDragCard;
 			document.onmousemove = dragCard;
+			adjustCardButtons();
 		}
 
 		function dragCard(e) {
@@ -111,6 +141,8 @@ function createCard(data) {
 			pos4 = e.clientY;
 			card.style.top = (card.offsetTop - pos2) + "px";
 			card.style.left = (card.offsetLeft - pos1) + "px";
+			adjustCardButtons();
+			adjustCommentsBox();
 			adjustConnectorsByCardId(card.id);
 		}
 
@@ -219,6 +251,7 @@ function createCard(data) {
 		// Show comment
 		card.querySelector(".commentBtn").addEventListener("mousedown", function () {
 			$("#" + card.id + " .comments-box").fadeIn();
+			adjustCommentsBox();
 		});
 
 		card.querySelector(".commentInput").addEventListener("keydown", function (e) {
@@ -236,6 +269,7 @@ function createCard(data) {
 
 		card.querySelector(".close-commentBox").addEventListener("mousedown", function () {
 			$("#" + card.id + " .comments-box").fadeOut();
+			adjustCardButtons();
 		});
 
 		// Change text of card listener
@@ -309,6 +343,7 @@ function createLine(x1, y1, x2, y2) {
 	return line;
 }
 
+let deleteConnectorBtn = $("#deleteConnectorBtn");
 // Draw connector between two cards
 function drawConnector(id, from, to) {
 	let card1 = document.getElementById(from);
@@ -323,35 +358,35 @@ function drawConnector(id, from, to) {
 
 	$("#connectors").append(connectorEl);
 	$(connectorEl).hover(e => {
-		$("#deleteConnectorBtn").trigger("mouseenter");
+		deleteConnectorBtn.trigger("mouseenter");
 		selectedConnector = id;
-		const h = $("#deleteConnectorBtn").height()/2, w = $("#deleteConnectorBtn").width()/2;
-		$("#deleteConnectorBtn").css({ top:  e.clientY - h, left:  e.clientX - w });
-		$("#deleteConnectorBtn").on("click", function(e) {
+		const h = deleteConnectorBtn.height()/2, w = deleteConnectorBtn.width()/2;
+		deleteConnectorBtn.css({ top:  e.clientY - h, left:  e.clientX - w });
+		deleteConnectorBtn.on("click", function(e) {
 			if(e.which === 1) {
 				socket.emit("delete-connector", selectedConnector);
 				deleteConnectorById(selectedConnector);
-				$("#deleteConnectorBtn").trigger("mouseleave");
+				deleteConnectorBtn.trigger("mouseleave");
 			}
 		});
 	});
 }
 
 $("#connector .line").on("mouseleave", function(e) {
-	$("#deleteConnectorBtn").trigger("mouseleave");
+	deleteConnectorBtn.trigger("mouseleave");
 });
-$("#deleteConnectorBtn").on("mouseenter", function(e) {
-	$("#deleteConnectorBtn").css("display", "inline");
+deleteConnectorBtn.on("mouseenter", function(e) {
+	deleteConnectorBtn.css("display", "inline");
 });
-$("#deleteConnectorBtn").on("mouseleave", function(e) {
-	$("#deleteConnectorBtn").css("display", "none");
+deleteConnectorBtn.on("mouseleave", function(e) {
+	deleteConnectorBtn.css("display", "none");
 });
 
 // Observer to recalculate all connectors on zoom change
 let observer = new MutationObserver(() => {
 	document.getElementById("connectors").childNodes.forEach(function(c) {
-		fromCardCenter = getCenter(document.getElementById(c.dataset.from));
-		toCardCenter = getCenter(document.getElementById(c.dataset.to));
+		let fromCardCenter = getCenter(document.getElementById(c.dataset.from));
+		let toCardCenter = getCenter(document.getElementById(c.dataset.to));
 		c.style = calcLineStyleFromCoords(fromCardCenter.x, fromCardCenter.y, toCardCenter.x, toCardCenter.y);
 	});
 });
@@ -366,8 +401,8 @@ function getConnectorsByCardId(cardId) {
 function adjustConnectorsByCardId(cardId) {
 	getConnectorsByCardId(cardId).forEach(c => {
 		let otherCardId = c.dataset.from == cardId ? c.dataset.to : c.dataset.from;
-		cardCenter = getCenter(document.getElementById(cardId));
-		otherCardCenter = getCenter(document.getElementById(otherCardId));
+		let cardCenter = getCenter(document.getElementById(cardId));
+		let otherCardCenter = getCenter(document.getElementById(otherCardId));
 		c.style = calcLineStyleFromCoords(cardCenter.x, cardCenter.y, otherCardCenter.x, otherCardCenter.y);
 	});
 }
