@@ -129,7 +129,7 @@ socket.on("update-users", (users) => {
 });
 
 $("#user-name").on("focusout", function () {
-	var oldName = window.username
+	var oldName = window.username;
 	document.cookie = "username=" +  $(this).text();
 	window.username = cookieValue("username");
 	socket.emit("change-user-list", {oldName: oldName, newName: window.username});
@@ -142,20 +142,38 @@ function getCursorElement(data) {
 		element = document.createElement("div");
 		element.id = username;
 		element.className = "mvcursor";
-		element.innerHTML = "<p>" + username + "</p>";
+		element.innerHTML = "<img src='/icons/pointer.svg'><p>" + username + "</p>";
 	}
 	return element;
 }
 
 socket.on("focus-in", (data) => {
+	var username = data.username;
+	document.getElementById(username).style.display = "none";
 	let card = document.getElementById(data.cardId);
-	card.querySelector("textarea").style.border = "1px solid red";
+	card.querySelector("textarea").style.border = "2px solid " + getFocusColor(card.style.backgroundColor);
 	let container = card.querySelector(".visitorContainer");
 	container.style.display = "block";
-	container.innerText = data.username;
+	container.innerText = username;
+
+	function getFocusColor(color) {
+		switch (color) {
+		case "rgb(255, 200, 200)":
+			return "#ff7d8e";
+		case "rgb(255, 253, 202)":
+			return "#fff801";
+		case "rgb(205, 244, 255)":
+			return "#669fff";
+		case "rgb(234, 212, 255)":
+			return "#f16eff";
+		default:
+		}
+	}
 });
 
 socket.on("focus-out", (data) => {
+	var username = data.username;
+	document.getElementById(username).style.display = "block";
 	let card = document.getElementById(data.cardId);
 	card.querySelector("textarea").style.border = "none";
 	let container = card.querySelector(".visitorContainer");
@@ -164,5 +182,5 @@ socket.on("focus-out", (data) => {
 
 socket.on("delete-courser", username => {
 	document.getElementById(username).remove();
-})
+});
 

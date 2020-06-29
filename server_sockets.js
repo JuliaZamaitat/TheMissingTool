@@ -26,6 +26,7 @@ module.exports = {
 				refreshUserNameList();
 				updateUserNames(obj);
 				deleteCourser(obj.oldName);
+				updateUserNames(obj.name);
 			});
 
 			function deleteCourser(name) {
@@ -62,6 +63,22 @@ module.exports = {
 				}
 			}
 
+			function removeConnectorsByCardId(cardId) {
+				const filter = {_id: mongoose.Types.ObjectId(board)};
+				const update = {
+					$pull : {
+						connectors : {
+							$or: [{from: cardId}, {to: cardId}]
+						}
+					}
+				};
+				Board.findOneAndUpdate(filter, update, { multi: true },
+					function (err) {
+						if(err) console.log("Something went wrong removing the connectors by card ID");
+					}
+				);
+			}
+
 			socket.on("add-link", function (incoming) {
 				const filter = {_id: mongoose.Types.ObjectId(incoming.cardId)};
 				const update = {linkId: incoming.linkId};
@@ -90,8 +107,8 @@ module.exports = {
 								if (err) console.log("Error finding card by id");
 								io.to(incoming.boardId).emit("display-card", card);
 								io.to(board).emit("remove-card", card.id);
+								removeConnectorsByCardId(card.id);
 							});
-
 						}
 					}
 				);
@@ -151,8 +168,10 @@ module.exports = {
 						io.to(board).emit("delete-card", JSON.stringify({
 							_id: req._id
 						}));
-					}
-				);
+
+						//Now also delete all connectors associated with deleted card
+						removeConnectorsByCardId(req._id);
+					});
 			});
 
 			socket.on("update-text", function (req) {
@@ -186,6 +205,67 @@ module.exports = {
 							backgroundColor: req.backgroundColor,
 							shape: req.shape
 						}));
+					}
+				);
+			});
+
+			socket.on("add-connector", function(req) {
+				const fromCard = req.from;
+				const toCard = req.to;
+
+				const boardIdFilter = {_id: mongoose.Types.ObjectId(board)};
+				const countConnectorsFilter = {
+					$and : [
+						boardIdFilter,
+						{ connectors : {
+							$elemMatch : {
+								$or: [
+									{ $and: [{from: fromCard}, {to: toCard}] },
+									{ $and: [{from: toCard}, {to: fromCard}] }
+								]
+							}
+						}
+						}
+					]
+				};
+
+				Board.countDocuments(countConnectorsFilter, function(err, count) {
+					if(err) console.log("Something went wrong counting the connectors");
+					if(count === 0) {
+						let connectorId = new mongoose.mongo.ObjectId();
+						let newConnector = {
+							_id: connectorId,
+							from: fromCard,
+							to: toCard
+						};
+
+						Board.updateOne(
+							boardIdFilter, {
+								$push: {
+									connectors: newConnector
+								}
+							},
+							function (err) {
+								if(err) console.log("Something went wrong adding connector to board");
+								io.to(board).emit("add-connector", JSON.stringify(newConnector));
+							});
+					}
+				});
+			});
+
+			socket.on("delete-connector", function (connectorId) {
+				const filter = {_id: mongoose.Types.ObjectId(board)};
+				const update = {
+					$pull : {
+						connectors : {
+							_id : connectorId
+						}
+					}
+				};
+				Board.findOneAndUpdate(filter, update,
+					function (err) {
+						if(err) console.log("Something went wrong removing the connector");
+						socket.broadcast.to(board).emit("delete-connector", connectorId);
 					}
 				);
 			});
@@ -250,10 +330,9 @@ module.exports = {
 				Card.findOneAndUpdate(
 					filter,
 					{$push: {comments: comment}},
-					function (error, success) {
+					function (error) {
 						if (error) {
 							console.log(error);
-						} else {
 						}
 					});
 

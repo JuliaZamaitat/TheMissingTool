@@ -1,6 +1,8 @@
 <body>
 <div id="zoom-container">
-    <div id="overlay"></div>
+		<div id="overlay"></div>
+		<div id="connectors"></div>
+		<span id="deleteConnectorBtn" class="gradient">&times;</span>
 </div>
 <div id="username_container" class="neu-panel neu-outline neu-edit-panel">
     <p class="neu-title" contenteditable="true" id="user-name"><%= username %></p>
@@ -40,9 +42,6 @@
     <button type="button" class="neu-button gradient toolbar-btn create-card-btn" id="TRIANGLE">
         <img src="/icons/triangle.svg"><span>Triangle</span>
         <div class="color-options"></div>
-    </button>
-    <button type="button" class="neu-button gradient toolbar-btn add-connection-btn">
-        <img src="/icons/arrow.svg"><span>Connect</span>
     </button>
 </div>
 
