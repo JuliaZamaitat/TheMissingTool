@@ -644,8 +644,8 @@ input[type=range]::-ms-thumb {
 
 .triangle .forward {
 	position: absolute;
-	right: -85px;
-	bottom: -170px;
+	right: 10%;
+	bottom: 0;
 }
 
 .rectangle {
@@ -777,8 +777,9 @@ textarea:hover {
 	left: -25%;
 }
 .triangle .comments-box {
-	width: 20vw;
+	width: 125%;
 	bottom: 25px;
+	left: -12.5%;
 }
 .comments-box_header {
 	font-weight: 500;
