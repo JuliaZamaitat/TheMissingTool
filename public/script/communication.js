@@ -151,7 +151,14 @@ socket.on("focus-in", (data) => {
 	var username = data.username;
 	document.getElementById(username).style.display = "none";
 	let card = document.getElementById(data.cardId);
-	card.querySelector("textarea").style.border = "2px solid " + getFocusColor(card.style.backgroundColor);
+	let borderType = "2px solid ";
+	if(!card.classList.contains("triangle")) {
+		card.querySelector("textarea").style.border = borderType + getFocusColor(card.style.backgroundColor);
+	} else {
+		let focusColor = getFocusColor(card.style.color);
+		card.style.setProperty("--border-color", focusColor);
+		card.style.borderBottom = borderType + focusColor;
+	}
 	let container = card.querySelector(".visitorContainer");
 	container.style.display = "block";
 	container.innerText = username;
@@ -175,7 +182,12 @@ socket.on("focus-out", (data) => {
 	var username = data.username;
 	document.getElementById(username).style.display = "block";
 	let card = document.getElementById(data.cardId);
-	card.querySelector("textarea").style.border = "none";
+	if(!card.classList.contains("triangle")) {
+		card.querySelector("textarea").style.border = "none";
+	} else {
+		card.style.borderBottom = "none";
+		card.style.setProperty("--border-color", "transparent");
+	}
 	let container = card.querySelector(".visitorContainer");
 	container.style.display = "none";
 });
