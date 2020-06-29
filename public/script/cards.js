@@ -231,7 +231,7 @@ function createCard(data) {
 
 			card.append(resizers);
 		});
-
+		let current;
 		function addResizeListener(button) {
 			console.log(button);
 			for (let i = 0; i < button.childElementCount; i++) {
@@ -247,29 +247,42 @@ function createCard(data) {
 			}
 
 			function resize(e) {
-				let original_width = card.style.width.replace("px", "");
-				let original_x = card.offsetLeft;
+				let original_height = parseFloat(getComputedStyle(card, null).getPropertyValue("height").replace("px", ""));
+				let original_width = parseFloat(getComputedStyle(card, null).getPropertyValue("width").replace("px", ""));
+				let original_x = card.getBoundingClientRect().left;
 				let original_mouse_x = e.clientX;
+				let ratio = original_width / original_height;
+				console.log("ratio" + ratio);
+				console.log(original_width);
+				console.log(original_height);
+
+
 
 				if (current === document.getElementById("bot_right")) {
-
+					let width0 = card.style.width.replace("px", "");
 					//card.querySelector("textarea").style.height = (e.clientY - card.offsetTop) + "px";
 					//card.style.height = (e.clientY - card.offsetTop) + "px";
 					card.querySelector("textarea").style.width = e.clientX - card.offsetLeft + "px";
 					card.style.width = e.clientX - card.offsetLeft + "px";
+					let width1 = card.style.width.replace("px", "");
+					let diff = width1-width0;
+					console.log("diff: " + diff);
 
 					card.querySelector("textarea").style.height = e.clientX - card.offsetLeft + "px";
-
 					card.style.height = e.clientX - card.offsetLeft + "px";
+
 				}
 				else if (current === document.getElementById("bot_left")) {
 					card.querySelector("textarea").style.width = original_width - ((e.clientX) - card.offsetLeft) + "px";
 					card.style.width = original_width - (e.clientX - card.offsetLeft) + "px";
-					card.style.left = original_x + (e.clientX - original_mouse_x) + "px";
+					card.offsetLeft = original_x + (e.clientX - original_mouse_x) + "px";
 				}
 				else if (current === document.getElementById("top_right")) {
 					card.querySelector("textarea").style.width = (e.pageX - card.getBoundingClientRect().left) + "px";
 					card.style.width = e.pageX - card.getBoundingClientRect().left + "px";
+
+					card.querySelector("textarea").style.height = (e.clientY - card.offsetTop) + "px";
+					card.style.height = (e.clientY - card.offsetTop) + "px";
 				}
 				else if (current === document.getElementById("top_left")) {
 					console.log("top_left");
