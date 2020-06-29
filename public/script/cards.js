@@ -447,7 +447,7 @@ function convertToLink(card) {
 						name: newBoardName
 					});
 					console.log(newBoardId);
-					setCookieAndChangeLocation(newBoardId);
+					forwardToBoard(newBoardId);
 				}
 			});
 		});
