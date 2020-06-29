@@ -1,93 +1,65 @@
 var zoom = "100";
 
 $(document).ready(function () {
-	$.get("/board/" + window.windowBoardId + "/path", (path) => {
-		for (let i = 0; i < path.length; i++) {
-			$.get({
-				url: "/board/" + path[i] + "/data",
-				success: function(boardData) {
-					if (boardData !== "") {
-						var element = document.createElement("p");
-						var text = document.createTextNode(boardData.name + "/");
-						element.appendChild(text);
-						element.id = boardData._id;
-						element.addEventListener("mousedown", function () {
-							setCookieAndChangeLocation(element.id);
-						});
-						document.getElementById("board_path").appendChild(element);
-					}
-				},
-				async:false
-			});
-		}
-	});
-
-	let currentBoards = cookieValue("visitedBoards");
-	if (currentBoards !== null) {
-		const arrayOfVisitedBoards = currentBoards.toString().split(",");
-		if (arrayOfVisitedBoards !== null && arrayOfVisitedBoards !== undefined) {
-			$("#folder").fadeIn();
-			arrayOfVisitedBoards.forEach(element => {
-				if (element !== null && element !== window.windowBoardId) {
-					appendNameToBoardList(element);
-				}
-			});
-		}
-	}
-
-	function appendNameToBoardList(boardId) {
-		if (boardId !== null && boardId !== "") {
-			$.get("/board/" + boardId + "/data", (boardData) => {
-				if (boardData !== "") {
-					var element = document.createElement("p");
-					var text = document.createTextNode(boardData.name);
-					element.appendChild(text);
-					element.id = boardData._id;
-					element.className = "boardLink";
-					element.addEventListener("mousedown", function () {
-						setCookieAndChangeLocation(element.id);
-					});
-					document.getElementById("dropdown-content").appendChild(element);
-				}
-			});
-		}
-	}
-
-	//If the modal for the board name is rendered then show it
-	if ($("#setNameModal")) {
-		$("#setNameModal").modal("show");
-		//Keep submit button disabled as long as input is empty
-		$("#board-name-input").on("input", () => {
-			$("#board-name-button").prop("disabled", !$("#board-name-input").val().trim());
+	if (window.windowBoardId !== "board") {
+		$.get("/board/" + window.windowBoardId + "/path", (path) => {
+			addToLoastVisitedCookie(path[0]);
+			for (let i = 0; i < path.length; i++) {
+				$.get({
+					url: "/board/" + path[i] + "/data",
+					success: function (boardData) {
+						if (boardData !== "") {
+							var element = document.createElement("p");
+							var text = document.createTextNode(boardData.name + "/");
+							element.appendChild(text);
+							element.id = boardData._id;
+							element.addEventListener("mousedown", function () {
+								forwardToBoard(element.id);
+							});
+							document.getElementById("board_path").appendChild(element);
+						}
+					},
+					async: false
+				});
+			}
 		});
-	}
-	//Update board name via modal
-	$("#board-name-form").submit(e => {
-		e.preventDefault();
-		$("#setNameModal").modal("hide");
-		updateBoardName($("#board-name-input").val().trim());
-	});
-	$("#create-board").on("click", createBoard);
+		//If the modal for the board name is rendered then show it
+		if ($("#setNameModal")) {
+			$("#setNameModal").modal("show");
+			//Keep submit button disabled as long as input is empty
+			$("#board-name-input").on("input", () => {
+				$("#board-name-button").prop("disabled", !$("#board-name-input").val().trim());
+			});
+		}
+		//Update board name via modal
+		$("#board-name-form").submit(e => {
+			e.preventDefault();
+			$("#setNameModal").modal("hide");
+			updateBoardName($("#board-name-input").val().trim());
+		});
 
-	$("#create-child-board").on("click", createChildBoardAndForward);
-	$("#share-board").on("click", copyToClipboard);
-	$("#folder").on("click", showOrHide);
-	$("#back-button").on("click", goToParent);
-	zoomOnclick();
+		$("#create-child-board").on("click", createChildBoardAndForward);
+		$("#share-board").on("click", copyToClipboard);
+		$("#folder").on("click", showOrHide);
+		$("#back-button").on("click", goToParent);
+		zoomOnclick();
+	}
+	$("#create-board").on("click", createBoard);
 });
 
 
 function createBoard() {
 	$.post("/",
-		function (data) {
-			setCookieAndChangeLocation(data);
+		function (boardId) {
+			console.log("IN HERE");
+			forwardToBoard(boardId);
 		});
 }
 
 function createChildBoardAndForward() {
 	$.post("/board/" + window.windowBoardId,
-		function (data) {
-			setCookieAndChangeLocation(data);
+		function (boardId) {
+			forwardToBoard(boardId);
 		});
 }
 
@@ -114,7 +86,7 @@ function goToParent() {
 		function (path) {
 			let parentBoard = path[path.length - 1];
 			if (parentBoard !== undefined) {
-				setCookieAndChangeLocation(parentBoard);
+				forwardToBoard(parentBoard);
 			}
 		});
 }
@@ -157,33 +129,23 @@ function zoomOnclick() {
 	}
 }
 
-// change location and append current board to lastVisited cookie
-function setCookieAndChangeLocation(newBoard) {
+function addToLoastVisitedCookie(parentBoard) {
+	if (parentBoard === undefined) {
+		parentBoard = window.windowBoardId;
+	}
 	let arrayOfVisitedBoards = [];
 	let currentCookie = cookieValue("visitedBoards");
-
-	if (currentCookie === null || currentCookie === "" || currentCookie === undefined) {
-		if (window.windowBoardId !== undefined) {
-			document.cookie = "visitedBoards=" + window.windowBoardId;
-			location.href = "/board/" + newBoard;
-		}
-	} else {
+	if (currentCookie !== null) {
 		arrayOfVisitedBoards = currentCookie.toString().split(",");
-		if (arrayOfVisitedBoards === undefined) {
-			arrayOfVisitedBoards = "";
-		}
-		if (arrayOfVisitedBoards.includes(window.windowBoardId)) {
-			for (let i = 0; i < arrayOfVisitedBoards.length; i++) {
-				if (arrayOfVisitedBoards[i] === window.windowBoardId) {
-					arrayOfVisitedBoards.splice(i, 1);
-				}
-			}
-		}
-		if (window.windowBoardId !== undefined) {
-			arrayOfVisitedBoards.push(window.windowBoardId);
-		}
 	}
-	document.cookie = "visitedBoards=" + arrayOfVisitedBoards;
+	if (!arrayOfVisitedBoards.includes(parentBoard)) {
+		arrayOfVisitedBoards.push(parentBoard);
+		document.cookie = "visitedBoards=" + arrayOfVisitedBoards;
+	}
+}
+
+// change location
+function forwardToBoard(newBoard) {
 	location.href = "/board/" + newBoard;
 }
 

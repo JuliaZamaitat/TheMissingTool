@@ -29,7 +29,6 @@ function createCard(data) {
 	} else {
 		card.style.color = data.backgroundColor; //In css, I'm turning color into bg-color; can't set bg-color directly cuz it's in a pseudoelement
 	}
-
 	card.innerHTML = "<textarea type='text' value=''></textarea>";
 
 	const buttons = document.createElement("div");
@@ -453,7 +452,7 @@ function convertToLink(card) {
 						name: newBoardName
 					});
 					console.log(newBoardId);
-					setCookieAndChangeLocation(newBoardId);
+					forwardToBoard(newBoardId);
 				}
 			});
 		});
@@ -513,7 +512,6 @@ socket.on("text-update", (data) => {
 });
 
 socket.on("color-update", (data) => {
-	console.log("shasha");
 	const card = JSON.parse(data);
 	let elementById = document.getElementById(card._id);
 	if (!elementById.classList.contains("triangle")) {
@@ -521,6 +519,7 @@ socket.on("color-update", (data) => {
 	} else {
 		elementById.style.color = card.backgroundColor;
 	}
+
 });
 
 socket.on("delete-card", (data) => {
