@@ -1,7 +1,7 @@
 let typing = false,
 	timeout = undefined,
 	messageCount = 0;
-let userList = [];
+let listOfUsers = [];
 
 $(document).ready(function () {
 
@@ -119,15 +119,9 @@ function typingTimeout() {
 }
 
 socket.on("update-users", (users) => {
-	//userList.length = 0;
+	listOfUsers.length = 0;
 	for (var i = 0; i < users.length; i++) {
-		userList.push(users[i]);
-		let username = document.createElement("p");
-		username.innerText = users[i];
-		if (users[i] !== window.username) {
-			$("#users").append(username);
-			console.log(i);
-		}
+		listOfUsers.push(users[i]);
 	}
 });
 
@@ -193,8 +187,8 @@ $(document).ready(function() {
 		html: true,
 		content: function () {
 			let result = $();
-			for (let i = 0; i < userList.length; i++) {
-				result = result.add("<p>" + userList[i] + "</p>");
+			for (let i = 0; i < listOfUsers.length; i++) {
+				result = result.add("<p>" + listOfUsers[i] + "</p>");
 			}
 			return result;
 		}

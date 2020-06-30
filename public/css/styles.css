@@ -828,7 +828,7 @@ textarea:hover {
 	right: 1.5rem;
 	width: 25vw;
 	border-radius: 10px 10px 0 0;
-	z-index: 9999;
+	z-index: 999;
 	overflow: hidden;
 	transition: ease .5s;
 	background-color: white;
@@ -920,7 +920,6 @@ textarea:hover {
 .user-list{
 	display: none;
 	position: relative;
-	data-container: "body";
 	top: 0px;
 	left: 0px;
 	z-index: 1000;
