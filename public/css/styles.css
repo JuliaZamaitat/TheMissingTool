@@ -913,6 +913,19 @@ textarea:hover {
 	font-weight: 500;
 }
 
+#user-list:hover {
+	opacity: .7;
+}
+
+.user-list{
+	display: none;
+	position: relative;
+	data-container: "body";
+	top: 0px;
+	left: 0px;
+	z-index: 1000;
+}
+
 /* From animate.css */
 .animate {
 	-webkit-animation-duration: .2s;
