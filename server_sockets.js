@@ -62,14 +62,16 @@ module.exports = {
 
 			function filteredUserList() {
 				let filteredNames = [];
-				const userList = Object.values(users[board]);
-				for (let i = 0; i < userList.length; i++) {
-					let name = userList[i];
-					if (!filteredNames.includes(name)) {
-						filteredNames.push(name);
+				if (users[board] !== undefined) {
+					const userList = Object.values(users[board]);
+					for (let i = 0; i < userList.length; i++) {
+						let name = userList[i];
+						if (!filteredNames.includes(name)) {
+							filteredNames.push(name);
+						}
 					}
+					return filteredNames;
 				}
-				return filteredNames;
 			}
 
 			socket.on("mouse_movement", (data) => {

@@ -177,7 +177,8 @@ socket.on("focus-out", (data) => {
 });
 
 socket.on("delete-courser", username => {
-	document.getElementById(username).remove();
+	let usernameElement = document.getElementById(username);
+	if (usernameElement !== null) usernameElement.remove();
 });
 
 $(document).ready(function() {
