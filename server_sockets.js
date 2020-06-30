@@ -6,79 +6,77 @@ var users = {};
 module.exports = {
 	start: function (io) {
 		io.on("connection", function (socket) {
-			let board;
-			console.log("a user connected with id %s", socket.id);
 
-			socket.on("join", function (obj) {
-				console.log(obj);
-				let username = obj.name;
-				let room = obj.boardId;
-				socket.join(room);
-				board = room;
-				updateUserNames({oldName: null, newName: username});
+			let board;
+			console.log("A user connected with id %s", socket.id);
+
+			// User
+			socket.on("join", function (data) {
+				board = data.boardId;
+				socket.join(board);
+				addNewUserName(data.name);
+				updateUserList();
 			});
 
 			socket.on("disconnect", function () {
-				refreshUserNameList();
+				deleteCourser();
+				removeCurrentUserName();
+				updateUserList();
 			});
 
-			socket.on("change-user-list", function (obj) {
-				refreshUserNameList();
-				updateUserNames(obj);
-				deleteCourser(obj.oldName);
-				updateUserNames(obj.name);
+			socket.on("update-user-name", function (name) {
+				deleteCourser();
+				removeCurrentUserName();
+				addNewUserName(name);
+				updateUserList();
 			});
 
-			function deleteCourser(name) {
-				socket.broadcast.to(board).emit("delete-courser", name);
+			function deleteCourser() {
+				socket.broadcast.to(board).emit("delete-courser", socket.user);
 			}
 
-			function updateUserNames(names) {
-				for (let i = 0; i < users[board]; i++) {
-					if (users[board][i] === names.oldName) {
-						users[board].splice(i, 1);
-						i--;
+			function removeCurrentUserName() {
+				if (users[board] !== undefined) {
+					const currentUsers = Object.values(users[board]);
+					for (let i = 0; i < currentUsers.length; i++) {
+						if (currentUsers[i] === socket.user) {
+							currentUsers.splice(i, 1);
+							users[board] = currentUsers;
+							return;
+						}
 					}
 				}
-				socket.user = names.newName;
+			}
+
+			function addNewUserName(name) {
+				socket.user = name;
 				if (!(board in users)) {
 					users[board] = [];
 				}
-				if (!users[board].includes(names.newName)) {
-					users[board].push(names.newName);
+				users[board].push(name);
+			}
+
+			function updateUserList() {
+				io.to(board).emit("update-users", filteredUserList());
+			}
+
+			function filteredUserList() {
+				let filteredNames = [];
+				const userList = Object.values(users[board]);
+				for (let i = 0; i < userList.length; i++) {
+					let name = userList[i];
+					if (!filteredNames.includes(name)) {
+						filteredNames.push(name);
+					}
 				}
-				io.to(board).emit("update-users", users[board]);
+				return filteredNames;
 			}
 
-			function refreshUserNameList() {
-				if (users[board] != null) {
-					const currentUsers = Object.values(users[board]);
-					for (var i = 0; i < currentUsers.length; i++) {
-						if (currentUsers[i] == socket.user) {
-							currentUsers.splice(i, 1);
-							users[board] = currentUsers;
-						}
-					}
-					io.to(board).emit("update-users", users[board]);
-				}
-			}
+			socket.on("mouse_movement", (data) => {
+				socket.broadcast.to(board).emit("all_mouse_movements", data);
+			});
 
-			function removeConnectorsByCardId(cardId) {
-				const filter = {_id: mongoose.Types.ObjectId(board)};
-				const update = {
-					$pull : {
-						connectors : {
-							$or: [{from: cardId}, {to: cardId}]
-						}
-					}
-				};
-				Board.findOneAndUpdate(filter, update, { multi: true },
-					function (err) {
-						if(err) console.log("Something went wrong removing the connectors by card ID");
-					}
-				);
-			}
-
+			// Card updates
 			socket.on("add-link", function (incoming) {
 				const filter = {_id: mongoose.Types.ObjectId(incoming.cardId)};
 				const update = {linkId: incoming.linkId};
@@ -209,29 +207,65 @@ module.exports = {
 				);
 			});
 
-			socket.on("add-connector", function(req) {
+			socket.on("focus-in", (data) => {
+				socket.broadcast.to(board).emit("focus-in", data);
+			});
+
+			socket.on("focus-out", (data) => {
+				socket.broadcast.to(board).emit("focus-out", data);
+			});
+
+			socket.on("comment", function (commentData) {
+				const comment = {
+					sender: commentData.sender,
+					message: commentData.message,
+					timestamp: Date.now()
+				};
+
+				const filter = {_id: mongoose.Types.ObjectId(commentData.cardId)};
+
+				Card.findOneAndUpdate(
+					filter,
+					{$push: {comments: comment}},
+					function (error) {
+						if (error) {
+							console.log(error);
+						}
+					});
+
+				io.to(board).emit("comment", {
+					sender: comment.sender,
+					message: comment.message,
+					timestamp: comment.timestamp,
+					cardId: commentData.cardId
+				});
+			});
+
+			// Connectors
+			socket.on("add-connector", function (req) {
 				const fromCard = req.from;
 				const toCard = req.to;
 
 				const boardIdFilter = {_id: mongoose.Types.ObjectId(board)};
 				const countConnectorsFilter = {
-					$and : [
+					$and: [
 						boardIdFilter,
-						{ connectors : {
-							$elemMatch : {
-								$or: [
-									{ $and: [{from: fromCard}, {to: toCard}] },
-									{ $and: [{from: toCard}, {to: fromCard}] }
-								]
+						{
+							connectors: {
+								$elemMatch: {
+									$or: [
+										{$and: [{from: fromCard}, {to: toCard}]},
+										{$and: [{from: toCard}, {to: fromCard}]}
+									]
+								}
 							}
-						}
 						}
 					]
 				};
 
-				Board.countDocuments(countConnectorsFilter, function(err, count) {
-					if(err) console.log("Something went wrong counting the connectors");
-					if(count === 0) {
+				Board.countDocuments(countConnectorsFilter, function (err, count) {
+					if (err) console.log("Something went wrong counting the connectors");
+					if (count === 0) {
 						let connectorId = new mongoose.mongo.ObjectId();
 						let newConnector = {
 							_id: connectorId,
@@ -246,7 +280,7 @@ module.exports = {
 								}
 							},
 							function (err) {
-								if(err) console.log("Something went wrong adding connector to board");
+								if (err) console.log("Something went wrong adding connector to board");
 								io.to(board).emit("add-connector", JSON.stringify(newConnector));
 							});
 					}
@@ -256,20 +290,37 @@ module.exports = {
 			socket.on("delete-connector", function (connectorId) {
 				const filter = {_id: mongoose.Types.ObjectId(board)};
 				const update = {
-					$pull : {
-						connectors : {
-							_id : connectorId
+					$pull: {
+						connectors: {
+							_id: connectorId
 						}
 					}
 				};
 				Board.findOneAndUpdate(filter, update,
 					function (err) {
-						if(err) console.log("Something went wrong removing the connector");
+						if (err) console.log("Something went wrong removing the connector");
 						socket.broadcast.to(board).emit("delete-connector", connectorId);
 					}
 				);
 			});
 
+			function removeConnectorsByCardId(cardId) {
+				const filter = {_id: mongoose.Types.ObjectId(board)};
+				const update = {
+					$pull: {
+						connectors: {
+							$or: [{from: cardId}, {to: cardId}]
+						}
+					}
+				};
+				Board.findOneAndUpdate(filter, update, {multi: true},
+					function (err) {
+						if (err) console.log("Something went wrong removing the connectors by card ID");
+					}
+				);
+			}
+
+			// Board
 			socket.on("update-board-name", function (req) {
 				const filter = {_id: mongoose.Types.ObjectId(req._id)};
 				const update = {name: req.name};
@@ -304,6 +355,7 @@ module.exports = {
 				});
 			});
 
+			// Chat
 			socket.on("message", function (message) {
 
 				const filter = {_id: mongoose.Types.ObjectId(message.boardId)};
@@ -318,32 +370,6 @@ module.exports = {
 				io.to(board).emit("message", message);
 			});
 
-			socket.on("comment", function (commentData) {
-				const comment = {
-					sender: commentData.sender,
-					message: commentData.message,
-					timestamp: Date.now()
-				};
-
-				const filter = {_id: mongoose.Types.ObjectId(commentData.cardId)};
-
-				Card.findOneAndUpdate(
-					filter,
-					{$push: {comments: comment}},
-					function (error) {
-						if (error) {
-							console.log(error);
-						}
-					});
-
-				io.to(board).emit("comment", {
-					sender: comment.sender,
-					message: comment.message,
-					timestamp: comment.timestamp,
-					cardId: commentData.cardId
-				});
-			});
-
 			socket.on("typing", (data) => {
 				if (data.typing === true)
 					socket.broadcast.to(board).emit("display", data);
@@ -351,17 +377,6 @@ module.exports = {
 					socket.broadcast.to(board).emit("display", data);
 			});
 
-			socket.on("mouse_movement", (data) => {
-				socket.broadcast.to(board).emit("all_mouse_movements", data);
-			});
-
-			socket.on("focus-in", (data) => {
-				socket.broadcast.to(board).emit("focus-in", data);
-			});
-
-			socket.on("focus-out", (data) => {
-				socket.broadcast.to(board).emit("focus-out", data);
-			});
 		});
 	}
 };
