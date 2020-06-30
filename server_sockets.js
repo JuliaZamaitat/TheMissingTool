@@ -32,7 +32,7 @@ module.exports = {
 			});
 
 			function deleteCourser() {
-				socket.broadcast.to(board).emit("delete-courser", socket.name);
+				socket.broadcast.to(board).emit("delete-courser", socket.user);
 			}
 
 			function removeCurrentUserName() {
