@@ -707,6 +707,43 @@ textarea:hover {
 	cursor: pointer;
 }
 
+.item .resizers{
+	width: calc(100% + 30px);
+	height: calc(100% + 30px);
+	left: -15px;
+	top: -15px;
+	border: 1px solid #4286f4;
+	position: absolute;
+}
+.item .resizers .resizer{
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background: white;
+	border: 2px solid gray;
+	position: absolute;
+}
+.item .resizers .resizer.top_left {
+	left: -5px;
+	top: -5px;
+	cursor: nwse-resize; /*resizer cursor*/
+}
+.item .resizers .resizer.top_right {
+	right: -5px;
+	top: -5px;
+	cursor: nesw-resize;
+}
+.item .resizers .resizer.bottom_left {
+	left: -5px;
+	bottom: -5px;
+	cursor: nesw-resize;
+}
+.item .resizers .resizer.bottom_right {
+	right: -5px;
+	bottom: -5px;
+	cursor: nwse-resize;
+}
+
 /* Card functions */
 .buttonContainer {
 	display: none;
