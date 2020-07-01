@@ -1,6 +1,7 @@
 let typing = false,
 	timeout = undefined,
 	messageCount = 0;
+let listOfUsers = [];
 
 $(document).ready(function () {
 
@@ -118,13 +119,9 @@ function typingTimeout() {
 }
 
 socket.on("update-users", (users) => {
-	$("#users").empty();
+	listOfUsers.length = 0;
 	for (var i = 0; i < users.length; i++) {
-		let username = document.createElement("p");
-		username.innerText = users[i];
-		if (users[i] !== window.username) {
-			$("#users").append(username);
-		}
+		listOfUsers.push(users[i]);
 	}
 });
 
@@ -192,6 +189,22 @@ socket.on("focus-out", (data) => {
 });
 
 socket.on("delete-courser", username => {
-	document.getElementById(username).remove();
+	let usernameElement = document.getElementById(username);
+	if (usernameElement !== null) usernameElement.remove();
+});
+
+$(document).ready(function() {
+	$(".pop-user-list").popover({
+		placement: "top",
+		trigger: "hover",
+		html: true,
+		content: function () {
+			let result = $();
+			for (let i = 0; i < listOfUsers.length; i++) {
+				result = result.add("<p>" + listOfUsers[i] + "</p>");
+			}
+			return result;
+		}
+	});
 });
 

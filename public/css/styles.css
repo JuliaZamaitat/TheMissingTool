@@ -903,7 +903,7 @@ textarea:hover {
 	right: 1.5rem;
 	width: 25vw;
 	border-radius: 10px 10px 0 0;
-	z-index: 9999;
+	z-index: 999;
 	overflow: hidden;
 	transition: ease .5s;
 	background-color: white;
@@ -986,6 +986,18 @@ textarea:hover {
 	height: 2rem;
 	padding: .2rem;
 	font-weight: 500;
+}
+
+#user-list:hover {
+	opacity: .7;
+}
+
+.user-list{
+	display: none;
+	position: relative;
+	top: 0px;
+	left: 0px;
+	z-index: 1000;
 }
 
 /* From animate.css */
