@@ -22,14 +22,13 @@ function createCard(data) {
 	const card = document.createElement("div");
 	card.className = "item animate";
 
-	card.style.backgroundColor = data.backgroundColor;
 	card.classList.add(data.shape.toLowerCase());
 
-	if (data.shape === "TRIANGLE") {
-		card.style.borderColor = "transparent transparent " + data.backgroundColor + " transparent";
-		card.style.backgroundColor = "transparent";
+	if (data.shape !== "TRIANGLE") {
+		card.style.backgroundColor = data.backgroundColor;
+	} else {
+		card.style.color = data.backgroundColor; //In css, I'm turning color into bg-color; can't set bg-color directly cuz it's in a pseudoelement
 	}
-
 	card.innerHTML = "<textarea type='text' value=''></textarea>";
 
 	const buttons = document.createElement("div");
@@ -81,15 +80,16 @@ function createCard(data) {
 	function adjustCardButtons() {
 		let colorChangeOptions = buttons.querySelector(".colorChangeOptions");
 		let buttonsFullHeight = $(".buttonContainer").outerHeight(true);
-		if(card.getBoundingClientRect().top - 2.2*buttonsFullHeight < 0) {
+		let cardTop = card.getBoundingClientRect().top - (data.shape !== "TRIANGLE" ? 0.3 : 0) * card.clientHeight;
+		if(cardTop - 2.2*buttonsFullHeight < 0) {
 			colorChangeOptions.style.top = "3.5rem";
 			colorChangeOptions.style.bottom = "auto";
-			if(card.getBoundingClientRect().top - buttonsFullHeight < 0) {
-				buttons.style.bottom = "-6.5rem";
+			if(cardTop - buttonsFullHeight < 0) {
+				buttons.style.bottom = data.shape !== "TRIANGLE" ? "-6.5rem" : "-6rem";
 				buttons.style.top = "auto";
 			} else {
 				buttons.style.bottom = "auto";
-				buttons.style.top = "-6.5rem";
+				buttons.style.top = data.shape !== "TRIANGLE" ? "-6.5rem" : "-2rem";
 			}
 		} else {
 			colorChangeOptions.style.top = "auto";
@@ -103,11 +103,16 @@ function createCard(data) {
 			commentsBox.style.bottom = "auto";
 		} else {
 			commentsBox.style.top = "auto";
-			commentsBox.style.bottom = "120%";
+			commentsBox.style.bottom = data.shape !== "TRIANGLE" ? "120%" : "85%";
 		}
 	}
 
 	function addCardListeners(card, data) {
+		if(data.shape === "TRIANGLE") {
+			card.addEventListener("mousedown", function (e) {
+				setTimeout(function(){card.querySelector("textarea").focus();}, 100);
+			});
+		}
 
 		// Focus listeners
 		card.querySelector("textarea").addEventListener("focusin", function () {
@@ -509,10 +514,10 @@ socket.on("text-update", (data) => {
 socket.on("color-update", (data) => {
 	const card = JSON.parse(data);
 	let elementById = document.getElementById(card._id);
-	if (card.shape === "TRIANGLE") {
-		elementById.style.borderColor = "transparent transparent " + card.backgroundColor + " transparent";
-	} else {
+	if (!elementById.classList.contains("triangle")) {
 		elementById.style.backgroundColor = card.backgroundColor;
+	} else {
+		elementById.style.color = card.backgroundColor;
 	}
 
 });

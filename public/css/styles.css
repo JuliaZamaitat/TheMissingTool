@@ -581,16 +581,41 @@ input[type=range]::-ms-thumb {
 }
 
 .triangle {
-	width: 0;
-	height: 0;
-	border-style: inset;
-	border-width: 0 100px 173px 100px;
-	float: left;
-	transform: rotate(360deg);
-	-ms-transform: rotate(360deg);
-	-moz-transform: rotate(360deg);
-	-webkit-transform: rotate(360deg);
-	-o-transform: rotate(360deg);
+	box-sizing: border-box;
+	--b: 250px;
+	--h: calc(var(--b) / 1.41421356237); /* hypothenuse / sqrt(2) */
+	width: var(--b);
+	padding-bottom: var(--h);
+	pointer-events: none;
+	box-shadow: 0 10px 4px -8px rgba(0, 0, 0, 0.2);
+	outline: none !important;
+	transition: box-shadow ease .2s;
+}
+
+.triangle::before {
+	clip-path: polygon(0 0, 0 100%, 71% 0);
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: currentColor;
+	transform-origin: 0 100%;
+	transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	-moz-transform: rotate(45deg);
+	-webkit-transform: rotate(45deg);
+	-o-transform: rotate(45deg);
+	cursor: pointer;
+	pointer-events: all;
+	border-left: 2px solid var(--border-color);
+	border-top: 2px solid var(--border-color);
+}
+
+.triangle * {
+	pointer-events: all;
+	color: initial;
 }
 
 .rectangle {
@@ -612,18 +637,16 @@ input[type=range]::-ms-thumb {
 }
 
 .triangle textarea {
-	text-align: center;
-	top: 80px;
-	left: -47px;
-	position: relative;
-	width: 93px;
-	height: 93px;
-	margin: 0px;
+	position: absolute;
+	--textarea-size: calc((var(--b) / 3));
+	width: var(--textarea-size);
+	height: var(--textarea-size);
+	left: var(--textarea-size); /*! cant use relative values here */
+	bottom: 0;
 	cursor: pointer;
 	-moz-box-shadow: none;
 	-webkit-box-shadow: none;
 	box-shadow: none;
-
 }
 
 .triangle textarea:focus {
@@ -633,10 +656,18 @@ input[type=range]::-ms-thumb {
 	box-shadow: none;
 }
 
+.triangle:focus-within {
+	box-shadow: 0px 18px 10px -12px rgba(0, 0, 0, 0.2);
+}
+
+.triangle:focus-within  .buttonContainer {
+	display: flex;
+}
+
 .triangle .forward {
 	position: absolute;
-	right: -85px;
-	bottom: -170px;
+	right: 10%;
+	bottom: 0;
 }
 
 .ellipse {
@@ -696,7 +727,7 @@ textarea:hover {
 	left: -9%;
 }
 .triangle .buttonContainer {
-	left: -9rem;
+	top: -2rem;
 }
 .buttonContainer img {
 	width: 1.3rem;
@@ -750,10 +781,17 @@ textarea:hover {
 	left: -25%;
 }
 .triangle .comments-box {
-	width: 20vw;
+	width: 125%;
 	bottom: 25px;
-	left: -11rem;
+	left: -12.5%;
 }
+
+.triangle .visitorContainer {
+	position: absolute;
+	width: 100%;
+	bottom: -20px;
+}
+
 .comments-box_header {
 	font-weight: 500;
 	margin-bottom: 1rem;
@@ -984,8 +1022,9 @@ textarea:hover {
 
 .mvcursor p {
 	display: inline;
+}
 
-  #deleteConnectorBtn {
+#deleteConnectorBtn {
 	cursor: pointer;
 	text-align: center;
 	font-weight: bold;
