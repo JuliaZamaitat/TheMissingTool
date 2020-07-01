@@ -296,6 +296,102 @@ function createCard(data) {
 				});
 			});
 		});
+
+		//resize card listener
+		card.querySelector(".resizeCardBtn").addEventListener("mousedown", function () {
+
+			const top_left = document.createElement("div");
+			top_left.className = "resizer top_left";
+			top_left.id = "top_left";
+
+			const top_right = document.createElement("div");
+			top_right.className = "resizer top_right";
+			top_right.id = "top_right";
+
+			const bottom_left = document.createElement("div");
+			bottom_left.className = "resizer bottom_left";
+			bottom_left.id = "bot_left";
+
+			const bottom_right = document.createElement("div");
+			bottom_right.id = "bot_right";
+			bottom_right.className = "resizer bottom_right";
+
+
+			const resizers = document.createElement("div");
+			resizers.className = "resizers";
+			resizers.id ="resizers";
+			resizers.append(bottom_right, bottom_left, top_right, top_left);
+			addResizeListener(resizers);
+
+			card.append(resizers);
+		});
+
+		let current;
+		function addResizeListener(button) {
+			console.log(button);
+			for (let i = 0; i < button.childElementCount; i++) {
+				const currentResizer = button.children[i];
+				currentResizer.addEventListener("mousedown", function (e) {
+					current = currentResizer;
+					e.preventDefault();
+					window.addEventListener("mousemove", resize);
+					window.addEventListener("mouseup", stopResize);
+					console.log("eventAdded");
+
+				});
+			}
+
+			function resize(e) {
+				let original_height = parseFloat(getComputedStyle(card, null).getPropertyValue("height").replace("px", ""));
+				let original_width = parseFloat(getComputedStyle(card, null).getPropertyValue("width").replace("px", ""));
+				let original_x = card.getBoundingClientRect().left;
+				let original_mouse_x = e.clientX;
+				let ratio = original_width / original_height;
+				console.log("ratio" + ratio);
+				console.log(original_width);
+				console.log(original_height);
+
+
+
+				if (current === document.getElementById("bot_right")) {
+					let width0 = card.style.width.replace("px", "");
+					//card.querySelector("textarea").style.height = (e.clientY - card.offsetTop) + "px";
+					//card.style.height = (e.clientY - card.offsetTop) + "px";
+					card.querySelector("textarea").style.width = e.clientX - card.offsetLeft + "px";
+					card.style.width = e.clientX - card.offsetLeft + "px";
+					let width1 = card.style.width.replace("px", "");
+					let diff = width1-width0;
+					console.log("diff: " + diff);
+
+					card.querySelector("textarea").style.height = e.clientX - card.offsetLeft + "px";
+					card.style.height = e.clientX - card.offsetLeft + "px";
+
+				}
+				else if (current === document.getElementById("bot_left")) {
+					card.querySelector("textarea").style.width = original_width - ((e.clientX) - card.offsetLeft) + "px";
+					card.style.width = original_width - (e.clientX - card.offsetLeft) + "px";
+					card.offsetLeft = original_x + (e.clientX - original_mouse_x) + "px";
+				}
+				else if (current === document.getElementById("top_right")) {
+					card.querySelector("textarea").style.width = (e.pageX - card.getBoundingClientRect().left) + "px";
+					card.style.width = e.pageX - card.getBoundingClientRect().left + "px";
+
+					card.querySelector("textarea").style.height = (e.clientY - card.offsetTop) + "px";
+					card.style.height = (e.clientY - card.offsetTop) + "px";
+				}
+				else if (current === document.getElementById("top_left")) {
+					console.log("top_left");
+				}
+			}
+
+			function stopResize(resizers) {
+				window.removeEventListener("mousemove", resize, false);
+				window.removeEventListener("mouseup", stopResize, false);
+				resizers = document.getElementById("resizers");
+				resizers.remove();
+			}
+		}
+
 	}
 }
 
