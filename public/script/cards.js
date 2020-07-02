@@ -37,7 +37,6 @@ function createCard(data) {
 	buttons.className = "neu-float-panel buttonContainer";
 	buttons.innerHTML = "<span type='button' class='neu-button plain link'><img src='/icons/link.svg'></span><span type='button' class='neu-button plain colorChangeBtn'><div class='colorChangeOptions'></div><img src='/icons/palette.svg'></span><span type='button' class='neu-button plain connectBtn'><img src='/icons/arrow-black.svg'></span><span type='button' class='neu-button plain commentBtn'><img src='/icons/comment.svg'></span><span type='button' class='neu-button plain deleteBtn'><img src='/icons/bin.svg'></span><span type='button' class='resizeCardBtn rounded'><i class='fa fa-arrows-h'></i></span>";
 
-	card.style.width =
 
 	var commentBox = createCommentBox();
 
@@ -58,6 +57,11 @@ function createCard(data) {
 		card.style.left = Math.floor(Math.random() * 301) + 100 + "px";
 		card.style.top = Math.floor(Math.random() * 401) + 100 + "px";
 	}
+	card.style.width = data.size.width;
+	card.style.height = data.size.height;
+	card.querySelector("textarea").style.width = data.size.width;
+	card.querySelector("textarea").style.height = data.size.height;
+
 	card.style.fontSize = data.fontSize;
 	if (data.text != null) {
 		card.querySelector("textarea").value = data.text; //Show the card text if defined
@@ -287,7 +291,7 @@ function createCard(data) {
 				_id: event.currentTarget.parentElement.id,
 				text: event.currentTarget.value
 			});
-			resizeText(card);
+			//resizeText(card);
 		});
 
 		// Change card color
@@ -350,14 +354,16 @@ function createCard(data) {
 
 				if (current === document.getElementById("bot_right")) {
 
-					//card.querySelector("textarea").style.height = (e.clientY - card.offsetTop) + "px";
-					//card.style.height = (e.clientY - card.offsetTop) + "px";
+
 					card.querySelector("textarea").style.width = e.clientX - card.offsetLeft + "px";
 					card.style.width = e.clientX - card.offsetLeft + "px";
-
-					card.querySelector("textarea").style.height = e.clientY - card.offsetTop + "px";
-					card.style.height = e.clientY - card.offsetTop + "px";
-
+					if (data.shape === "SQUARE" || data.shape === "CIRCLE") {
+						card.querySelector("textarea").style.height = card.style.width;
+						card.style.height = card.style.width;
+					} else {
+						card.querySelector("textarea").style.height = e.clientY - card.offsetTop + "px";
+						card.style.height = e.clientY - card.offsetTop + "px";
+					}
 				}
 				socket.emit("update-size", {
 					_id: card.id,
@@ -650,7 +656,7 @@ socket.on("add-connector", connector => {
 socket.on("delete-connector", connectorId => {
 	deleteConnectorById(connectorId);
 });
-
+/*
 function resizeText(card){
 
 
@@ -663,7 +669,7 @@ function resizeText(card){
 	let clientHeight = card.querySelector("textarea").clientHeight;
 
 	//console.log(card.querySelector("textarea").scrollHeight);
-	while (scrollHeight > clientHeight && size > 5) {
+	if (scrollHeight > clientHeight && size > 5) {
 		size = size - 1;
 		card.querySelector("textarea").style.fontSize = size + "px";
 		scrollHeight = card.querySelector("textarea").scrollHeight;
@@ -673,4 +679,4 @@ function resizeText(card){
 		console.log("client" + card.querySelector("textarea").clientWidth);
 	}
 
-}
+}*/

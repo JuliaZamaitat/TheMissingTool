@@ -123,6 +123,10 @@ module.exports = {
 							left: null,
 							top: null
 						},
+						size: {
+							width: null,
+							height: null
+						},
 						boardId: mongoose.Types.ObjectId(board),
 						type: req.type,
 						linkId: req.linkId,
