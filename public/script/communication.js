@@ -182,13 +182,14 @@ socket.on("focus-out", (data) => {
 	document.getElementById(username).style.display = "block";
 	let card = document.getElementById(data.cardId);
 	card.querySelector("textarea").style.border = "none";
-	let container = card.querySelector(".visitorContainer");
 	if(!card.classList.contains("triangle")) {
 		card.querySelector("textarea").style.border = "none";
 	} else {
 		card.style.borderBottom = "none";
 		card.style.setProperty("--border-color", "transparent");
 	}
+	let container = card.querySelector(".visitorContainer");
+	container.style.display = "none";
 });
 
 socket.on("delete-courser", username => {
