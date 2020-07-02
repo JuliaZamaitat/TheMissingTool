@@ -29,12 +29,15 @@ function createCard(data) {
 	} else {
 		card.style.color = data.backgroundColor; //In css, I'm turning color into bg-color; can't set bg-color directly cuz it's in a pseudoelement
 	}
+
 	card.innerHTML = "<textarea type='text' maxlength='120' value=''></textarea>";
 	card.querySelector("textarea").style.fontSize = "50px";
 
 	const buttons = document.createElement("div");
 	buttons.className = "neu-float-panel buttonContainer";
 	buttons.innerHTML = "<span type='button' class='neu-button plain link'><img src='/icons/link.svg'></span><span type='button' class='neu-button plain colorChangeBtn'><div class='colorChangeOptions'></div><img src='/icons/palette.svg'></span><span type='button' class='neu-button plain connectBtn'><img src='/icons/arrow-black.svg'></span><span type='button' class='neu-button plain commentBtn'><img src='/icons/comment.svg'></span><span type='button' class='neu-button plain deleteBtn'><img src='/icons/bin.svg'></span><span type='button' class='resizeCardBtn rounded'><i class='fa fa-arrows-h'></i></span>";
+
+	card.style.width =
 
 	var commentBox = createCommentBox();
 
@@ -352,8 +355,8 @@ function createCard(data) {
 					card.querySelector("textarea").style.width = e.clientX - card.offsetLeft + "px";
 					card.style.width = e.clientX - card.offsetLeft + "px";
 
-					card.querySelector("textarea").style.height = e.clientX - card.offsetLeft + "px";
-					card.style.height = e.clientX - card.offsetLeft + "px";
+					card.querySelector("textarea").style.height = e.clientY - card.offsetTop + "px";
+					card.style.height = e.clientY - card.offsetTop + "px";
 
 				}
 				socket.emit("update-size", {
@@ -564,7 +567,7 @@ function createCardOnClick() {
 			color_picked = true;
 			socket.emit("save-card", {
 				color: $(this).attr("id"),
-				shape: $(this).closest(".create-card-btn").attr("id")
+				shape: $(this).closest(".create-card-btn").attr("id"),
 			});
 		});
 	});
