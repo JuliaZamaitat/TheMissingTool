@@ -31,6 +31,7 @@ function createCard(data) {
 	}
 
 	card.innerHTML = "<textarea type='text' maxlength='120' value=''></textarea>";
+
 	card.querySelector("textarea").style.fontSize = "50px";
 
 	const buttons = document.createElement("div");
@@ -291,7 +292,7 @@ function createCard(data) {
 				_id: event.currentTarget.parentElement.id,
 				text: event.currentTarget.value
 			});
-			//resizeText(card);
+			resizeText(card);
 		});
 
 		// Change card color
@@ -656,27 +657,32 @@ socket.on("add-connector", connector => {
 socket.on("delete-connector", connectorId => {
 	deleteConnectorById(connectorId);
 });
-/*
-function resizeText(card){
+
+function resizeText(card) {
 
 
 	//console.log(id);
 	//console.log($("#" + id));
 	//console.log(card);
-	let size = card.querySelector("textarea").style.fontSize.replace("px","");
+	let size = card.querySelector("textarea").style.fontSize.replace("px", "");
 	//card.querySelector("textarea").style.fontSize = size + "px";
 	let scrollHeight = card.querySelector("textarea").scrollHeight;
 	let clientHeight = card.querySelector("textarea").clientHeight;
 
+
+	//oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'
+
 	//console.log(card.querySelector("textarea").scrollHeight);
-	if (scrollHeight > clientHeight && size > 5) {
+
+	while (scrollHeight > clientHeight ) {
 		size = size - 1;
 		card.querySelector("textarea").style.fontSize = size + "px";
 		scrollHeight = card.querySelector("textarea").scrollHeight;
 		clientHeight = card.querySelector("textarea").clientHeight;
-		size = card.querySelector("textarea").style.fontSize.replace("px","");
+		size = card.querySelector("textarea").style.fontSize.replace("px", "");
 		console.log("scroll" + card.querySelector("textarea").scrollWidth);
 		console.log("client" + card.querySelector("textarea").clientWidth);
 	}
 
-}*/
+}
+
