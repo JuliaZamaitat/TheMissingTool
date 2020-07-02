@@ -6,7 +6,7 @@ describe("The Chat", () => {
 	});
 
 	it("shows the chat header", () => {
-		cy.get("#chatHeader").should("contain", "Chat");
+		cy.get("#chatHeader").should("contain", "Ananas");
 	});
 	it("does not show hidden chat content", () => {
 		cy.get("#chatContent").should("be.not.visible");

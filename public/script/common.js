@@ -37,7 +37,6 @@ function formatHours(hour, minutes) {
 	}
 }
 
-// get cookie value from cookie name
 function cookieValue(name) {
 	let rightRow = document.cookie.split("; ").find(row => row.startsWith(name));
 	if (rightRow !== null && rightRow !== undefined) {

@@ -64,5 +64,5 @@ server.listen(app.get("port"), () => {
 
 module.exports = app;
 
-const socket = require("./server_sockets.js");
+const socket = require("./controller/socket_controller.js");
 socket.start(io);
