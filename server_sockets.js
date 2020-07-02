@@ -209,6 +209,26 @@ module.exports = {
 				);
 			});
 
+			socket.on("update-size", function (req) {
+				const filter = {_id: mongoose.Types.ObjectId(req._id)};
+				const update = {size: {width: req.size.width, height: req.size.height}};
+
+				Card.findOneAndUpdate(filter, update, {new: true},
+					function (err) {
+						if (err) {
+							console.log("Something wrong when updating data!");
+						}
+						io.to(board).emit("size-update", JSON.stringify({
+							_id: req._id,
+							size: {
+								width: req.size.width,
+								height: req.size.height
+							}
+						}));
+					}
+				);
+			});
+
 			socket.on("focus-in", (data) => {
 				socket.broadcast.to(board).emit("focus-in", data);
 			});

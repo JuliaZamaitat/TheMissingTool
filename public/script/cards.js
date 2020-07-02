@@ -125,7 +125,7 @@ function createCard(data) {
 
 		// Moving card listener
 		let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-		card.onmousedown = cardMouseDown;
+		card.querySelector("textarea").onmousedown = cardMouseDown;
 
 		function cardMouseDown(e) {
 			card.classList.remove("animate");
@@ -280,32 +280,11 @@ function createCard(data) {
 
 		// Change text of card listener
 		card.querySelector("textarea").addEventListener("input", function (event) {
-
-
-			//console.log(id);
-			//console.log($("#" + id));
-			//console.log(card);
-			let size = card.querySelector("textarea").style.fontSize.replace("px","");
-			//card.querySelector("textarea").style.fontSize = size + "px";
-
-			//console.log(card.querySelector("textarea").scrollHeight);
-			if (card.querySelector("textarea").scrollHeight > card.querySelector("textarea").clientHeight){
-				size = size - 2;
-				console.log(size);
-				card.querySelector("textarea").style.fontSize = size + "px";
-			}
-			/*
-			else if (card.querySelector("textarea").scrollHeight < card.querySelector("textarea").clientHeight){
-				size = size + 2;
-				if (size > 50){ size = 50;}
-				card.querySelector("textarea").style.fontSize = size + "px";
-			}*/
-
-
 			socket.emit("update-text", {
 				_id: event.currentTarget.parentElement.id,
 				text: event.currentTarget.value
 			});
+			resizeText(card);
 		});
 
 		// Change card color
@@ -343,7 +322,7 @@ function createCard(data) {
 			const resizers = document.createElement("div");
 			resizers.className = "resizers";
 			resizers.id ="resizers";
-			resizers.append(bottom_right, bottom_left, top_right, top_left);
+			resizers.append(bottom_right);
 			addResizeListener(resizers);
 
 			card.append(resizers);
@@ -377,6 +356,14 @@ function createCard(data) {
 					card.style.height = e.clientX - card.offsetLeft + "px";
 
 				}
+				socket.emit("update-size", {
+					_id: card.id,
+					size: {
+						width: card.style.width,
+						height: card.style.height
+					},
+					shape: data.shape
+				});
 			}
 
 			function stopResize(resizers) {
@@ -610,7 +597,15 @@ socket.on("color-update", (data) => {
 	} else {
 		elementById.style.color = card.backgroundColor;
 	}
+});
 
+socket.on("size-update", (data) => {
+	const card = JSON.parse(data);
+	let elementById = document.getElementById(card._id);
+	elementById.style.width = card.size.width;
+	elementById.style.height = card.size.height;
+	elementById.querySelector("textarea").style.width = card.size.width;
+	elementById.querySelector("textarea").style.height = card.size.height;
 });
 
 socket.on("delete-card", (data) => {
@@ -652,3 +647,27 @@ socket.on("add-connector", connector => {
 socket.on("delete-connector", connectorId => {
 	deleteConnectorById(connectorId);
 });
+
+function resizeText(card){
+
+
+	//console.log(id);
+	//console.log($("#" + id));
+	//console.log(card);
+	let size = card.querySelector("textarea").style.fontSize.replace("px","");
+	//card.querySelector("textarea").style.fontSize = size + "px";
+	let scrollHeight = card.querySelector("textarea").scrollHeight;
+	let clientHeight = card.querySelector("textarea").clientHeight;
+
+	//console.log(card.querySelector("textarea").scrollHeight);
+	while (scrollHeight > clientHeight && size > 5) {
+		size = size - 1;
+		card.querySelector("textarea").style.fontSize = size + "px";
+		scrollHeight = card.querySelector("textarea").scrollHeight;
+		clientHeight = card.querySelector("textarea").clientHeight;
+		size = card.querySelector("textarea").style.fontSize.replace("px","");
+		console.log("scroll" + card.querySelector("textarea").scrollWidth);
+		console.log("client" + card.querySelector("textarea").clientWidth);
+	}
+
+}

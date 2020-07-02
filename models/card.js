@@ -6,6 +6,10 @@ const mongoose = require("mongoose"),
 			left: Number,
 			top: Number
 		},
+		size: {
+			width: String,
+			height: String
+		},
 		text: String,
 		fontSize: Number,
 		shape: {
