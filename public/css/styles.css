@@ -239,7 +239,6 @@ p:focus {
 	color: var(--dark-color);
 }
 
-/* MENUBAR */
 #menubar {
 	position: absolute;
 	top: 1.5rem;
@@ -290,7 +289,7 @@ img#hamburger-bars {
 	position: absolute;
 }
 .menu-btn:hover {
-	margin: 0 1rem;
+	margin: 0 0rem;
 	width: 10rem;
 	box-shadow:
 		inset 2px 2px 5px rgba(0,0,0,.2),
@@ -299,6 +298,7 @@ img#hamburger-bars {
 .menu-btn:hover span {
 	opacity: 1;
 }
+
 
 /* MODAL */
 #setNameModal {
