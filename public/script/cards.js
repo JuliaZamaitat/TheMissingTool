@@ -29,11 +29,12 @@ function createCard(data) {
 	} else {
 		card.style.color = data.backgroundColor; //In css, I'm turning color into bg-color; can't set bg-color directly cuz it's in a pseudoelement
 	}
-	card.innerHTML = "<textarea type='text' value=''></textarea>";
+	card.innerHTML = "<textarea type='text' maxlength='120' value=''></textarea>";
+	card.querySelector("textarea").style.fontSize = "50px";
 
 	const buttons = document.createElement("div");
 	buttons.className = "neu-float-panel buttonContainer";
-	buttons.innerHTML = "<span type='button' class='neu-button plain link'><img src='/icons/link.svg'></span><span type='button' class='neu-button plain colorChangeBtn'><div class='colorChangeOptions'></div><img src='/icons/palette.svg'></span><span type='button' class='neu-button plain connectBtn'><img src='/icons/arrow-black.svg'></span><span type='button' class='neu-button plain commentBtn'><img src='/icons/comment.svg'></span><span type='button' class='neu-button plain deleteBtn'><img src='/icons/bin.svg'></span>";
+	buttons.innerHTML = "<span type='button' class='neu-button plain link'><img src='/icons/link.svg'></span><span type='button' class='neu-button plain colorChangeBtn'><div class='colorChangeOptions'></div><img src='/icons/palette.svg'></span><span type='button' class='neu-button plain connectBtn'><img src='/icons/arrow-black.svg'></span><span type='button' class='neu-button plain commentBtn'><img src='/icons/comment.svg'></span><span type='button' class='neu-button plain deleteBtn'><img src='/icons/bin.svg'></span><span type='button' class='resizeCardBtn rounded'><i class='fa fa-arrows-h'></i></span>";
 
 	var commentBox = createCommentBox();
 
@@ -279,6 +280,28 @@ function createCard(data) {
 
 		// Change text of card listener
 		card.querySelector("textarea").addEventListener("input", function (event) {
+
+
+			//console.log(id);
+			//console.log($("#" + id));
+			//console.log(card);
+			let size = card.querySelector("textarea").style.fontSize.replace("px","");
+			//card.querySelector("textarea").style.fontSize = size + "px";
+
+			//console.log(card.querySelector("textarea").scrollHeight);
+			if (card.querySelector("textarea").scrollHeight > card.querySelector("textarea").clientHeight){
+				size = size - 2;
+				console.log(size);
+				card.querySelector("textarea").style.fontSize = size + "px";
+			}
+			/*
+			else if (card.querySelector("textarea").scrollHeight < card.querySelector("textarea").clientHeight){
+				size = size + 2;
+				if (size > 50){ size = 50;}
+				card.querySelector("textarea").style.fontSize = size + "px";
+			}*/
+
+
 			socket.emit("update-text", {
 				_id: event.currentTarget.parentElement.id,
 				text: event.currentTarget.value
@@ -342,45 +365,17 @@ function createCard(data) {
 			}
 
 			function resize(e) {
-				let original_height = parseFloat(getComputedStyle(card, null).getPropertyValue("height").replace("px", ""));
-				let original_width = parseFloat(getComputedStyle(card, null).getPropertyValue("width").replace("px", ""));
-				let original_x = card.getBoundingClientRect().left;
-				let original_mouse_x = e.clientX;
-				let ratio = original_width / original_height;
-				console.log("ratio" + ratio);
-				console.log(original_width);
-				console.log(original_height);
-
-
 
 				if (current === document.getElementById("bot_right")) {
-					let width0 = card.style.width.replace("px", "");
+
 					//card.querySelector("textarea").style.height = (e.clientY - card.offsetTop) + "px";
 					//card.style.height = (e.clientY - card.offsetTop) + "px";
 					card.querySelector("textarea").style.width = e.clientX - card.offsetLeft + "px";
 					card.style.width = e.clientX - card.offsetLeft + "px";
-					let width1 = card.style.width.replace("px", "");
-					let diff = width1-width0;
-					console.log("diff: " + diff);
 
 					card.querySelector("textarea").style.height = e.clientX - card.offsetLeft + "px";
 					card.style.height = e.clientX - card.offsetLeft + "px";
 
-				}
-				else if (current === document.getElementById("bot_left")) {
-					card.querySelector("textarea").style.width = original_width - ((e.clientX) - card.offsetLeft) + "px";
-					card.style.width = original_width - (e.clientX - card.offsetLeft) + "px";
-					card.offsetLeft = original_x + (e.clientX - original_mouse_x) + "px";
-				}
-				else if (current === document.getElementById("top_right")) {
-					card.querySelector("textarea").style.width = (e.pageX - card.getBoundingClientRect().left) + "px";
-					card.style.width = e.pageX - card.getBoundingClientRect().left + "px";
-
-					card.querySelector("textarea").style.height = (e.clientY - card.offsetTop) + "px";
-					card.style.height = (e.clientY - card.offsetTop) + "px";
-				}
-				else if (current === document.getElementById("top_left")) {
-					console.log("top_left");
 				}
 			}
 
