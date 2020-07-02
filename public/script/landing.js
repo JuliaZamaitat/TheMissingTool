@@ -19,7 +19,7 @@ $(document).ready(function () {
 				var text = document.createTextNode(boardData.name);
 				element.appendChild(text);
 				element.id = boardData._id;
-				element.className = "list-group-item boardLink";
+				element.className = "boardLink neu-button plain";
 				element.addEventListener("mousedown", function () {
 					forwardToBoard(element.id);
 				});

@@ -140,12 +140,49 @@ p:focus {
 	text-shadow: 2px 2px 3px rgba(0,0,0,.1), -2px -2px 3px rgba(255,255,255,.8);
 }
 
+ul {
+	list-style-type: none;
+	padding: 0;
+}
+
+/* LANDING */
+#create-board {
+	padding: .5rem .7rem;
+}
+.centered {
+	top: 50vh;
+	position: absolute;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+#lastSeenContainer {
+	margin-top: 3rem;
+}
+#visitedBoards {
+	margin-top: 1rem;
+}
+#visitedBoards li {
+	width: 100%;
+	padding: .7rem 1rem;
+	cursor: pointer;
+	box-shadow: 2px 2px 3px rgba(0, 0, 0, .2);
+	margin-bottom: 1rem;
+}
+#visitedBoards li:hover {
+	color: var(--dark-color) !important;
+	text-shadow: 0 0 1px var(--shadow-color);
+	box-shadow: 5px 5px 10px rgba(0,0,0,.10);
+}
+#create-board span {
+	margin-left: .4rem;
+}
+
 /* BOARD-INPUT */
 #username_container {
 	z-index: 999;
 	position: fixed;
 	top: 1.5rem;
-	left: 1.5rem;
+	left: 4rem;
 	text-transform: capitalize;
 	border-radius: 50px;
 }
@@ -154,7 +191,7 @@ p:focus {
 }
 #username-hint {
 	position: absolute;
-	left: 110%;
+	left: 120%;
 	top: .3rem;
 	white-space: nowrap;
 	background-color: var(--title-color);
@@ -765,7 +802,7 @@ textarea:hover {
 .comments-box {
 	display: none;
 	position: absolute;
-	bottom: 120%;
+	bottom: 115%;
 	height: auto;
 	background-color: white;
 	border-radius: 10px;
@@ -782,7 +819,7 @@ textarea:hover {
 }
 .triangle .comments-box {
 	width: 125%;
-	bottom: 25px;
+	bottom: 20px;
 	left: -12.5%;
 }
 
@@ -995,11 +1032,16 @@ textarea:hover {
 }
 
 #back-button {
-	height: 50px;
-	width: auto;
+	font-size: 1.5rem;
 	position: fixed;
-	left: 100px;
-	bottom: 100px;
+	left: 1.5rem;
+	top: 2.6rem;
+	color: var(--dark-color);
+	text-shadow: 3px 3px 6px rgba(0,0,0,.1);
+	cursor: pointer;
+}
+#back-button:hover {
+	text-shadow: 0 0 3px var(--shadow-color);
 }
 
 .mvcursor {
