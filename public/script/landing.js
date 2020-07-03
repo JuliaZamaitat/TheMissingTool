@@ -3,7 +3,7 @@ $(document).ready(function () {
 	let visitedBoardsString = cookieValue("visitedBoards");
 	if (visitedBoardsString !== null) {
 		const visitedBoards = toArray(visitedBoardsString);
-		if (visitedBoards.isArray()) {
+		if (Array.isArray(visitedBoards)) {
 			visitedBoards.forEach(board => {
 				if (board !== null && board !== window.windowBoardId) {
 					appendToCookieList(board);
