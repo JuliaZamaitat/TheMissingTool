@@ -149,6 +149,7 @@ socket.on("focus-in", (data) => {
 	let card = document.getElementById(data.cardId);
 	let borderType = "2px solid ";
 	if(!card.classList.contains("triangle")) {
+		card.querySelector("textarea").style.border = getFocusColor(card.style.backgroundColor);
 		card.querySelector("textarea").style.border = borderType + getFocusColor(card.style.backgroundColor);
 	} else {
 		let focusColor = getFocusColor(card.style.color);

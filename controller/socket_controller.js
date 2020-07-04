@@ -1,6 +1,6 @@
 const mongoose = require("mongoose"),
-	Card = require("./models/card"),
-	Board = require("./models/board");
+	Card = require("../models/card_model"),
+	Board = require("../models/board_model");
 var users = {};
 
 module.exports = {
@@ -357,7 +357,7 @@ module.exports = {
 				});
 			});
 
-			// Chat
+			// Chat: Jannis
 			socket.on("message", function (message) {
 
 				const filter = {_id: mongoose.Types.ObjectId(message.boardId)};
