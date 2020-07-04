@@ -14,7 +14,7 @@ run with nodemon:
 
 `npm start`
 
-seed the Database with
+seed the Database with:
 
 `npm run db:seed`
 

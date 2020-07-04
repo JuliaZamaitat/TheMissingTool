@@ -1,8 +1,8 @@
 "use strict";
 
 const mongoose = require("mongoose"),
-	Card = require("../models/card"),
-	Board = require("../models/board");
+	Card = require("../models/card_model"),
+	Board = require("../models/board_model");
 
 
 mongoose.connect(

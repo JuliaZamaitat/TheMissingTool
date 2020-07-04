@@ -276,7 +276,6 @@ ul {
 	color: var(--dark-color);
 }
 
-/* MENUBAR */
 #menubar {
 	position: absolute;
 	top: 1.5rem;
@@ -327,7 +326,7 @@ img#hamburger-bars {
 	position: absolute;
 }
 .menu-btn:hover {
-	margin: 0 1rem;
+	margin: 0 0rem;
 	width: 10rem;
 	box-shadow:
 		inset 2px 2px 5px rgba(0,0,0,.2),
@@ -336,6 +335,7 @@ img#hamburger-bars {
 .menu-btn:hover span {
 	opacity: 1;
 }
+
 
 /* MODAL */
 #setNameModal {
@@ -902,7 +902,7 @@ textarea:hover {
 	right: 1.5rem;
 	width: 25vw;
 	border-radius: 10px 10px 0 0;
-	z-index: 9999;
+	z-index: 999;
 	overflow: hidden;
 	transition: ease .5s;
 	background-color: white;
@@ -985,6 +985,18 @@ textarea:hover {
 	height: 2rem;
 	padding: .2rem;
 	font-weight: 500;
+}
+
+#user-list:hover {
+	opacity: .7;
+}
+
+.user-list{
+	display: none;
+	position: relative;
+	top: 0px;
+	left: 0px;
+	z-index: 1000;
 }
 
 /* From animate.css */

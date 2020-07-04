@@ -1,6 +1,6 @@
 const mongoose = require("mongoose"),
-	Card = require("./models/card"),
-	Board = require("./models/board");
+	Card = require("../models/card_model"),
+	Board = require("../models/board_model");
 var users = {};
 
 module.exports = {
@@ -62,14 +62,16 @@ module.exports = {
 
 			function filteredUserList() {
 				let filteredNames = [];
-				const userList = Object.values(users[board]);
-				for (let i = 0; i < userList.length; i++) {
-					let name = userList[i];
-					if (!filteredNames.includes(name)) {
-						filteredNames.push(name);
+				if (users[board] !== undefined) {
+					const userList = Object.values(users[board]);
+					for (let i = 0; i < userList.length; i++) {
+						let name = userList[i];
+						if (!filteredNames.includes(name)) {
+							filteredNames.push(name);
+						}
 					}
+					return filteredNames;
 				}
-				return filteredNames;
 			}
 
 			socket.on("mouse_movement", (data) => {
@@ -355,7 +357,7 @@ module.exports = {
 				});
 			});
 
-			// Chat
+			// Chat: Jannis
 			socket.on("message", function (message) {
 
 				const filter = {_id: mongoose.Types.ObjectId(message.boardId)};
