@@ -129,7 +129,7 @@ function addToLoastVisitedCookie(parentBoard) {
 	let arrayOfVisitedBoards = [];
 	let currentCookie = cookieValue("visitedBoards");
 	if (currentCookie !== null) {
-		arrayOfVisitedBoards = currentCookie.toString().split(",");
+		arrayOfVisitedBoards = toArray(currentCookie);
 	}
 	if (!arrayOfVisitedBoards.includes(parentBoard)) {
 		arrayOfVisitedBoards.push(parentBoard);
