@@ -120,8 +120,8 @@ module.exports = {
 						_id: new mongoose.mongo.ObjectId(),
 						backgroundColor: req.color,
 						position: {
-							left: null,
-							top: null
+							left: req.position.left,
+							top: req.position.top
 						},
 						boardId: mongoose.Types.ObjectId(board),
 						type: req.type,
