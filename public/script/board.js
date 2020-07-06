@@ -38,27 +38,20 @@ $(document).ready(function () {
 			updateBoardName($("#board-name-input").val().trim());
 		});
 
-		$("#create-child-board").on("click", createChildBoardAndForward);
+		$("#create-new-board").on("click", createRootBoard);
 		$("#share-board").on("click", copyToClipboard);
 		$("#folder").on("click", showOrHide);
 		$("#back-button").on("click", goToParent);
 		zoomOnclick();
 	}
-	$("#create-board").on("click", createBoard);
+	$("#create-board").on("click", createRootBoard);
 });
 
 
-function createBoard() {
+function createRootBoard() {
 	$.post("/",
 		function (boardId) {
 			console.log("IN HERE");
-			forwardToBoard(boardId);
-		});
-}
-
-function createChildBoardAndForward() {
-	$.post("/board/" + window.windowBoardId,
-		function (boardId) {
 			forwardToBoard(boardId);
 		});
 }
