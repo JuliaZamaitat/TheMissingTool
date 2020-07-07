@@ -50,9 +50,6 @@ function createCard(data) {
 	if (data.position.left !== null && data.position.right !== null) {
 		card.style.left = data.position.left + "px";
 		card.style.top = data.position.top + "px";
-	} else {
-		card.style.left = Math.floor(Math.random() * 301) + 100 + "px";
-		card.style.top = Math.floor(Math.random() * 401) + 100 + "px";
 	}
 	card.style.fontSize = data.fontSize;
 	if (data.text != null) {
@@ -471,7 +468,11 @@ function createCardOnClick() {
 			if (!color_picked) {
 				socket.emit("save-card", {
 					color: getRandomColor(),
-					shape: $(this).attr("id")
+					shape: $(this).attr("id"),
+					position: {
+						left: Math.floor(Math.random() * 301) + 100,
+						top: Math.floor(Math.random() * 401) + 100
+					}
 				});
 			} else {
 				return;
@@ -486,7 +487,11 @@ function createCardOnClick() {
 			color_picked = true;
 			socket.emit("save-card", {
 				color: $(this).attr("id"),
-				shape: $(this).closest(".create-card-btn").attr("id")
+				shape: $(this).closest(".create-card-btn").attr("id"),
+				position: {
+					left: Math.floor(Math.random() * 301) + 100,
+					top: Math.floor(Math.random() * 401) + 100
+				}
 			});
 		});
 	});
