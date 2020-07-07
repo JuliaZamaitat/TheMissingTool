@@ -100,7 +100,7 @@ function createCard(data) {
 			commentsBox.style.bottom = "auto";
 		} else {
 			commentsBox.style.top = "auto";
-			commentsBox.style.bottom = data.shape !== "TRIANGLE" ? "120%" : "85%";
+			commentsBox.style.bottom = data.shape !== "TRIANGLE" ? "120%" : "80%";
 		}
 	}
 
