@@ -75,13 +75,13 @@ function drawConnector(id, from, to) {
 	});
 }
 
-$("#connector .line").on("mouseleave", function (e) {
+$("#connector .line").on("mouseleave", function () {
 	deleteConnectorBtn.trigger("mouseleave");
 });
-deleteConnectorBtn.on("mouseenter", function (e) {
+deleteConnectorBtn.on("mouseenter", function () {
 	deleteConnectorBtn.css("display", "inline");
 });
-deleteConnectorBtn.on("mouseleave", function (e) {
+deleteConnectorBtn.on("mouseleave", function () {
 	deleteConnectorBtn.css("display", "none");
 });
 
@@ -123,7 +123,6 @@ function deleteConnectorsByCardId(cardId) {
 		c.parentNode.removeChild(c);
 	});
 }
-
 
 socket.on("add-connector", connector => {
 	connector = JSON.parse(connector);

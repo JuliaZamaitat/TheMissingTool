@@ -8,9 +8,9 @@ window.username = cookieValue("username");
 $(document).ready(function () {
 	socket.emit("join", {boardId: window.windowBoardId, name: window.username});
 	$("#username-hint").fadeIn();
-	setTimeout(function() {
+	setTimeout(function () {
 		$("#username-hint").fadeOut();
-	},3000);
+	}, 3000);
 	toggleBoardPath();
 });
 
@@ -47,13 +47,13 @@ function cookieValue(name) {
 }
 
 function toggleBoardPath() {
-	$("#collapse-path").click(function() {
+	$("#collapse-path").click(function () {
 		$("#board_path").hide();
 		$(this).hide();
 		$("#expand-path").show();
 	});
 
-	$("#expand-path").click(function() {
+	$("#expand-path").click(function () {
 		$("#board_path").show();
 		$(this).hide();
 		$("#collapse-path").show();

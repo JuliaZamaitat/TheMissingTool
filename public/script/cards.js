@@ -41,7 +41,6 @@ $.get("/board/" + window.windowBoardId + "/cards", (cards) => {
 });
 
 function createCard(data) {
-
 	const card = document.createElement("div");
 	card.id = data._id;
 	card.className = "item animate";
@@ -268,7 +267,7 @@ function createCard(data) {
 		card.querySelector(".commentInput").addEventListener("keydown", function (e) {
 			if ((e.keyCode === 10 || e.keyCode === 13)) {
 				if (!e.shiftKey) {
-					sendComment({
+					socket.emit("comment", {
 						cardId: card.id,
 						message: $(this).val(),
 						sender: window.username
@@ -357,7 +356,7 @@ function convertToLink(card) {
 	}
 }
 
-// Web-sockets
+// Listening to sockets
 socket.on("new-card", (data) => {
 	const card = JSON.parse(data);
 	createCard(card);
@@ -373,8 +372,8 @@ socket.on("pos-update", (data) => {
 
 socket.on("delete-card", (data) => {
 	const card = JSON.parse(data);
-	$("#" + card._id).remove(); //remove the card element by its ID
-	deleteConnectorsByCardId(card._id); //remove all connectors associated with card
+	$("#" + card._id).remove();
+	deleteConnectorsByCardId(card._id);
 });
 
 socket.on("text-update", (data) => {
@@ -404,7 +403,7 @@ socket.on("display-card", (data) => {
 
 socket.on("remove-card", (cardId) => {
 	document.getElementById(cardId).remove();
-	deleteConnectorsByCardId(cardId); //remove all connectors associated with card
+	deleteConnectorsByCardId(cardId);
 });
 
 $(document).on("mousemove", function (event) {
