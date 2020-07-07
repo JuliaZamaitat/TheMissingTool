@@ -1,29 +1,29 @@
 $(document).ready(function () {
 
-	let currentBoards = cookieValue("visitedBoards");
-	if (currentBoards !== null) {
-		const arrayOfVisitedBoards = currentBoards.toString().split(",");
-		if (arrayOfVisitedBoards !== null && arrayOfVisitedBoards !== undefined) {
-			arrayOfVisitedBoards.forEach(boardId => {
-				if (boardId !== null && boardId !== window.windowBoardId) {
-					appendNameToBoardList(boardId);
+	let visitedBoardsString = cookieValue("visitedBoards");
+	if (visitedBoardsString !== null) {
+		const visitedBoards = toArray(visitedBoardsString);
+		if (Array.isArray(visitedBoards)) {
+			visitedBoards.forEach(board => {
+				if (board !== null && board !== window.windowBoardId) {
+					appendToCookieList(board);
 				}
 			});
 		}
 	}
 
-	function appendNameToBoardList(boardId) {
-		$.get("/board/" + boardId + "/data", (boardData) => {
-			if (boardData !== "" && boardData.name !== "") {
-				var element = document.createElement("li");
-				var text = document.createTextNode(boardData.name);
-				element.appendChild(text);
-				element.id = boardData._id;
-				element.className = "boardLink neu-button plain";
-				element.addEventListener("mousedown", function () {
-					forwardToBoard(element.id);
+	function appendToCookieList(boardId) {
+		$.get("/board/" + boardId + "/data", (board) => {
+			if (board !== "" && board.name !== "") {
+				const li = document.createElement("li");
+				const text = document.createTextNode(board.name);
+				li.appendChild(text);
+				li.id = board._id;
+				li.className = "list-group-item boardLink";
+				li.addEventListener("mousedown", function () {
+					forwardToBoard(li.id);
 				});
-				document.getElementById("visitedBoards").appendChild(element);
+				document.getElementById("visitedBoards").appendChild(li);
 			}
 		});
 	}
