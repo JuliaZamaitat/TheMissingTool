@@ -1,3 +1,8 @@
+function addComments(card, data) {
+	card.append(createCommentBox());
+	prependComments(card, data);
+}
+
 function createCommentBox() {
 	const commentBox = document.createElement("div");
 	commentBox.className = "comments-box neu-float-panel";
@@ -5,10 +10,10 @@ function createCommentBox() {
 	return commentBox;
 }
 
-function addComments(data, card) {
+function prependComments(card, data) {
 	let comments = data.comments;
-	for (let i = 0; i < comments.length  ; i++) {
-		const commentContainer  = addComment(comments[i]);
+	for (let i = 0; i < comments.length; i++) {
+		const commentContainer = addComment(comments[i]);
 		card.querySelector(".commentField").prepend(commentContainer);
 	}
 }
@@ -30,4 +35,5 @@ function addComment(comment) {
 	commentContainer.innerHTML = "<div class='comment-head'><p class='senderName'>" + comment.sender + "</p><p class='timestamp'>" + dateString + "</p></div><p class='commentMessage'>" + comment.message + "</p>";
 	return commentContainer;
 }
+
 

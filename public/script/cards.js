@@ -1,52 +1,86 @@
 let selectedConnector = null;
 
+// Left Toolbar
+(function () {
+	let color_picked = false;
+
+	$(".create-card-btn").each(function () {
+		$(this).mousedown(() => {
+			if (!color_picked) {
+				socket.emit("save-card", {
+					color: getRandomColor(),
+					shape: $(this).attr("id")
+				});
+			} else {
+				return;
+			}
+		}).mouseup(() => {
+			color_picked = false;
+		});
+	});
+
+	$(".color-btn").each(function () {
+		$(this).mousedown(() => {
+			color_picked = true;
+			socket.emit("save-card", {
+				color: $(this).attr("id"),
+				shape: $(this).closest(".create-card-btn").attr("id")
+			});
+		});
+	});
+})();
+
+// Load cards
 $.get("/board/" + window.windowBoardId + "/cards", (cards) => {
 	cards.forEach(createCard);
 	$.get("/board/" + window.windowBoardId + "/connectors", connectors => {
-		connectors.forEach(function(c) {
-			drawConnector(c._id, c.from, c.to);
+		connectors.forEach(function (connector) {
+			drawConnector(connector._id, connector.from, connector.to);
 		});
 	});
 });
 
-window.addEventListener("pageshow", function (event) {
-	const historyTraversal = event.persisted ||
-		(typeof window.performance != "undefined" &&
-			window.performance.navigation.type === 2);
-	if (historyTraversal) {
-		window.location.reload();
-	}
-});
-
 function createCard(data) {
+
 	const card = document.createElement("div");
+	card.id = data._id;
 	card.className = "item animate";
 
-	card.classList.add(data.shape.toLowerCase());
+	// Color
+	addColor(card, data);
 
-	if (data.shape !== "TRIANGLE") {
-		card.style.backgroundColor = data.backgroundColor;
-	} else {
-		card.style.color = data.backgroundColor; //In css, I'm turning color into bg-color; can't set bg-color directly cuz it's in a pseudoelement
-	}
+	// Text
 	card.innerHTML = "<textarea type='text' value=''></textarea>";
+	card.style.fontSize = data.fontSize;
+	if (data.text != null) {
+		card.querySelector("textarea").value = data.text; //Show the card text if defined
+	}
+	card.querySelector("textarea").addEventListener("input", function (event) {
+		socket.emit("update-text", {
+			_id: event.currentTarget.parentElement.id,
+			text: event.currentTarget.value
+		});
+	});
 
+	// Buttons
 	const buttons = document.createElement("div");
 	buttons.className = "neu-float-panel buttonContainer";
 	buttons.innerHTML = "<span type='button' class='neu-button plain link'><img src='/icons/link.svg'></span><span type='button' class='neu-button plain colorChangeBtn'><div class='colorChangeOptions'></div><img src='/icons/palette.svg'></span><span type='button' class='neu-button plain connectBtn'><img src='/icons/arrow-black.svg'></span><span type='button' class='neu-button plain commentBtn'><img src='/icons/comment.svg'></span><span type='button' class='neu-button plain deleteBtn'><img src='/icons/bin.svg'></span>";
+	card.prepend(buttons);
+	assignColorsToChange(card);
+	addButtonListener();
 
-	var commentBox = createCommentBox();
+	// Comments
+	addComments(card, data);
+	addCommentListeners();
 
+	// Visitor
 	const visitor = document.createElement("div");
 	visitor.className = "visitorContainer";
-
-	card.prepend(buttons);
-	card.append(commentBox);
 	card.append(visitor);
-	card.id = data._id;
+	addFocusListener();
 
-	assignColorsToChange(card);
-
+	// Position
 	if (data.position.left !== null && data.position.right !== null) {
 		card.style.left = data.position.left + "px";
 		card.style.top = data.position.top + "px";
@@ -54,75 +88,19 @@ function createCard(data) {
 		card.style.left = Math.floor(Math.random() * 301) + 100 + "px";
 		card.style.top = Math.floor(Math.random() * 401) + 100 + "px";
 	}
-	card.style.fontSize = data.fontSize;
-	if (data.text != null) {
-		card.querySelector("textarea").value = data.text; //Show the card text if defined
-	}
+	addMovementListener();
 
-	addComments(data, card);
-
+	// Link
 	if (data.linkId !== null && data.linkId !== undefined) {
 		convertToLink(card);
-
 	} else {
-		let querySelector = card.querySelector(".link");
-		querySelector.addEventListener("mousedown", function () {
-			$.post("/board/" + window.windowBoardId,
-				function (boardId) {
-					socket.emit("add-link", {linkId: boardId, cardId: card.id});
-				});
-		});
+		addLinkListener();
 	}
-	addCardListeners(card, data);
+
+	// Append card
 	document.getElementById("overlay").appendChild(card);
 
-	//Flip card elements to the bottom side if the card is too high up
-	function adjustCardButtons() {
-		let colorChangeOptions = buttons.querySelector(".colorChangeOptions");
-		let buttonsFullHeight = $(".buttonContainer").outerHeight(true);
-		let cardTop = card.getBoundingClientRect().top - (data.shape !== "TRIANGLE" ? 0.3 : 0) * card.clientHeight;
-		if(cardTop - 2.2*buttonsFullHeight < 0) {
-			colorChangeOptions.style.top = "3.5rem";
-			colorChangeOptions.style.bottom = "auto";
-			if(cardTop - buttonsFullHeight < 0) {
-				buttons.style.bottom = data.shape !== "TRIANGLE" ? "-6.5rem" : "-6rem";
-				buttons.style.top = "auto";
-			} else {
-				buttons.style.bottom = "auto";
-				buttons.style.top = data.shape !== "TRIANGLE" ? "-6.5rem" : "-2rem";
-			}
-		} else {
-			colorChangeOptions.style.top = "auto";
-			colorChangeOptions.style.bottom = "3.5rem";
-		}
-	}
-	function adjustCommentsBox() {
-		let commentsBox = card.querySelector(".comments-box");
-		if(card.getBoundingClientRect().top - $(".comments-box").outerHeight(true) < 0) {
-			commentsBox.style.top = "120%";
-			commentsBox.style.bottom = "auto";
-		} else {
-			commentsBox.style.top = "auto";
-			commentsBox.style.bottom = data.shape !== "TRIANGLE" ? "120%" : "85%";
-		}
-	}
-
-	function addCardListeners(card, data) {
-		if(data.shape === "TRIANGLE") {
-			card.addEventListener("mousedown", function (e) {
-				setTimeout(function(){card.querySelector("textarea").focus();}, 100);
-			});
-		}
-
-		// Focus listeners
-		card.querySelector("textarea").addEventListener("focusin", function () {
-			socket.emit("focus-in", {cardId: card.id, username: window.username});
-		});
-		card.querySelector("textarea").addEventListener("focusout", function () {
-			socket.emit("focus-out", {cardId: card.id, username: window.username});
-		});
-
-		// Moving card listener
+	function addMovementListener() {
 		let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
 		card.onmousedown = cardMouseDown;
 
@@ -211,8 +189,9 @@ function createCard(data) {
 		card.ondragstart = function () {
 			return false;
 		};
+	}
 
-		// Connect card listener
+	function addButtonListener() {
 		card.querySelector(".connectBtn").addEventListener("mousedown", function (event) {
 			event.stopPropagation();
 			const card1 = event.currentTarget.parentElement.parentElement;
@@ -226,16 +205,15 @@ function createCard(data) {
 				$("#connectors").after(connector);
 			});
 
-
 			$(document).mousedown(e => {
 				$(document).off("mousemove mousedown");
 				elementMouseIsOver = document.elementFromPoint(e.clientX, e.clientY);
-				while(elementMouseIsOver !== null && !elementMouseIsOver.classList.contains("item"))
+				while (elementMouseIsOver !== null && !elementMouseIsOver.classList.contains("item"))
 					elementMouseIsOver = elementMouseIsOver.parentElement;
 				const card2 = elementMouseIsOver;
 				$("#connectors + #temp").remove();
 
-				if(card2 !== null && card1.id !== card2.id) { // If neither aborted nor connected to same card
+				if (card2 !== null && card1.id !== card2.id) {
 					const connector = {
 						boardId: window.windowBoardId,
 						from: card1.id,
@@ -245,20 +223,48 @@ function createCard(data) {
 				}
 			});
 		});
-
-		// Delete card listener
 		card.querySelector(".deleteBtn").addEventListener("mousedown", function (event) {
-			event.stopPropagation();  //prevent bubbling process so the whole card doesn't start dragging
+			event.stopPropagation();
 			const cardToDelete = {_id: event.currentTarget.parentElement.parentElement.id};
 			socket.emit("delete-card", cardToDelete);
 		});
+		let colorButtons = card.querySelectorAll(".color-change-btn");
+		colorButtons.forEach(function (btn) {
+			btn.addEventListener("mousedown", function (event) {
+				socket.emit("update-color", {
+					_id: card.id,
+					backgroundColor: event.currentTarget.id,
+					shape: data.shape
+				});
+			});
+		});
+	}
 
-		// Show comment
+	function adjustCardButtons() {
+		let colorChangeOptions = buttons.querySelector(".colorChangeOptions");
+		let buttonsFullHeight = $(".buttonContainer").outerHeight(true);
+		let cardTop = card.getBoundingClientRect().top - (data.shape !== "TRIANGLE" ? 0.3 : 0) * card.clientHeight;
+		if (cardTop - 2.2 * buttonsFullHeight < 0) {
+			colorChangeOptions.style.top = "3.5rem";
+			colorChangeOptions.style.bottom = "auto";
+			if (cardTop - buttonsFullHeight < 0) {
+				buttons.style.bottom = data.shape !== "TRIANGLE" ? "-6.5rem" : "-6rem";
+				buttons.style.top = "auto";
+			} else {
+				buttons.style.bottom = "auto";
+				buttons.style.top = data.shape !== "TRIANGLE" ? "-6.5rem" : "-2rem";
+			}
+		} else {
+			colorChangeOptions.style.top = "auto";
+			colorChangeOptions.style.bottom = "3.5rem";
+		}
+	}
+
+	function addCommentListeners() {
 		card.querySelector(".commentBtn").addEventListener("mousedown", function () {
 			$("#" + card.id + " .comments-box").fadeIn();
 			adjustCommentsBox();
 		});
-
 		card.querySelector(".commentInput").addEventListener("keydown", function (e) {
 			if ((e.keyCode === 10 || e.keyCode === 13)) {
 				if (!e.shiftKey) {
@@ -271,157 +277,49 @@ function createCard(data) {
 				}
 			}
 		});
-
 		card.querySelector(".close-commentBox").addEventListener("mousedown", function () {
 			$("#" + card.id + " .comments-box").fadeOut();
 			adjustCardButtons();
 		});
+	}
 
-		// Change text of card listener
-		card.querySelector("textarea").addEventListener("input", function (event) {
-			socket.emit("update-text", {
-				_id: event.currentTarget.parentElement.id,
-				text: event.currentTarget.value
+	function adjustCommentsBox() {
+		let commentsBox = card.querySelector(".comments-box");
+		if (card.getBoundingClientRect().top - $(".comments-box").outerHeight(true) < 0) {
+			commentsBox.style.top = "120%";
+			commentsBox.style.bottom = "auto";
+		} else {
+			commentsBox.style.top = "auto";
+			commentsBox.style.bottom = data.shape !== "TRIANGLE" ? "120%" : "85%";
+		}
+	}
+
+	function addFocusListener() {
+		if (data.shape === "TRIANGLE") {
+			card.addEventListener("mousedown", function (e) {
+				setTimeout(function () {
+					card.querySelector("textarea").focus();
+				}, 100);
 			});
+		}
+		card.querySelector("textarea").addEventListener("focusin", function () {
+			socket.emit("focus-in", {cardId: card.id, username: window.username});
 		});
-
-		// Change card color
-		let colorButtons = card.querySelectorAll(".color-change-btn");
-		colorButtons.forEach(function (btn) {
-			btn.addEventListener("mousedown", function (event) {
-				socket.emit("update-color", {
-					_id: card.id,
-					backgroundColor: event.currentTarget.id,
-					shape: data.shape
-				});
-			});
+		card.querySelector("textarea").addEventListener("focusout", function () {
+			socket.emit("focus-out", {cardId: card.id, username: window.username});
 		});
 	}
-}
 
-// Get center coordinates of element
-function getCenter(el) {
-	//Eventually consider zoom for calculations
-	let zoom = document.getElementById("overlay").style.zoom;
-	if(!zoom)
-		zoom = 1;
-	else
-		zoom = zoom.replace("%", "") / 100;
-	let width = el.clientWidth | $(el).outerWidth(), //Special cases for triangle shape
-		height = el.clientHeight | $(el).outerHeight(),
-		offsetLeft = el.offsetLeft,
-		offsetTop = el.offsetTop;
-	return {
-		x: zoom * (offsetLeft + width / 2),
-		y: zoom * (offsetTop + height / 2)
-	};
-}
-
-// Calculate styling for a potential line, given the coordinates
-function calcLineStyleFromCoords(x1, y1, x2, y2) {
-	let a = x1 - x2,
-		b = y1 - y2,
-		length = Math.sqrt(a * a + b * b);
-	let sx = (x1 + x2) / 2,
-		sy = (y1 + y2) / 2;
-	let x = sx - length / 2,
-		y = sy;
-	let angle = Math.PI - Math.atan2(-b, a);
-
-	return "width: " + length + "px; "
-				+ "-moz-transform: rotate(" + angle + "rad); "
-				+ "-webkit-transform: rotate(" + angle + "rad); "
-				+ "-o-transform: rotate(" + angle + "rad); "
-				+ "-ms-transform: rotate(" + angle + "rad); "
-				+ "top: " + y + "px; "
-				+ "left: " + x + "px; ";
-}
-
-// Create a line with the necessary syling
-function createLine(x1, y1, x2, y2) {
-	let line = document.createElement("div");
-	line.classList.add("line");
-	let styles = calcLineStyleFromCoords(x1, y1, x2, y2);
-	line.setAttribute("style", styles);
-	return line;
-}
-
-let deleteConnectorBtn = $("#deleteConnectorBtn");
-// Draw connector between two cards
-function drawConnector(id, from, to) {
-	let card1 = document.getElementById(from);
-	let card2 = document.getElementById(to);
-	let card1Center = getCenter(card1);
-	let card2Center = getCenter(card2);
-
-	let connectorEl = createLine(card1Center.x, card1Center.y, card2Center.x, card2Center.y);
-	connectorEl.setAttribute("data-from", card1.id);
-	connectorEl.setAttribute("data-to", card2.id);
-	connectorEl.id = id;
-
-	$("#connectors").append(connectorEl);
-	$(connectorEl).hover(e => {
-		deleteConnectorBtn.trigger("mouseenter");
-		selectedConnector = id;
-		const h = deleteConnectorBtn.height()/2, w = deleteConnectorBtn.width()/2;
-		deleteConnectorBtn.css({ top:  e.clientY - h, left:  e.clientX - w });
-		deleteConnectorBtn.on("click", function(e) {
-			if(e.which === 1) {
-				socket.emit("delete-connector", selectedConnector);
-				deleteConnectorById(selectedConnector);
-				deleteConnectorBtn.trigger("mouseleave");
-			}
+	function addLinkListener() {
+		let querySelector = card.querySelector(".link");
+		querySelector.addEventListener("mousedown", function () {
+			$.post("/board/" + window.windowBoardId,
+				function (boardId) {
+					socket.emit("add-link", {linkId: boardId, cardId: card.id});
+				});
 		});
-	});
-}
+	}
 
-$("#connector .line").on("mouseleave", function(e) {
-	deleteConnectorBtn.trigger("mouseleave");
-});
-deleteConnectorBtn.on("mouseenter", function(e) {
-	deleteConnectorBtn.css("display", "inline");
-});
-deleteConnectorBtn.on("mouseleave", function(e) {
-	deleteConnectorBtn.css("display", "none");
-});
-
-// Observer to recalculate all connectors on zoom change
-let observer = new MutationObserver(() => {
-	document.getElementById("connectors").childNodes.forEach(function(c) {
-		let fromCardCenter = getCenter(document.getElementById(c.dataset.from));
-		let toCardCenter = getCenter(document.getElementById(c.dataset.to));
-		c.style = calcLineStyleFromCoords(fromCardCenter.x, fromCardCenter.y, toCardCenter.x, toCardCenter.y);
-	});
-});
-observer.observe(document.getElementById("overlay"), { attributeFilter : ["style"] });
-
-// Get all connectors attached to this card
-function getConnectorsByCardId(cardId) {
-	return document.querySelectorAll(".line[data-from='" + cardId + "'],.line[data-to='" + cardId + "']");
-}
-
-// Recalculate all connectors attached to this card
-function adjustConnectorsByCardId(cardId) {
-	getConnectorsByCardId(cardId).forEach(c => {
-		let otherCardId = c.dataset.from == cardId ? c.dataset.to : c.dataset.from;
-		let cardCenter = getCenter(document.getElementById(cardId));
-		let otherCardCenter = getCenter(document.getElementById(otherCardId));
-		c.style = calcLineStyleFromCoords(cardCenter.x, cardCenter.y, otherCardCenter.x, otherCardCenter.y);
-	});
-}
-
-// Delete a connector by its ID
-function deleteConnectorById(id) {
-	let c = document.getElementById(id);
-	if(c === null) return;
-	c.parentNode.removeChild(c);
-}
-
-// Delete all connectors attached to this card
-function deleteConnectorsByCardId(cardId) {
-	getConnectorsByCardId(cardId).forEach(c => {
-		c.parentNode.removeChild(c);
-	});
 }
 
 function convertToLink(card) {
@@ -459,40 +357,7 @@ function convertToLink(card) {
 	}
 }
 
-assignColorsToCreate();
-
-createCardOnClick();
-
-function createCardOnClick() {
-	var color_picked = false;
-
-	$(".create-card-btn").each(function () {
-		$(this).mousedown(() => {
-			if (!color_picked) {
-				socket.emit("save-card", {
-					color: getRandomColor(),
-					shape: $(this).attr("id")
-				});
-			} else {
-				return;
-			}
-		}).mouseup(() => {
-			color_picked = false;
-		});
-	});
-
-	$(".color-btn").each(function () {
-		$(this).mousedown(() => {
-			color_picked = true;
-			socket.emit("save-card", {
-				color: $(this).attr("id"),
-				shape: $(this).closest(".create-card-btn").attr("id")
-			});
-		});
-	});
-}
-
-// listening to web-sockets
+// Web-sockets
 socket.on("new-card", (data) => {
 	const card = JSON.parse(data);
 	createCard(card);
@@ -504,6 +369,12 @@ socket.on("pos-update", (data) => {
 	cardById.style.left = card.position.left + "px";
 	cardById.style.top = card.position.top + "px";
 	adjustConnectorsByCardId(card._id);
+});
+
+socket.on("delete-card", (data) => {
+	const card = JSON.parse(data);
+	$("#" + card._id).remove(); //remove the card element by its ID
+	deleteConnectorsByCardId(card._id); //remove all connectors associated with card
 });
 
 socket.on("text-update", (data) => {
@@ -522,12 +393,6 @@ socket.on("color-update", (data) => {
 
 });
 
-socket.on("delete-card", (data) => {
-	const card = JSON.parse(data);
-	$("#" + card._id).remove(); //remove the card element by its ID
-	deleteConnectorsByCardId(card._id); //remove all connectors associated with card
-});
-
 socket.on("card-to-link", (data) => {
 	const card = document.getElementById(data);
 	convertToLink(card);
@@ -543,21 +408,12 @@ socket.on("remove-card", (cardId) => {
 });
 
 $(document).on("mousemove", function (event) {
-	socket.emit("mouse_movement", {coords: {x: event.pageX, y: event.pageY}, username: window.username});
+	socket.emit("mouse-movement", {coords: {x: event.pageX, y: event.pageY}, username: window.username});
 });
 
-socket.on("all_mouse_movements", (data) => {
+socket.on("mouse-movement", (data) => {
 	var el = getCursorElement(data);
 	el.style.left = data.coords.x + "px";
 	el.style.top = data.coords.y + "px";
 	$("body").append(el);
-});
-
-socket.on("add-connector", connector => {
-	connector = JSON.parse(connector);
-	drawConnector(connector._id, connector.from, connector.to);
-});
-
-socket.on("delete-connector", connectorId => {
-	deleteConnectorById(connectorId);
 });
