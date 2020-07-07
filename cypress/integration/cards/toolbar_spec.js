@@ -16,11 +16,12 @@ describe("The Card Toolbar", () => {
 		cy.get("#32cb31bde3464f14678934ca > .buttonContainer > .connectBtn").should("be.visible");
 		cy.get("#32cb31bde3464f14678934ca > .buttonContainer > .commentBtn").should("be.visible");
 		cy.get("#32cb31bde3464f14678934ca > .buttonContainer > .deleteBtn").should("be.visible");
+		cy.get("#32cb31bde3464f14678934ca > .buttonContainer > .deleteBtn").click();
+		cy.get("#32cb31bde3464f14678934ca").should("not.exist");
 	});
 
 	it("shows the side toolbar", () => {
 		cy.get("#toolbar > .toolbar-btn").should("be.visible");
 		cy.get("#toolbar > #SQUARE").should("have.css", "width", "32.5px");
-		cy.get("#toolbar > #SQUARE").trigger("mouseover");
 	});
 });
