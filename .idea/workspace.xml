@@ -1,7 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="BRANCH:TMT-115new" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </select>
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="4aeae4f9-cb33-4104-9fac-6d9e8be56c4a" name="Default Changelist" comment="" />
+    <list default="true" id="4aeae4f9-cb33-4104-9fac-6d9e8be56c4a" name="Default Changelist" comment="initialize cards with fixed random position">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_30_06_20,_16_24_[Default_Changelist]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_30_06_20__16_24__Default_Changelist_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/socket_controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/socket_controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/script/communication.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/script/communication.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/partials/chat.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/views/partials/chat.ejs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -10,18 +41,128 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="TMT-166" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="JsFlowSettings">
+    <service-enabled>true</service-enabled>
+    <exe-path />
+    <other-services-enabled>true</other-services-enabled>
+    <auto-save>true</auto-save>
+  </component>
+  <component name="ProjectId" id="1ePmVokeoiWgITQ5kguYIMiYzRO" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
+    <property name="Git.Branch.Popup.ShowAllRemotes" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="JavaScript.Libraries" />
+    <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
   </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
   <component name="TaskManager">
+    <task id="LOCAL-00001" summary="initialize cards with fixed random position">
+      <created>1594029271910</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1594029271910</updated>
+    </task>
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="4aeae4f9-cb33-4104-9fac-6d9e8be56c4a" name="Default Changelist" comment="initialize cards with fixed random position" />
+      <created>1594231629419</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1594231629419</updated>
+      <workItem from="1594231633584" duration="195000" />
+      <workItem from="1594231840399" duration="3530000" />
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="2" />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="TMT-115new" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="initialize cards with fixed random position" />
+    <option name="LAST_COMMIT_MESSAGE" value="initialize cards with fixed random position" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="2165" y="340" key="#com.intellij.ide.scriptingContext.ui.PerFileMappingsDialogWrapper" timestamp="1594231593533">
+      <screen x="1440" y="23" width="1920" height="1057" />
+    </state>
+    <state x="2165" y="340" key="#com.intellij.ide.scriptingContext.ui.PerFileMappingsDialogWrapper/0.23.1440.877/1440.23.1920.1057@1440.23.1920.1057" timestamp="1594231593533" />
+    <state x="1936" y="192" key="SettingsEditor" timestamp="1594231787785">
+      <screen x="1440" y="23" width="1920" height="1057" />
+    </state>
+    <state x="1936" y="192" key="SettingsEditor/0.23.1440.877/1440.23.1920.1057@1440.23.1920.1057" timestamp="1594231787785" />
+    <state x="320" y="201" key="Vcs.Push.Dialog.v2" timestamp="1594029276168">
+      <screen x="0" y="23" width="1440" height="877" />
+    </state>
+    <state x="320" y="201" key="Vcs.Push.Dialog.v2/0.23.1440.877@0.23.1440.877" timestamp="1594029276168" />
+    <state x="2054" y="170" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1594231026346">
+      <screen x="1440" y="23" width="1920" height="1057" />
+    </state>
+    <state x="2054" y="170" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.23.1440.877/1440.23.1920.1057@1440.23.1920.1057" timestamp="1594231026346" />
+    <state x="2117" y="456" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1594230109469">
+      <screen x="1440" y="23" width="1920" height="1057" />
+    </state>
+    <state x="2117" y="456" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1440.877/1440.23.1920.1057@1440.23.1920.1057" timestamp="1594230109469" />
+    <state x="508" y="382" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1440.877@0.23.1440.877" timestamp="1594026735997" />
+    <state x="2149" y="313" width="586" height="490" key="find.popup" timestamp="1594235484562">
+      <screen x="1440" y="23" width="1920" height="1057" />
+    </state>
+    <state x="2149" y="313" width="586" height="490" key="find.popup/0.23.1440.877/1440.23.1920.1057@1440.23.1920.1057" timestamp="1594235484562" />
+    <state x="2092" y="260" width="670" height="676" key="search.everywhere.popup" timestamp="1594234598872">
+      <screen x="1440" y="23" width="1920" height="1057" />
+    </state>
+    <state x="2092" y="260" width="670" height="676" key="search.everywhere.popup/0.23.1440.877/1440.23.1920.1057@1440.23.1920.1057" timestamp="1594234598872" />
   </component>
 </project>
