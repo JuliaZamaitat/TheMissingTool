@@ -1,47 +1,43 @@
 let selectedConnector = null;
 
-// Left Toolbar
-(function () {
-	let color_picked = false;
-
-	$(".create-card-btn").each(function () {
-		$(this).mousedown(() => {
-			if (!color_picked) {
-				socket.emit("save-card", {
-					color: getRandomColor(),
-					shape: $(this).attr("id")
-				});
-			} else {
-				return;
-			}
-		}).mouseup(() => {
-			color_picked = false;
-		});
-	});
-
-	$(".color-btn").each(function () {
-		$(this).mousedown(() => {
-			color_picked = true;
-			socket.emit("save-card", {
-				color: $(this).attr("id"),
-				shape: $(this).closest(".create-card-btn").attr("id")
+$(document).ready(function () {
+	$.get("/board/" + window.windowBoardId + "/cards", (cards) => {
+		cards.forEach(createCard);
+		$.get("/board/" + window.windowBoardId + "/connectors", connectors => {
+			connectors.forEach(function (connector) {
+				drawConnector(connector._id, connector.from, connector.to);
 			});
 		});
 	});
-})();
 
-$(document).on("mousemove", function (event) {
-	socket.emit("mouse-movement", {coords: {x: event.pageX, y: event.pageY}, username: window.username});
-});
+	(function () {
+		let color_picked = false;
 
-// Load cards
-$.get("/board/" + window.windowBoardId + "/cards", (cards) => {
-	cards.forEach(createCard);
-	$.get("/board/" + window.windowBoardId + "/connectors", connectors => {
-		connectors.forEach(function (connector) {
-			drawConnector(connector._id, connector.from, connector.to);
+		$(".create-card-btn").each(function () {
+			$(this).mousedown(() => {
+				if (!color_picked) {
+					socket.emit("save-card", {
+						color: getRandomColor(),
+						shape: $(this).attr("id")
+					});
+				} else {
+					return;
+				}
+			}).mouseup(() => {
+				color_picked = false;
+			});
 		});
-	});
+
+		$(".color-btn").each(function () {
+			$(this).mousedown(() => {
+				color_picked = true;
+				socket.emit("save-card", {
+					color: $(this).attr("id"),
+					shape: $(this).closest(".create-card-btn").attr("id")
+				});
+			});
+		});
+	})();
 });
 
 function createCard(data) {
@@ -49,10 +45,8 @@ function createCard(data) {
 	card.id = data._id;
 	card.className = "item animate";
 
-	// Color
 	addColor(card, data);
 
-	// Text
 	card.innerHTML = "<textarea type='text' value=''></textarea>";
 	card.style.fontSize = data.fontSize;
 	if (data.text != null) {
@@ -65,7 +59,6 @@ function createCard(data) {
 		});
 	});
 
-	// Buttons
 	const buttons = document.createElement("div");
 	buttons.className = "neu-float-panel buttonContainer";
 	buttons.innerHTML = "<span type='button' class='neu-button plain link'><img src='/icons/link.svg'></span><span type='button' class='neu-button plain colorChangeBtn'><div class='colorChangeOptions'></div><img src='/icons/palette.svg'></span><span type='button' class='neu-button plain connectBtn'><img src='/icons/arrow-black.svg'></span><span type='button' class='neu-button plain commentBtn'><img src='/icons/comment.svg'></span><span type='button' class='neu-button plain deleteBtn'><img src='/icons/bin.svg'></span>";
@@ -73,17 +66,14 @@ function createCard(data) {
 	assignColorsToChange(card);
 	addButtonListener();
 
-	// Comments
 	addComments(card, data);
 	addCommentListeners();
 
-	// Visitor
 	const visitor = document.createElement("div");
 	visitor.className = "visitorContainer";
 	card.append(visitor);
 	addFocusListener();
 
-	// Position
 	if (data.position.left !== null && data.position.right !== null) {
 		card.style.left = data.position.left + "px";
 		card.style.top = data.position.top + "px";
@@ -93,14 +83,12 @@ function createCard(data) {
 	}
 	addMovementListener();
 
-	// Link
 	if (data.linkId !== null && data.linkId !== undefined) {
 		convertToLink(card);
 	} else {
 		addLinkListener();
 	}
 
-	// Append card
 	document.getElementById("overlay").appendChild(card);
 
 	function addMovementListener() {
@@ -360,7 +348,6 @@ function convertToLink(card) {
 	}
 }
 
-// Listening to sockets
 socket.on("new-card", (data) => {
 	const card = JSON.parse(data);
 	createCard(card);
@@ -410,9 +397,3 @@ socket.on("remove-card", (cardId) => {
 	deleteConnectorsByCardId(cardId);
 });
 
-socket.on("mouse-movement", (data) => {
-	var el = getCursorElement(data);
-	el.style.left = data.coords.x + "px";
-	el.style.top = data.coords.y + "px";
-	$("body").append(el);
-});
