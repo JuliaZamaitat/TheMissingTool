@@ -40,6 +40,10 @@ app.use("/", indexRouter);
 app.set("view engine", "ejs");
 app.set("port", process.env.NODEPORT || process.env.PORT || 8080);
 
+app.use((req,res) => {
+	res.render("error.ejs");
+});
+
 const socket = require("./controller/socket_controller.js");
 socket.start(io);
 

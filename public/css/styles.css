@@ -178,11 +178,11 @@ ul {
 }
 
 /* BOARD-INPUT */
-#username_container {
+#username-container {
 	z-index: 999;
 	position: fixed;
 	top: 1.5rem;
-	left: 4rem;
+	left: 1.5rem;
 	text-transform: capitalize;
 	border-radius: 50px;
 }
@@ -211,7 +211,7 @@ ul {
 	left: -13px;
 	top: .8rem;
 }
-#board-names_container {
+#board-names-container {
 	position: fixed;
 	top: 1.5rem;
 	text-align: center;
@@ -221,7 +221,7 @@ ul {
 	align-items: center;
 	text-transform: capitalize;
 }
-#board-name_input {
+#board-name-input {
 	padding: 1rem 1.5rem;
 	margin: 0 .5rem;
 }
@@ -229,7 +229,6 @@ ul {
 	cursor: pointer;
 	text-align: center;
 	float: left;
-	margin-right: 1.5rem;
 }
 #collapse-path, #expand-path {
 	width: 1rem;
@@ -239,17 +238,17 @@ ul {
 #expand-path {
 	display: none;
 }
-#board_path p {
+#board-path p {
 	float: left;
 	cursor: pointer;
 }
-#board_path p:hover {
+#board-path p:hover {
 	opacity: .5;
 }
 #folder {
 	display: none;
 }
-#board-name_input:focus-within #folder {
+#board-name-input:focus-within #folder {
 	opacity: 0;
 }
 #dropdown-content {
@@ -414,26 +413,6 @@ body.modal-open {
 	color: white;
 }
 
-.toolbar-btn span {
-	position: absolute;
-	top: .5rem;
-	left: 3rem;
-	white-space: nowrap;
-	opacity: 0;
-	transition: ease-in-out 1s;
-	color: white;
-	display: none;
-}
-
-.toolbar-btn:hover {
-	width: 8.5rem;
-}
-
-.toolbar-btn:hover span {
-	opacity: 1;
-	display: inline-block;
-}
-
 .toolbar-btn:hover .color-options {
 	opacity: 1;
 	display: block;
@@ -469,86 +448,10 @@ body.modal-open {
 	top: 0;
 	left: 0;
 }
-#zoom-container {
+#main-container {
 	width: 100vw;
 	height: 100vh;
 	overflow: scroll;
-}
-#zoom-container:hover {
-	cursor: move;
-}
-#zoom-btn_container {
-	position: absolute;
-	left: 1.5rem;
-	bottom: 1.5rem;
-	overflow: hidden;
-	padding: 0 .5rem;
-	align-items: center;
-	z-index: 999;
-}
-#zoom-slider {
-	height: .5rem;
-	padding: 0;
-	margin: 0 .5rem;
-	cursor: pointer;
-	color: white;
-	background-color: var(--dark-panel-color);
-	border-radius: 5px;
-	box-shadow:
-		inset 1px 1px 2px rgba(0,0,0,.2),
-		inset -2px -2px 2px rgba(255,255,255);
-}
-input[type=range] {
-	-webkit-appearance: none;
-}
-input[type=range]:focus {
-	outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
-  }
-input[type=range]::-webkit-slider-thumb {
-	-webkit-appearance: none;
-	width: 1.2rem;
-	height: 1.2rem;
-	border-radius: 50%;
-	box-shadow:
-		3px 3px 6px rgba(0, 0, 0, .2),
-		-5px -5px 10px rgba(255, 255, 255, .9);
-	background-image: linear-gradient(to bottom right, var(--light-color), var(--dark-color));
-	transition: ease .2s;
-	border: 3px solid var(--light-panel-color);
-}
-input[type=range]::-moz-range-thumb {
-	-webkit-appearance: none;
-	width: 1.2rem;
-	height: 1.2rem;
-	border-radius: 50%;
-	box-shadow:
-		3px 3px 6px rgba(0, 0, 0, .2),
-		-5px -5px 10px rgba(255, 255, 255, .9);
-	background-image: linear-gradient(to bottom right, var(--light-color), var(--dark-color));
-	transition: ease .2s;
-	border: 3px solid var(--light-panel-color);
-}
-input[type=range]::-ms-thumb {
-	-webkit-appearance: none;
-	width: 1.2rem;
-	height: 1.2rem;
-	border-radius: 50%;
-	box-shadow:
-		3px 3px 6px rgba(0, 0, 0, .2),
-		-5px -5px 10px rgba(255, 255, 255, .9);
-	background-image: linear-gradient(to bottom right, var(--light-color), var(--dark-color));
-	transition: ease .2s;
-	border: 3px solid var(--light-panel-color);
-}
-.zoom-btn {
-	background: none;
-	font-size: 1.5rem;
-}
-.zoom-btn:hover {
-	color: var(--dark-color);
-}
-#zoom-size {
-	margin: 0 .7rem;
 }
 
 /* CARDS */
@@ -1043,10 +946,10 @@ textarea:hover {
 }
 
 #back-button {
-	font-size: 1.5rem;
+	font-size: 3rem;
 	position: fixed;
 	left: 1.5rem;
-	top: 2.6rem;
+	bottom: 1.5rem;
 	color: var(--dark-color);
 	text-shadow: 3px 3px 6px rgba(0,0,0,.1);
 	cursor: pointer;
@@ -1089,4 +992,11 @@ textarea:hover {
 	border-radius: 50%;
 	display: none;
 
+}
+
+.error-container {
+	width: 100%;
+	text-align: center;
+	height: 50%;
+	margin: 25% auto;
 }

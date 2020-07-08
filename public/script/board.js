@@ -1,5 +1,3 @@
-var zoom = "100";
-
 $(document).ready(function () {
 	if (window.windowBoardId !== "board") {
 		$.get("/board/" + window.windowBoardId + "/path", (path) => {
@@ -42,7 +40,6 @@ $(document).ready(function () {
 		$("#share-board").on("click", copyToClipboard);
 		$("#folder").on("click", showOrHide);
 		$("#back-button").on("click", goToParent);
-		zoomOnclick();
 	}
 	$("#create-board").on("click", createRootBoard);
 });
@@ -82,44 +79,6 @@ function goToParent() {
 				forwardToBoard(parentBoard);
 			}
 		});
-}
-
-// zooming
-function zoomOnclick() {
-	var interval = 0;
-	$("#zoom-in").mousedown(function () {
-		interval = setInterval(zoomIn(), 50);
-	}).mouseup(function () {
-		clearInterval(interval);
-	});
-
-	$("#zoom-out").mousedown(function () {
-		interval = setInterval(zoomOut(), 50);
-	}).mouseup(function () {
-		clearInterval(interval);
-	});
-
-	$("#zoom-slider").on("input", function () {
-		const zoomVal = document.getElementById("zoom-slider").value;
-		document.getElementById("overlay").style.zoom = zoomVal + "%";
-		document.getElementById("zoom-size").innerHTML = zoomVal + "%";
-	});
-
-	function zoomIn() {
-		zoom++;
-		document.getElementById("overlay").style.zoom = zoom + "%";
-		document.getElementById("zoom-slider").value = zoom;
-		document.getElementById("zoom-size").innerHTML = zoom + "%";
-		if (zoom > 200) return;
-	}
-
-	function zoomOut() {
-		zoom--;
-		document.getElementById("overlay").style.zoom = zoom + "%";
-		document.getElementById("zoom-slider").value = zoom;
-		document.getElementById("zoom-size").innerHTML = zoom + "%";
-		if (zoom < 1) return;
-	}
 }
 
 function addToLoastVisitedCookie(parentBoard) {

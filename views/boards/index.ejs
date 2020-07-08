@@ -1,19 +1,19 @@
 <body>
-<div id="zoom-container">
+<div id="main-container">
 		<div id="overlay"></div>
 		<div id="connectors"></div>
 		<span id="deleteConnectorBtn" class="gradient">&times;</span>
 </div>
-<div id="username_container" class="neu-panel neu-outline neu-edit-panel">
+<div id="username-container" class="neu-panel neu-outline neu-edit-panel">
     <p class="neu-title" contenteditable="true" id="user-name"><%= username %></p>
     <span class="neu-hint neu-float-panel" id="username-hint">Edit your username</span>
 </div>
 <!-- <div id="users"></div> -->
-<div id="board-names_container" class="flex-container">
+<div id="board-names-container" class="flex-container">
     <img id="collapse-path" src="/icons/collapse.svg">
     <img id="expand-path" src="/icons/expand.svg">
-    <div id="board_path"></div>
-    <div class="neu-panel neu-edit-panel" id="board-name_input">
+    <div id="board-path"></div>
+    <div class="neu-panel neu-edit-panel" id="board-name-input">
         <p class="neu-title" contenteditable="true" id="board-name"><%= board.name %></p>
         <i id="folder" class="fa fa-angle-down fa-lg glow" aria-hidden="true"></i></div>
     <div id="dropdown-content" class="neu-float-panel"></div>
@@ -24,32 +24,25 @@
 <!-- Left toolbar -->
 <div id="toolbar" class="neu-panel">
     <button type="button" class="neu-button gradient toolbar-btn create-card-btn" id="SQUARE">
-        <img src="/icons/square.svg"><span>Square</span>
+        <img src="/icons/square.svg">
         <div class="color-options"></div>
     </button>
     <button type="button" class="neu-button gradient toolbar-btn create-card-btn" id="RECTANGLE">
-        <img src="/icons/rectangle.svg"><span>Rectangle</span>
+        <img src="/icons/rectangle.svg">
         <div class="color-options"></div>
     </button>
     <button type="button" class="neu-button gradient toolbar-btn create-card-btn" id="CIRCLE">
-        <img src="/icons/circle.svg"><span>Circle</span>
+        <img src="/icons/circle.svg">
         <div class="color-options"></div>
     </button>
     <button type="button" class="neu-button gradient toolbar-btn create-card-btn" id="ELLIPSE">
-        <img src="/icons/oval.svg"><span>Ellipse</span>
+        <img src="/icons/oval.svg">
         <div class="color-options"></div>
     </button>
     <button type="button" class="neu-button gradient toolbar-btn create-card-btn" id="TRIANGLE">
-        <img src="/icons/triangle.svg"><span>Triangle</span>
+        <img src="/icons/triangle.svg">
         <div class="color-options"></div>
     </button>
-</div>
-
-<div id="zoom-btn_container" class="neu-panel flex-container">
-    <button id="zoom-out" class="zoom-btn neu-title neu-link">&mdash;</button>
-    <input type="range" min="1" max="200" step="1" value="100" id="zoom-slider">
-    <button id="zoom-in" class="zoom-btn neu-title neu-link">&plus;</button>
-    <p id="zoom-size" class="neu-title">100%</p>
 </div>
 
 <!-- Top menubar -->
