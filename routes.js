@@ -8,14 +8,14 @@ var appController = require("./controller/app_controller");
 router.get("/", indexController.redirectToIndex);
 router.get("/board", indexController.getIndex);
 
-router.post("/", boardController.create_board);
-router.post("/board/:boardId", boardController.create_child_board);
-router.get("/board/:boardId", appController.setUsername, boardController.get_board);
-router.get("/board/:boardId/path", boardController.get_path);
-router.get("/board/:boardId/data", boardController.get_board_data);
+router.post("/", boardController.createBoard);
+router.post("/board/:boardId", boardController.createChildBoard);
+router.get("/board/:boardId", appController.setUsername, boardController.getBoard);
+router.get("/board/:boardId/path", boardController.getPath);
+router.get("/board/:boardId/data", boardController.getBoardData);
 router.get("/board/:boardId/cards", boardController.getCards);
-router.get("/board/:boardId/messages", boardController.get_messages);
-router.get("/board/:boardId/connectors", boardController.get_connectors);
+router.get("/board/:boardId/messages", boardController.getMessages);
+router.get("/board/:boardId/connectors", boardController.getConnectors);
 router.get("/board/:boardId/cards/:cardId/linked-board", boardController.getLinkedBoard);
 router.get("/get-linked-board/:cardId", boardController.getLinkedBoard);
 

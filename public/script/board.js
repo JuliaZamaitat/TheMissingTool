@@ -7,8 +7,8 @@ $(document).ready(function () {
 					url: "/board/" + path[i] + "/data",
 					success: function (boardData) {
 						if (boardData !== "") {
-							var element = document.createElement("p");
-							var text = document.createTextNode(boardData.name + "/");
+							const element = document.createElement("p");
+							const text = document.createTextNode(boardData.name + "/");
 							element.appendChild(text);
 							element.id = boardData._id;
 							element.addEventListener("mousedown", function () {
@@ -21,15 +21,14 @@ $(document).ready(function () {
 				});
 			}
 		});
-		//If the modal for the board name is rendered then show it
+
 		if ($("#setNameModal")) {
 			$("#setNameModal").modal("show");
-			//Keep submit button disabled as long as input is empty
 			$("#board-name-input").on("input", () => {
 				$("#board-name-button").prop("disabled", !$("#board-name-input").val().trim());
 			});
 		}
-		//Update board name via modal
+
 		$("#board-name-form").submit(e => {
 			e.preventDefault();
 			$("#setNameModal").modal("hide");
@@ -44,11 +43,9 @@ $(document).ready(function () {
 	$("#create-board").on("click", createRootBoard);
 });
 
-
 function createRootBoard() {
 	$.post("/",
 		function (boardId) {
-			console.log("IN HERE");
 			forwardToBoard(boardId);
 		});
 }
@@ -96,12 +93,10 @@ function addToLoastVisitedCookie(parentBoard) {
 	}
 }
 
-// change location
 function forwardToBoard(newBoard) {
 	location.href = "/board/" + newBoard;
 }
 
-// update board name
 $("#board-name").on("focusout", () => {
 	updateBoardName($("#board-name").text());
 });
@@ -118,7 +113,6 @@ socket.on("board-name-update", (data) => {
 	$("#board-name").text(name);
 });
 
-// delete board
 $("#delete-board").on("click", () => {
 	socket.emit("delete-board", {_id: window.windowBoardId});
 });
