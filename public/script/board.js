@@ -29,10 +29,11 @@ $(document).ready(function () {
 			});
 		}
 
-		$("#board-name-form").submit(e => {
+		//Update board name via modal
+		$("#board-name-form").on("submit", e => {
 			e.preventDefault();
 			$("#setNameModal").modal("hide");
-			updateBoardName($("#board-name-input").val().trim());
+			updateBoardName($("#board-name-input-modal").val().trim());
 		});
 
 		$("#create-new-board").on("click", createRootBoard);
@@ -101,10 +102,10 @@ $("#board-name").on("focusout", () => {
 	updateBoardName($("#board-name").text());
 });
 
-function updateBoardName(newName) {
+function updateBoardName(name) {
 	socket.emit("update-board-name", {
-		_id: windowBoardId,
-		name: newName
+		_id: window.windowBoardId,
+		name: name
 	});
 }
 
