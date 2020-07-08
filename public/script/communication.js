@@ -126,7 +126,7 @@ socket.on("update-users", (users) => {
 });
 
 $("#user-name").on("focusout", function () {
-	document.cookie = "username=" + $(this).text();
+	document.cookie = "username=" +  $(this).text();
 	window.username = cookieValue("username");
 	socket.emit("update-user-name", window.username);
 });
@@ -148,7 +148,7 @@ socket.on("focus-in", (data) => {
 	document.getElementById(username).style.display = "none";
 	let card = document.getElementById(data.cardId);
 	let borderType = "2px solid ";
-	if (!card.classList.contains("triangle")) {
+	if(!card.classList.contains("triangle")) {
 		card.querySelector("textarea").style.border = getFocusColor(card.style.backgroundColor);
 		card.querySelector("textarea").style.border = borderType + getFocusColor(card.style.backgroundColor);
 	} else {
@@ -180,7 +180,7 @@ socket.on("focus-out", (data) => {
 	document.getElementById(username).style.display = "block";
 	let card = document.getElementById(data.cardId);
 	card.querySelector("textarea").style.border = "none";
-	if (!card.classList.contains("triangle")) {
+	if(!card.classList.contains("triangle")) {
 		card.querySelector("textarea").style.border = "none";
 	} else {
 		card.style.borderBottom = "none";
@@ -195,7 +195,7 @@ socket.on("delete-courser", username => {
 	if (usernameElement !== null) usernameElement.remove();
 });
 
-$(document).ready(function () {
+$(document).ready(function() {
 	$(".pop-user-list").popover({
 		placement: "top",
 		trigger: "hover",
