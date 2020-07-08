@@ -30,10 +30,10 @@ $(document).ready(function () {
 			});
 		}
 		//Update board name via modal
-		$("#board-name-form").submit(e => {
+		$("#board-name-form").on("submit", e => {
 			e.preventDefault();
 			$("#setNameModal").modal("hide");
-			updateBoardName($("#board-name-input").val().trim());
+			updateBoardName($("#board-name-input-modal").val().trim());
 		});
 
 		$("#create-new-board").on("click", createRootBoard);
@@ -48,7 +48,6 @@ $(document).ready(function () {
 function createRootBoard() {
 	$.post("/",
 		function (boardId) {
-			console.log("IN HERE");
 			forwardToBoard(boardId);
 		});
 }
@@ -106,14 +105,16 @@ $("#board-name").on("focusout", () => {
 	updateBoardName($("#board-name").text());
 });
 
-function updateBoardName(newName) {
+function updateBoardName(name) {
+	console.log("NAME " + name);
 	socket.emit("update-board-name", {
-		_id: windowBoardId,
-		name: newName
+		_id: window.windowBoardId,
+		name: name
 	});
 }
 
 socket.on("board-name-update", (data) => {
+	console.log("RES " + data);
 	const name = JSON.parse(data).name;
 	$("#board-name").text(name);
 });
