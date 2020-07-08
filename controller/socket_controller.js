@@ -74,8 +74,8 @@ module.exports = {
 				}
 			}
 
-			socket.on("mouse_movement", (data) => {
-				socket.broadcast.to(board).emit("all_mouse_movements", data);
+			socket.on("mouse-movement", (data) => {
+				socket.broadcast.to(board).emit("mouse-movement", data);
 			});
 
 			// Card updates

@@ -1,8 +1,9 @@
-let colors = ["#FFC8C8", "#FFFDCA", "#CDF4FF", "#EAD4FF"]; // cards colors scheme
+let colors = ["#FFC8C8", "#FFFDCA", "#CDF4FF", "#EAD4FF"];
 
 function getRandomColor() {
 	return colors[Math.floor(Math.random() * Math.floor(colors.length))];
 }
+
 function assignColorsToCreate() {
 	for (var i = 0; i < colors.length; i++) {
 		var button = "<button class='color-btn' id='" + colors[i] + "' style='background-color:" + colors[i] + "'></button>";
