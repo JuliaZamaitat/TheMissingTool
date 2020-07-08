@@ -210,3 +210,14 @@ $(document).ready(function() {
 	});
 });
 
+
+$(document).on("mousemove", function (event) {
+	socket.emit("mouse-movement", {coords: {x: event.pageX, y: event.pageY}, username: window.username});
+});
+
+socket.on("mouse-movement", (data) => {
+	var el = getCursorElement(data);
+	el.style.left = data.coords.x + "px";
+	el.style.top = data.coords.y + "px";
+	$("body").append(el);
+});

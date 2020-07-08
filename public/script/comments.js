@@ -1,3 +1,8 @@
+function addComments(card, data) {
+	card.append(createCommentBox());
+	prependComments(data, card);
+}
+
 function createCommentBox() {
 	const commentBox = document.createElement("div");
 	commentBox.className = "comments-box neu-float-panel";
@@ -5,10 +10,10 @@ function createCommentBox() {
 	return commentBox;
 }
 
-function addComments(data, card) {
+function prependComments(data, card) {
 	let comments = data.comments;
-	for (let i = 0; i < comments.length  ; i++) {
-		const commentContainer  = addComment(comments[i]);
+	for (let i = 0; i < comments.length; i++) {
+		const commentContainer = createCommentContainer(comments[i]);
 		card.querySelector(".commentField").prepend(commentContainer);
 	}
 }
@@ -18,11 +23,11 @@ function sendComment(comment) {
 }
 
 socket.on("comment", (data) => {
-	const commentContainer = addComment(data);
+	const commentContainer = createCommentContainer(data);
 	document.getElementById(data.cardId).querySelector(".commentField").prepend(commentContainer);
 });
 
-function addComment(comment) {
+function createCommentContainer(comment) {
 	const commentContainer = document.createElement("div");
 	commentContainer.className = "comment-container";
 	const date = new Date(comment.timestamp);
