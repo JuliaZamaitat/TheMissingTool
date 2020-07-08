@@ -59,3 +59,7 @@ function toggleBoardPath() {
 		$("#collapse-path").show();
 	});
 }
+
+function toArray(text) {
+	return text.toString().split(",");
+}

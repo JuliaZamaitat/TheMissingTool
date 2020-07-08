@@ -77,9 +77,6 @@ function createCard(data) {
 	if (data.position.left !== null && data.position.right !== null) {
 		card.style.left = data.position.left + "px";
 		card.style.top = data.position.top + "px";
-	} else {
-		card.style.left = Math.floor(Math.random() * 301) + 100 + "px";
-		card.style.top = Math.floor(Math.random() * 401) + 100 + "px";
 	}
 	addMovementListener();
 
@@ -90,6 +87,52 @@ function createCard(data) {
 	}
 
 	document.getElementById("overlay").appendChild(card);
+
+  //Flip card elements to the bottom side if the card is too high up
+	function adjustCardButtons() {
+		let colorChangeOptions = buttons.querySelector(".colorChangeOptions");
+		let buttonsFullHeight = $(".buttonContainer").outerHeight(true);
+		let cardTop = card.getBoundingClientRect().top - (data.shape !== "TRIANGLE" ? 0.3 : 0) * card.clientHeight;
+		if(cardTop - 2.2*buttonsFullHeight < 0) {
+			colorChangeOptions.style.top = "3.5rem";
+			colorChangeOptions.style.bottom = "auto";
+			if(cardTop - buttonsFullHeight < 0) {
+				buttons.style.bottom = data.shape !== "TRIANGLE" ? "-6.5rem" : "-6rem";
+				buttons.style.top = "auto";
+			} else {
+				buttons.style.bottom = "auto";
+				buttons.style.top = data.shape !== "TRIANGLE" ? "-6.5rem" : "-2rem";
+			}
+		} else {
+			colorChangeOptions.style.top = "auto";
+			colorChangeOptions.style.bottom = "3.5rem";
+		}
+	}
+	function adjustCommentsBox() {
+		let commentsBox = card.querySelector(".comments-box");
+		if(card.getBoundingClientRect().top - $(".comments-box").outerHeight(true) < 0) {
+			commentsBox.style.top = "120%";
+			commentsBox.style.bottom = "auto";
+		} else {
+			commentsBox.style.top = "auto";
+			commentsBox.style.bottom = data.shape !== "TRIANGLE" ? "120%" : "80%";
+		}
+	}
+
+	function addCardListeners(card, data) {
+		if(data.shape === "TRIANGLE") {
+			card.addEventListener("mousedown", function (e) {
+				setTimeout(function(){card.querySelector("textarea").focus();}, 100);
+			});
+		}
+
+		// Focus listeners
+		card.querySelector("textarea").addEventListener("focusin", function () {
+			socket.emit("focus-in", {cardId: card.id, username: window.username});
+		});
+		card.querySelector("textarea").addEventListener("focusout", function () {
+			socket.emit("focus-out", {cardId: card.id, username: window.username});
+		});
 
 	function addMovementListener() {
 		let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
@@ -348,6 +391,48 @@ function convertToLink(card) {
 	}
 }
 
+assignColorsToCreate();
+
+createCardOnClick();
+
+function createCardOnClick() {
+	var color_picked = false;
+
+	$(".create-card-btn").each(function () {
+		$(this).mousedown(() => {
+			if (!color_picked) {
+				socket.emit("save-card", {
+					color: getRandomColor(),
+					shape: $(this).attr("id"),
+					position: {
+						left: Math.floor(Math.random() * 301) + 100,
+						top: Math.floor(Math.random() * 401) + 100
+					}
+				});
+			} else {
+				return;
+			}
+		}).mouseup(() => {
+			color_picked = false;
+		});
+	});
+
+	$(".color-btn").each(function () {
+		$(this).mousedown(() => {
+			color_picked = true;
+			socket.emit("save-card", {
+				color: $(this).attr("id"),
+				shape: $(this).closest(".create-card-btn").attr("id"),
+				position: {
+					left: Math.floor(Math.random() * 301) + 100,
+					top: Math.floor(Math.random() * 401) + 100
+				}
+			});
+		});
+	});
+}
+
+// listening to web-sockets
 socket.on("new-card", (data) => {
 	const card = JSON.parse(data);
 	createCard(card);
