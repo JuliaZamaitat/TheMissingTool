@@ -151,7 +151,7 @@ function createCard(data) {
 
 	function addDeleteListener() {
 		card.querySelector(".deleteBtn").addEventListener("mousedown", function (event) {
-			event.stopPropagation();  //prevent bubbling process so the whole card doesn't start dragging
+			event.stopPropagation();
 			const cardToDelete = {_id: event.currentTarget.parentElement.parentElement.id};
 			socket.emit("delete-card", cardToDelete);
 		});
