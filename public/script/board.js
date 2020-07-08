@@ -106,7 +106,6 @@ $("#board-name").on("focusout", () => {
 });
 
 function updateBoardName(name) {
-	console.log("NAME " + name);
 	socket.emit("update-board-name", {
 		_id: window.windowBoardId,
 		name: name
@@ -114,7 +113,6 @@ function updateBoardName(name) {
 }
 
 socket.on("board-name-update", (data) => {
-	console.log("RES " + data);
 	const name = JSON.parse(data).name;
 	$("#board-name").text(name);
 });

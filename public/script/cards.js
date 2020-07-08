@@ -341,7 +341,6 @@ function convertToLink(card) {
 						_id: newBoardId,
 						name: newBoardName
 					});
-					console.log(newBoardId);
 					forwardToBoard(newBoardId);
 				}
 			});
