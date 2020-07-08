@@ -3,7 +3,7 @@ const mongoose = require("mongoose"),
 	Board = require("../models/board_model");
 
 // Boards
-exports.create_board = function (req, res) {
+exports.createBoard = function (req, res) {
 	const newBoard =
 		new Board({
 			_id: new mongoose.mongo.ObjectId(),
@@ -18,9 +18,8 @@ exports.create_board = function (req, res) {
 	});
 };
 
-exports.create_child_board = function (req, res) {
-
-	let parentBoardId = req.params.boardId;
+exports.createChildBoard = function (req, res) {
+	const parentBoardId = req.params.boardId;
 
 	Board.findById(parentBoardId, (err, parentBoard) => {
 		const newPath = parentBoard.path;
@@ -41,36 +40,36 @@ exports.create_child_board = function (req, res) {
 	});
 };
 
-exports.get_path = function (req, res) {
-	const filter = {_id: mongoose.Types.ObjectId(req.params.boardId)};
+exports.getPath = function (req, res) {
+	const filter = { _id: mongoose.Types.ObjectId(req.params.boardId) };
 	Board.findOne(filter, (err, savedBoard) => {
 		res.send(savedBoard.path);
 	});
 };
 
-exports.get_board = function (req, res) {
-	const filter = {_id: mongoose.Types.ObjectId(req.params.boardId)};
+exports.getBoard = function (req, res) {
+	const filter = { _id: mongoose.Types.ObjectId(req.params.boardId) };
 	Board.findOne(filter, (err, savedBoard) => {
-		res.render("boards/index", {board: savedBoard});
+		res.render("boards/index", { board: savedBoard });
 	});
 };
 
-exports.get_board_data = function (req, res) {
-	const filter = {_id: mongoose.Types.ObjectId(req.params.boardId)};
+exports.getBoardData = function (req, res) {
+	const filter = { _id: mongoose.Types.ObjectId(req.params.boardId) };
 	Board.findOne(filter, (err, savedBoard) => {
 		res.send(savedBoard);
 	});
 };
 
-exports.get_messages = function (req, res) {
-	const filter = {_id: mongoose.Types.ObjectId(req.params.boardId)};
+exports.getMessages = function (req, res) {
+	const filter = { _id: mongoose.Types.ObjectId(req.params.boardId) };
 	Board.findById(filter, (err, board) => {
 		res.send(board.messages);
 	});
 };
 
-exports.get_connectors = function (req, res) {
-	const filter = {_id: mongoose.Types.ObjectId(req.params.boardId)};
+exports.getConnectors = function (req, res) {
+	const filter = { _id: mongoose.Types.ObjectId(req.params.boardId) };
 	Board.findById(filter, (err, board) => {
 		res.send(board.connectors);
 	});
@@ -78,14 +77,14 @@ exports.get_connectors = function (req, res) {
 
 // Cards
 exports.getLinkedBoard = function (req, res) {
-	const filter = {_id: mongoose.Types.ObjectId(req.params.cardId)};
+	const filter = { _id: mongoose.Types.ObjectId(req.params.cardId) };
 	Card.findOne(filter, (err, savedCard) => {
 		res.send(savedCard.linkId);
 	});
 };
 
 exports.getCards = function (req, res) {
-	const filter = {boardId: mongoose.Types.ObjectId(req.params.boardId)};
+	const filter = { boardId: mongoose.Types.ObjectId(req.params.boardId) };
 	Card.find(filter, (err, cards) => {
 		res.send(cards);
 	});
