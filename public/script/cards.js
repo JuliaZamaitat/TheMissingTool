@@ -30,6 +30,10 @@ let selectedConnector = null;
 	});
 })();
 
+$(document).on("mousemove", function (event) {
+	socket.emit("mouse-movement", {coords: {x: event.pageX, y: event.pageY}, username: window.username});
+});
+
 // Load cards
 $.get("/board/" + window.windowBoardId + "/cards", (cards) => {
 	cards.forEach(createCard);
@@ -404,10 +408,6 @@ socket.on("display-card", (data) => {
 socket.on("remove-card", (cardId) => {
 	document.getElementById(cardId).remove();
 	deleteConnectorsByCardId(cardId);
-});
-
-$(document).on("mousemove", function (event) {
-	socket.emit("mouse-movement", {coords: {x: event.pageX, y: event.pageY}, username: window.username});
 });
 
 socket.on("mouse-movement", (data) => {
