@@ -8,7 +8,7 @@ describe("Board", function () {
 		cy.title().should("eq", "The Missing Tool");
 		cy.get("#create-board").contains("Create a new board").should("be.visible").click();
 		cy.url().should("include", "board");
-		cy.get("input[placeholder=\"Type a name...\"]").type("My", {timeout:10000});
+		cy.get("input[placeholder=\"Type a name...\"]").type("My Board", {timeout:100000});
 		//cy.contains("Create").should("be.visible").click({force:true});
 		cy.contains("Create").should("be.visible").last().click();
 		cy.get("#user-name").clear();
