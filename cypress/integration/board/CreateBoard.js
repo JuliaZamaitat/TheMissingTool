@@ -12,7 +12,7 @@ describe("Board", function () {
 		//cy.contains("Create").should("be.visible").click({force:true});
 		cy.contains("Create").should("be.visible").last().click();
 		cy.get("#user-name").clear();
-		cy.get("#user-name").type("Alain").click();
+		cy.get("#user-name").type("Brahe").click();
 		cy.url().should("include", "5f");
 		cy.get("#SQUARE").click();
 		cy.go(-1);
