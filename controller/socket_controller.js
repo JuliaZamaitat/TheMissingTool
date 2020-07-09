@@ -78,7 +78,7 @@ module.exports = {
 				socket.broadcast.to(board).emit("mouse-movement", data);
 			});
 
-			// Card updates
+			// Card
 			socket.on("add-link", function (incoming) {
 				const filter = {_id: mongoose.Types.ObjectId(incoming.cardId)};
 				const update = {linkId: incoming.linkId};
@@ -168,8 +168,6 @@ module.exports = {
 						io.to(board).emit("delete-card", JSON.stringify({
 							_id: req._id
 						}));
-
-						//Now also delete all connectors associated with deleted card
 						removeConnectorsByCardId(req._id);
 					});
 			});
@@ -357,7 +355,7 @@ module.exports = {
 				});
 			});
 
-			// Chat: Jannis
+			// Chat
 			socket.on("message", function (message) {
 
 				const filter = {_id: mongoose.Types.ObjectId(message.boardId)};

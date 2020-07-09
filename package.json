@@ -15,17 +15,12 @@
 		"url": "git+https://github.com/JuliaZamaitat/TheMissingTool.git"
 	},
 	"author": "",
-	"jest": {
-		"verbose": true,
-		"preset": "@shelf/jest-mongodb"
-	},
 	"license": "ISC",
 	"bugs": {
 		"url": "https://github.com/JuliaZamaitat/TheMissingTool/issues"
 	},
 	"homepage": "https://github.com/JuliaZamaitat/TheMissingTool#readme",
 	"dependencies": {
-		"@shelf/jest-mongodb": "^1.1.5",
 		"body-parser": "latest",
 		"cookie-parser": "^1.4.5",
 		"cypress": "^4.7.0",
@@ -35,7 +30,6 @@
 		"express-session": "^1.17.1",
 		"faker": "^4.1.0",
 		"http": "0.0.1-security",
-		"jest": "^26.0.1",
 		"jquery": "^3.5.1",
 		"keygenerator": "^1.0.4",
 		"mongodb": "^3.5.7",
