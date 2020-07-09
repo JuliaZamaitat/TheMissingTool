@@ -103,6 +103,15 @@ $("#board-name").on("focusout", () => {
 	updateBoardName($("#board-name").text());
 });
 
+$("#board-name").keypress(function (event) {
+	var keycode = (event.keyCode ? event.keyCode : event.which);
+	console.log(keycode);
+	if (keycode === 13) {
+		updateBoardName($("#board-name").text());
+		this.blur();
+	}
+});
+
 function updateBoardName(name) {
 	socket.emit("update-board-name", {
 		_id: window.windowBoardId,

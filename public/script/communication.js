@@ -126,10 +126,24 @@ socket.on("update-users", (users) => {
 });
 
 $("#user-name").on("focusout", function () {
-	document.cookie = "username=" +  $(this).text();
-	window.username = cookieValue("username");
-	socket.emit("update-user-name", window.username);
+	changeUserName(this);
 });
+
+$("#user-name").keypress(function (event) {
+	var keycode = (event.keyCode ? event.keyCode : event.which);
+	if (keycode === 13) {
+		event.preventDefault();
+		changeUserName(this);
+		this.blur();
+	}
+});
+
+function changeUserName(text) {
+	document.cookie = "username=" + $(text).text();
+	window.username = cookieValue("username");
+	console.log(window.username);
+	socket.emit("update-user-name", window.username);
+}
 
 function getCursorElement(data) {
 	let username = data.username;
@@ -148,8 +162,8 @@ socket.on("focus-in", (data) => {
 	document.getElementById(username).style.display = "none";
 	let card = document.getElementById(data.cardId);
 	let borderType = "2px solid ";
-	if(!card.classList.contains("triangle")) {
-		card.querySelector('textarea').style.border = borderType + getFocusColor(card.style.backgroundColor);
+	if (!card.classList.contains("triangle")) {
+		card.querySelector("textarea").style.border = borderType + getFocusColor(card.style.backgroundColor);
 	} else {
 		let focusColor = getFocusColor(card.style.color);
 		card.style.setProperty("--border-color", focusColor);
@@ -178,8 +192,8 @@ socket.on("focus-out", (data) => {
 	var username = data.username;
 	document.getElementById(username).style.display = "block";
 	let card = document.getElementById(data.cardId);
-	if(!card.classList.contains("triangle")) {
-		card.querySelector('textarea').style.border = "none";
+	if (!card.classList.contains("triangle")) {
+		card.querySelector("textarea").style.border = "none";
 	} else {
 		card.style.borderBottom = "none";
 		card.style.setProperty("--border-color", "transparent");
@@ -193,7 +207,7 @@ socket.on("delete-courser", username => {
 	if (usernameElement !== null) usernameElement.remove();
 });
 
-$(document).ready(function() {
+$(document).ready(function () {
 	$(".pop-user-list").popover({
 		placement: "top",
 		trigger: "hover",
