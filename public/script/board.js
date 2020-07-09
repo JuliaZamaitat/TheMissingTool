@@ -15,7 +15,7 @@ $(document).ready(function () {
 							element.addEventListener("mousedown", function () {
 								forwardToBoard(element.id);
 							});
-							document.getElementById("board_path").appendChild(element);
+							document.getElementById("board-path").appendChild(element);
 						}
 					},
 					async: false
