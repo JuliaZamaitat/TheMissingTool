@@ -32,8 +32,6 @@ $(document).ready(function () {
 		});
 	});
 
-	console.log($(".color-btn"));
-
 	$(".color-btn").each(function () {
 		console.log("adding");
 		$(this).mousedown(() => {
