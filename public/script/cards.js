@@ -1,42 +1,6 @@
 let selectedConnector = null;
 
 $(document).ready(function () {
-	(function () {
-		var color_picked = false;
-
-		$(".create-card-btn").each(function () {
-			$(this).mousedown(() => {
-				if (!color_picked) {
-					socket.emit("save-card", {
-						color: getRandomColor(),
-						shape: $(this).attr("id"),
-						position: {
-							left: Math.floor(Math.random() * 301) + 100,
-							top: Math.floor(Math.random() * 401) + 100
-						}
-					});
-				} else {
-					return;
-				}
-			}).mouseup(() => {
-				color_picked = false;
-			});
-		});
-
-		$(".color-btn").each(function () {
-			$(this).mousedown(() => {
-				color_picked = true;
-				socket.emit("save-card", {
-					color: $(this).attr("id"),
-					shape: $(this).closest(".create-card-btn").attr("id"),
-					position: {
-						left: Math.floor(Math.random() * 301) + 100,
-						top: Math.floor(Math.random() * 401) + 100
-					}
-				});
-			});
-		});
-	})();
 
 	assignColorsToCreate();
 
@@ -45,6 +9,40 @@ $(document).ready(function () {
 		$.get("/board/" + window.windowBoardId + "/connectors", connectors => {
 			connectors.forEach(function (connector) {
 				drawConnector(connector._id, connector.from, connector.to);
+			});
+		});
+	});
+
+	var color_picked = false;
+
+	$(".create-card-btn").each(function () {
+		$(this).mousedown(() => {
+			if (!color_picked) {
+				socket.emit("save-card", {
+					color: getRandomColor(),
+					shape: $(this).attr("id"),
+					position: {
+						left: Math.floor(Math.random() * 301) + 100,
+						top: Math.floor(Math.random() * 401) + 100
+					}
+				});
+			}
+		}).mouseup(() => {
+			color_picked = false;
+		});
+	});
+
+	$(".color-btn").each(function () {
+		console.log("adding");
+		$(this).mousedown(() => {
+			color_picked = true;
+			socket.emit("save-card", {
+				color: $(this).attr("id"),
+				shape: $(this).closest(".create-card-btn").attr("id"),
+				position: {
+					left: Math.floor(Math.random() * 301) + 100,
+					top: Math.floor(Math.random() * 401) + 100
+				}
 			});
 		});
 	});
