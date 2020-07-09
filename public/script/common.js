@@ -48,13 +48,13 @@ function cookieValue(name) {
 
 function toggleBoardPath() {
 	$("#collapse-path").click(function() {
-		$("#board_path").hide();
+		$("#board-path").hide();
 		$(this).hide();
 		$("#expand-path").show();
 	});
 
 	$("#expand-path").click(function() {
-		$("#board_path").show();
+		$("#board-path").show();
 		$(this).hide();
 		$("#collapse-path").show();
 	});

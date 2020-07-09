@@ -1,7 +1,6 @@
 $(document).ready(function () {
 	if (window.windowBoardId !== "board") {
 		$.get("/board/" + window.windowBoardId + "/path", (path) => {
-			console.log(path[0]);
 			addToLoastVisitedCookie(path[0]);
 			for (let i = 0; i < path.length; i++) {
 				$.get({
@@ -15,7 +14,7 @@ $(document).ready(function () {
 							element.addEventListener("mousedown", function () {
 								forwardToBoard(element.id);
 							});
-							document.getElementById("board_path").appendChild(element);
+							document.getElementById("board-path").appendChild(element);
 						}
 					},
 					async: false
