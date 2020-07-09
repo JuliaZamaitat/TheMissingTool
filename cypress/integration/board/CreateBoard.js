@@ -1,7 +1,7 @@
 /// <reference types="Cypress" />
 describe("Board", function () {
 	before(() => {
-		cy.visit("http://the-missing-tool.herokuapp.com/board");
+		cy.visit("https://onboard.f4.htw-berlin.de/board");
 	});
 	it("Create Board-Test", function () {
 		cy.url().should("include", "board");
