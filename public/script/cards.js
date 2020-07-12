@@ -303,20 +303,20 @@ function createCard(data) {
 	function addLinkListener() {
 		let querySelector = card.querySelector(".link");
 		querySelector.addEventListener("mousedown", function () {
-			const newBoardName = card.querySelector("textarea").value;
-			if (newBoardName.length === 0) {
+			const name = card.querySelector("textarea").value;
+			if (name.length === 0) {
 				document.onmouseup = null;
 				document.onmousemove = null;
 				alert("Please enter a name for the new board on the card.");
-			} else if (newBoardName.length >= 201) {
+			} else if (name.length >= 30) {
 				document.onmouseup = null;
 				document.onmousemove = null;
-				alert("Board name cannot be longer than 200 characters.");
+				alert("Board name cannot be longer than 30 characters.");
 			}
 			$.ajax({
 				type: "POST",
 				url: "/board/" + window.windowBoardId,
-				data: {"name": card.querySelector("textarea").value},
+				data: {"name": name},
 				success: function (boardId) {
 					socket.emit("add-link", {linkId: boardId, cardId: card.id});
 				}
