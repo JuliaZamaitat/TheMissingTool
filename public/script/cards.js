@@ -303,13 +303,16 @@ function createCard(data) {
 	function addLinkListener() {
 		let querySelector = card.querySelector(".link");
 		querySelector.addEventListener("mousedown", function () {
-			$.post("/board/" + window.windowBoardId,
-				function (boardId) {
+			$.ajax({
+				type: "POST",
+				url: "/board/" + window.windowBoardId,
+				data: {"name": card.querySelector("textarea").value},
+				success: function (boardId) {
 					socket.emit("add-link", {linkId: boardId, cardId: card.id});
-				});
+				}
+			});
 		});
 	}
-
 }
 
 function convertToLink(card) {
