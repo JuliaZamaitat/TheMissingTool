@@ -1,6 +1,7 @@
 $(document).ready(function () {
 	if (window.windowBoardId !== "board") {
 		$.get("/board/" + window.windowBoardId + "/path", (path) => {
+			console.log(path[0]);
 			addToLoastVisitedCookie(path[0]);
 			for (let i = 0; i < path.length; i++) {
 				$.get({
@@ -14,7 +15,7 @@ $(document).ready(function () {
 							element.addEventListener("mousedown", function () {
 								forwardToBoard(element.id);
 							});
-							document.getElementById("board_path").appendChild(element);
+							document.getElementById("board-path").appendChild(element);
 						}
 					},
 					async: false
@@ -100,6 +101,15 @@ function forwardToBoard(newBoard) {
 
 $("#board-name").on("focusout", () => {
 	updateBoardName($("#board-name").text());
+});
+
+$("#board-name").keypress(function (event) {
+	var keycode = (event.keyCode ? event.keyCode : event.which);
+	console.log(keycode);
+	if (keycode === 13) {
+		updateBoardName($("#board-name").text());
+		this.blur();
+	}
 });
 
 function updateBoardName(name) {

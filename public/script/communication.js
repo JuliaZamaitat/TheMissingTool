@@ -133,10 +133,26 @@ $(".pop-user-list").popover({
 
 //FOCUS ON CARDS
 $("#user-name").on("focusout", function () {
-	document.cookie = "username=" + $(this).text();
-	window.username = cookieValue("username");
-	socket.emit("update-user-name", window.username);
+
+	changeUserName(this);
 });
+
+$("#user-name").keypress(function (event) {
+	var keycode = (event.keyCode ? event.keyCode : event.which);
+	if (keycode === 13) {
+		event.preventDefault();
+		changeUserName(this);
+		this.blur();
+	}
+});
+
+function changeUserName(text) {
+	document.cookie = "username=" + $(text).text();
+
+	window.username = cookieValue("username");
+	console.log(window.username);
+	socket.emit("update-user-name", window.username);
+}
 
 socket.on("focus-in", (data) => {
 	var username = data.username;
@@ -184,7 +200,22 @@ socket.on("focus-out", (data) => {
 });
 
 
+
 //USER CURSOR
+$(document).ready(function () {
+	$(".pop-user-list").popover({
+		placement: "top",
+		trigger: "hover",
+		html: true,
+		content: function () {
+			let result = $();
+			for (let i = 0; i < listOfUsers.length; i++) {
+				result = result.add("<p>" + listOfUsers[i] + "</p>");
+			}
+			return result;
+		}
+	});
+});
 
 function getCursorElement(data) {
 	let username = data.username;

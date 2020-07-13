@@ -1,4 +1,3 @@
-
 describe("The Chat", () => {
 	before(() => {
 		cy.exec("npm run db:seed");
