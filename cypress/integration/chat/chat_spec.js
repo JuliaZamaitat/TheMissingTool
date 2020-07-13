@@ -48,20 +48,4 @@ describe("The Chat", () => {
 		cy.get("#close-chat").click();
 		cy.get("#chatContent").should("be.not.visible");
 	});
-
-	/*
-	it("shows the chat header", () => {
-		cy.get("#chatHeader").should("contain", "Chat");
-	});
-	it("does not show hidden chat content", () => {
-		cy.get("#chatContent").should("be.not.visible");
-	});
-	it("hides chat content after click on chat Header", () => {
-		cy.get("#chatHeader").click();
-		cy.get("#chatContent").should("be.visible");
-	});
-
-
-
-	 */
 });
