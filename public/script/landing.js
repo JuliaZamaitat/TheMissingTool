@@ -10,6 +10,8 @@ $(document).ready(function () {
 				}
 			});
 		}
+	} else {
+		$("lastSeen-container").hide();
 	}
 
 	function appendToCookieList(boardId) {
@@ -19,7 +21,7 @@ $(document).ready(function () {
 				const text = document.createTextNode(board.name);
 				li.appendChild(text);
 				li.id = board._id;
-				li.className = "list-group-item boardLink";
+				li.className = "board-link";
 				li.addEventListener("mousedown", function () {
 					forwardToBoard(li.id);
 				});

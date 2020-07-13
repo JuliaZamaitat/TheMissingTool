@@ -155,20 +155,21 @@ ul {
 	left: 50%;
 	transform: translate(-50%, -50%);
 }
-#lastSeenContainer {
+#lastSeen-container {
 	margin-top: 3rem;
 }
 #visitedBoards {
 	margin-top: 1rem;
 }
-#visitedBoards li {
+.board-link {
 	width: 100%;
 	padding: .7rem 1rem;
 	cursor: pointer;
 	box-shadow: 2px 2px 3px rgba(0, 0, 0, .2);
 	margin-bottom: 1rem;
+	background-color: white;
 }
-#visitedBoards li:hover {
+.board-link:hover {
 	color: var(--dark-color) !important;
 	text-shadow: 0 0 1px var(--shadow-color);
 	box-shadow: 5px 5px 10px rgba(0,0,0,.10);
@@ -245,36 +246,9 @@ ul {
 #board-path p:hover {
 	opacity: .5;
 }
-#folder {
-	display: none;
-}
 #board-name-input:focus-within #folder {
 	opacity: 0;
 }
-#dropdown-content {
-	position: absolute;
-	background-color: var(--dark-panel-color);
-	width: 100%;
-	display: none;
-	border-radius: 0 0 10px 10px;
-	transform: translateY(-.5rem);
-	z-index: 999999;
-}
-#dropdown-content p {
-	opacity: .5;
-	padding: 1rem 1.5rem;
-	border-top: 1px solid var(--dark-color);
-	margin: 0;
-	z-index: 999999;
-
-}
-#dropdown-content p:hover
-{
-	cursor: pointer;
-	opacity: 1;
-	color: var(--dark-color);
-}
-
 #menubar {
 	position: absolute;
 	top: 1.5rem;
