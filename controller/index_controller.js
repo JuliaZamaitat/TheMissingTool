@@ -5,3 +5,7 @@ exports.getIndex = function(req, res) {
 exports.redirectToIndex = function(req, res) {
 	res.redirect("board");
 };
+
+exports.getImprintPrivacy = function(req,res) {
+	res.render("imprint-privacy");
+}

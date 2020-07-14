@@ -177,6 +177,23 @@ ul {
 #create-board span {
 	margin-left: .4rem;
 }
+#legal-notice {
+	margin: 50px 200px 50px;
+	font-size: 1.2rem;
+}
+#legal-notice h1 {
+	text-align: center;
+}
+#legal-notice h2 {
+	margin: 2em 0 1em;
+}
+#legal-notice h3 {
+	margin: 1em 0 0.5em;
+	font-size: 1.2rem;
+}
+#copyright {
+	font-style: italic;
+}
 
 /* BOARD-INPUT */
 #username-container {
@@ -249,13 +266,13 @@ ul {
 #board-name-input:focus-within #folder {
 	opacity: 0;
 }
+/* MENUBAR */
 #menubar {
 	position: absolute;
 	top: 1.5rem;
-	right: -6.5rem;
+	right: -9.5rem;
 	border-radius: 10px 0 0 10px;
 	padding: .7rem .5rem;
-	color: white;
 	z-index: 999;
 }
 #menubar img {
@@ -283,13 +300,16 @@ img#hamburger-bars {
 	border-radius: 10px;
 	border: none;
 	background: none;
-	color: white;
+	color: white !important;
 	margin: 0;
 	padding: .7rem;
 	width: 3rem;
 	height: 3rem;
 	overflow: hidden;
 	transition: ease .2s;
+}
+.menu-btn a {
+	color: white;
 }
 .menu-btn span {
 	opacity: 0;
@@ -308,7 +328,6 @@ img#hamburger-bars {
 .menu-btn:hover span {
 	opacity: 1;
 }
-
 
 /* MODAL */
 #setNameModal {
