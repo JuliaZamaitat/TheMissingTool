@@ -303,47 +303,43 @@ function createCard(data) {
 	function addLinkListener() {
 		let querySelector = card.querySelector(".link");
 		querySelector.addEventListener("mousedown", function () {
-			$.post("/board/" + window.windowBoardId,
-				function (boardId) {
+			const name = card.querySelector("textarea").value;
+			if (name.length === 0) {
+				document.onmouseup = null;
+				document.onmousemove = null;
+				alert("Please enter a name for the new board on the card.");
+			} else if (name.length >= 30) {
+				document.onmouseup = null;
+				document.onmousemove = null;
+				alert("Board name cannot be longer than 30 characters.");
+			}
+			$.ajax({
+				type: "POST",
+				url: "/board/" + window.windowBoardId,
+				data: {"name": name},
+				success: function (boardId) {
 					socket.emit("add-link", {linkId: boardId, cardId: card.id});
-				});
-		});
-	}
-
-}
-
-function convertToLink(card) {
-	const newBoardName = card.querySelector("textarea").value;
-	if (newBoardName.length == 0) {
-		document.onmouseup = null;
-		document.onmousemove = null;
-		alert("Please enter a name for the new board on the card.");
-	} else if (newBoardName.length >= 201) {
-		document.onmouseup = null;
-		document.onmousemove = null;
-		alert("Board name cannot be longer than 200 characters.");
-	} else {
-		card.classList.add("link-card");
-		if (card.querySelector(".link")) card.querySelector(".link").remove();
-		const element = document.createElement("button");
-		element.type = "button";
-		element.className = "forward";
-		element.innerHTML = "<img src='/icons/external-link.svg'>";
-		card.appendChild(element);
-		// Listener for forwarding to new board
-		card.querySelector(".forward").addEventListener("mousedown", function () {
-			$.get("/get-linked-board/" + card.id, function (data) {
-				if (data !== null && data !== "") {
-					const newBoardId = data;
-					socket.emit("update-board-name", {
-						_id: newBoardId,
-						name: newBoardName
-					});
-					forwardToBoard(newBoardId);
 				}
 			});
 		});
 	}
+}
+
+function convertToLink(card) {
+	card.classList.add("link-card");
+	if (card.querySelector(".link")) card.querySelector(".link").remove();
+	const element = document.createElement("button");
+	element.type = "button";
+	element.className = "forward";
+	element.innerHTML = "<img src='/icons/external-link.svg'>";
+	card.appendChild(element);
+	card.querySelector(".forward").addEventListener("mousedown", function () {
+		$.get("/get-linked-board/" + card.id, function (data) {
+			if (data !== null && data !== "") {
+				forwardToBoard(data);
+			}
+		});
+	});
 }
 
 socket.on("new-card", (data) => {

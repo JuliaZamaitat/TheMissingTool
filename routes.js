@@ -7,6 +7,7 @@ var appController = require("./controller/app_controller");
 
 router.get("/", indexController.redirectToIndex);
 router.get("/board", indexController.getIndex);
+router.get("/imprint-privacy", indexController.getImprintPrivacy);
 
 router.post("/", boardController.createBoard);
 router.post("/board/:boardId", boardController.createChildBoard);
