@@ -1,7 +1,8 @@
 /// <reference types="Cypress" />
 describe("Board", function () {
 	before(() => {
-		cy.visit("https://onboard.f4.htw-berlin.de/board");
+		cy.exec("npm run db:seed");
+		cy.visit("/board");
 	});
 	it("Create Board-Test", function () {
 		cy.url().should("include", "board");

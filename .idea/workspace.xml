@@ -2,8 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4aeae4f9-cb33-4104-9fac-6d9e8be56c4a" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_14_07_20,_19_37_[Default_Changelist]/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_14_07_20,_19_37_[Default_Changelist]1/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_14_07_20__19_37__Default_Changelist_.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_14_07_20__19_37__Default_Changelist_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cypress/integration/board/right_Menu.spec.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cypress/integration/board/CreateBoard.js" beforeDir="false" afterPath="$PROJECT_DIR$/cypress/integration/board/CreateBoard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cypress/integration/board/CreateBoard.js" beforeDir="false" afterPath="$PROJECT_DIR$/cypress/integration/board/create_Board.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cypress/integration/board/CreateShape.js" beforeDir="false" afterPath="$PROJECT_DIR$/cypress/integration/board/create_Shape.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -13,7 +19,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="TMT-166-Fix" />
+        <entry key="$PROJECT_DIR$" value="TMT-106" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -46,6 +52,7 @@
       <option name="presentableId" value="Default" />
       <updated>1593700139400</updated>
       <workItem from="1593700147235" duration="22884000" />
+      <workItem from="1594748425238" duration="5038000" />
     </task>
     <servers />
   </component>
@@ -53,6 +60,14 @@
     <option name="version" value="2" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="144" y="79" key="MergeDialog" timestamp="1594748296092">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="144" y="79" key="MergeDialog/0.0.1440.900@0.0.1440.900" timestamp="1594748296092" />
+    <state x="488" y="170" key="git4idea.branch.GitSmartOperationDialog" timestamp="1594748273940">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="488" y="170" key="git4idea.branch.GitSmartOperationDialog/0.0.1440.900@0.0.1440.900" timestamp="1594748273940" />
     <state x="385" y="196" width="670" height="676" key="search.everywhere.popup" timestamp="1594234822864">
       <screen x="0" y="0" width="1440" height="900" />
     </state>

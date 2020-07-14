@@ -1,0 +1,16 @@
+Index: cypress/integration/board/create_Board.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>/// <reference types=\"Cypress\" />\ndescribe(\"Board\", function () {\n\tbefore(() =>{\n\t\tcy.exec(\"npm run db:seed\");\n\t  cy.visit(\"/board\");\n\t});\n\tit(\"Create Board-Test\", function () {\n\t\tcy.url().should(\"include\", \"board\");\n\t\tcy.title().should(\"eq\", \"The Missing Tool\");\n\t\tcy.get(\"#create-board\").contains(\"Create a new board\").should(\"be.visible\").click();\n\t\tcy.url().should(\"include\", \"board\");\n\t\tcy.get(\"input[placeholder=\\\"Type a name...\\\"]\").type(\"My Board\", {timeout: 100000});\n\t\t//cy.contains(\"Create\").should(\"be.visible\").click({force:true});\n\t\tcy.contains(\"Create\").should(\"be.visible\").last().click();\n\t\tcy.get(\"#user-name\").clear();\n\t\tcy.get(\"#user-name\").type(\"Brahe\").click();\n\t\tcy.url().should(\"include\", \"5f\");\n\t\tcy.get(\"#SQUARE\").click();\n\t\tcy.go(-1);\n\t\t//cy.go(1);\n\t\t//cy.get(\"input[placeholder=\\\"Type a name...\\\"]\").type(\"My\", {timeout:10000});\n\t});\n});\n
+===================================================================
+--- cypress/integration/board/create_Board.js	(revision e62dd30fd67808f8a6c21fe7e838d6d7b630241b)
++++ cypress/integration/board/create_Board.js	(date 1594747894838)
+@@ -2,7 +2,7 @@
+ describe("Board", function () {
+ 	before(() =>{
+ 		cy.exec("npm run db:seed");
+-	  cy.visit("/board");
++		cy.visit("/board");
+ 	});
+ 	it("Create Board-Test", function () {
+ 		cy.url().should("include", "board");
