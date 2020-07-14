@@ -20,11 +20,9 @@ describe("The Connectors", () => {
 		cy.get(".line[data-from='32cb31bde3464f14678934ca'][data-to='22cb32bde3464f14678922ca']").should("be.visible");
 	});
 
-	it("deletes connector", () => {
-		cy.get(".line[data-from='32cb31bde3464f14678934ca'][data-to='22cb32bde3464f14678922ca']").first().trigger("mouseover");
-		cy.get("#deleteConnectorBtn").should("be.visible");
-		cy.get("#deleteConnectorBtn").click();
-		cy.get("#deleteConnectorBtn").should("be.not.visible");
-		cy.get(".line[data-from='32cb31bde3464f14678934ca'][data-to='22cb32bde3464f14678922ca']").should("be.not.visible");
+	it("deletes card and associated line", () => {
+		cy.get("#32cb31bde3464f14678934ca > textarea").click();
+		cy.get("#32cb31bde3464f14678934ca > .buttonContainer > .deleteBtn").click();
+		cy.get(".line[data-from='32cb31bde3464f14678934ca'], .line[data-to='32cb31bde3464f14678934ca']").should("not.exist");
 	});
 });
