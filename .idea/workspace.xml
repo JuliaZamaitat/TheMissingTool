@@ -2,14 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4aeae4f9-cb33-4104-9fac-6d9e8be56c4a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_14_07_20,_19_37_[Default_Changelist]/shelved.patch" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_14_07_20,_19_37_[Default_Changelist]1/shelved.patch" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_14_07_20__19_37__Default_Changelist_.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_14_07_20__19_37__Default_Changelist_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cypress/integration/board/right_Menu.spec.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cypress/integration/board/CreateBoard.js" beforeDir="false" afterPath="$PROJECT_DIR$/cypress/integration/board/create_Board.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cypress/integration/board/CreateShape.js" beforeDir="false" afterPath="$PROJECT_DIR$/cypress/integration/board/create_Shape.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cypress/integration/board/right_Menu.spec.js" beforeDir="false" afterPath="$PROJECT_DIR$/cypress/integration/board/right_Menu.spec.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,7 +46,7 @@
       <option name="presentableId" value="Default" />
       <updated>1593700139400</updated>
       <workItem from="1593700147235" duration="22884000" />
-      <workItem from="1594748425238" duration="5038000" />
+      <workItem from="1594748425238" duration="5926000" />
     </task>
     <servers />
   </component>

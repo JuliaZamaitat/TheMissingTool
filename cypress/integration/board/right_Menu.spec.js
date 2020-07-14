@@ -24,7 +24,4 @@ describe("Board", function () {
 		cy.url().should("include", "board");
 		cy.contains("Last seen").should("be.visible");
 	});
-	it('Create-Right', function () {
-
-	});
 });
