@@ -1,48 +1,46 @@
-let typing = false,
-	timeout = undefined,
-	messageCount = 0;
-let listOfUsers = [];
+//CHAT
 
-$(document).ready(function () {
-
-	$("#chatInput").keypress((e) => {
-		if (e.which !== 13) {
-			typing = true;
-			let user = window.username;
-			socket.emit("typing", {user: user, typing: true});
-			clearTimeout(timeout);
-			timeout = setTimeout(typingTimeout, 2000);
-		} else {
-			clearTimeout(timeout);
-			typingTimeout();
-		}
-	});
-
-	//display a notification when a user is typing
-	socket.on("display", (data) => {
-		if (data.typing === true) {
-			$("#notificationbox").text(data.user + " is typing");
-			chatRescaleContent();
-		} else {
-			$("#notificationbox").text("");
-			chatRescaleContent();
-		}
-	});
-
-	toggleChatWindow();
-});
-
+toggleChatWindow();
 $.get("/board/" + window.windowBoardId + "/messages", (messages) => {
 	messages.forEach(addMessage);
 	$("#messageCount").text((messageCount = 0).toString());
 });
 
-//Send mere message to server, without username and time
+$("#chatInput").on("input keydown", function (e) {
+	if ((e.keyCode == 10 || e.keyCode == 13)) {
+		if (!e.shiftKey) {
+			e.preventDefault();
+			let text = $.trim($("#chatInput").val());
+			if (text !== "") {
+				let time = Date.now();
+				$("#chatInput").val("");
+				sendMessage({
+					text: text,
+					time: time,
+					boardId: window.windowBoardId,
+					username: window.username
+				});
+			}
+			clearTimeout(timeout);
+			typingTimeout();
+		}
+	} else {
+		typing = true;
+		let user = window.username;
+		socket.emit("typing", {user: user, typing: true});
+		clearTimeout(timeout);
+		timeout = setTimeout(typingTimeout, 2000);
+	}
+
+	// Rescale textarea and chat
+	$(this).css("height", "unset").height(this.scrollHeight - 10);
+	chatRescaleContent();
+
+});
+
 function sendMessage(message) {
 	socket.emit("message", message);
 }
-
-socket.on("message", addMessage);
 
 function addMessage(message) {
 	$("#messageCount").text((++messageCount).toString());
@@ -76,40 +74,30 @@ function toggleChatWindow() {
 	}
 }
 
-// Adjust chat content height, in case input height changes
-const chatRescaleContent = () => {
+function chatRescaleContent() {
 	$("#chatContent").css("height", "calc(100% - " + $("#chatInputContainer").outerHeight() + "px)");
-};
+}
 
-//Scroll to bottom
-const chatScrollBottom = () => {
+function chatScrollBottom() {
 	$("#chatContent").scrollTop(chatContent.scrollHeight);
-};
+}
 
-//Listens for chat keyboard input
-$("#chatInput").on("input keydown", function (e) {
-	if ((e.keyCode == 10 || e.keyCode == 13)) { //If Enter is pressed
-		if (!e.shiftKey) { //If Shift is not pressed
-			e.preventDefault(); //Prevent new line
-			let text = $.trim($("#chatInput").val()); //Get input
-			if (text !== "") { //If it's not empty
-				let time = Date.now(); //Timestamp in ms
-				//Clear textarea
-				$("#chatInput").val("");
-				//Send message without username
-				sendMessage({
-					text: text,
-					time: time,
-					boardId: window.windowBoardId,
-					username: window.username
-				});
-			}
-		}
+socket.on("message", addMessage);
+
+
+//TYPING NOTIFICATION
+let typing = false,
+	timeout = undefined,
+	messageCount = 0;
+
+socket.on("display-typing-notification", (data) => {
+	if (data.typing === true) {
+		$("#notificationBox").text(data.user + " is typing");
+		chatRescaleContent();
+	} else {
+		$("#notificationBox").text("");
+		chatRescaleContent();
 	}
-
-	// Rescale textarea and chat
-	$(this).css("height", "unset").height(this.scrollHeight - 10);
-	chatRescaleContent();
 });
 
 function typingTimeout() {
@@ -118,6 +106,10 @@ function typingTimeout() {
 	socket.emit("typing", {user: user, typing: false});
 }
 
+
+//USER LIST
+let listOfUsers = [];
+
 socket.on("update-users", (users) => {
 	listOfUsers.length = 0;
 	for (var i = 0; i < users.length; i++) {
@@ -125,7 +117,23 @@ socket.on("update-users", (users) => {
 	}
 });
 
+$(".pop-user-list").popover({
+	placement: "top",
+	trigger: "hover",
+	html: true,
+	content: function () {
+		let result = $();
+		for (let i = 0; i < listOfUsers.length; i++) {
+			result = result.add("<p>" + listOfUsers[i] + "</p>");
+		}
+		return result;
+	}
+});
+
+
+//FOCUS ON CARDS
 $("#user-name").on("focusout", function () {
+
 	changeUserName(this);
 });
 
@@ -140,21 +148,10 @@ $("#user-name").keypress(function (event) {
 
 function changeUserName(text) {
 	document.cookie = "username=" + $(text).text();
+
 	window.username = cookieValue("username");
 	console.log(window.username);
 	socket.emit("update-user-name", window.username);
-}
-
-function getCursorElement(data) {
-	let username = data.username;
-	let element = document.getElementById(username);
-	if (element == null) {
-		element = document.createElement("div");
-		element.id = username;
-		element.className = "mvcursor";
-		element.innerHTML = "<img src='/icons/pointer.svg'><p>" + username + "</p>";
-	}
-	return element;
 }
 
 socket.on("focus-in", (data) => {
@@ -202,11 +199,9 @@ socket.on("focus-out", (data) => {
 	container.style.display = "none";
 });
 
-socket.on("delete-courser", username => {
-	let usernameElement = document.getElementById(username);
-	if (usernameElement !== null) usernameElement.remove();
-});
 
+
+//USER CURSOR
 $(document).ready(function () {
 	$(".pop-user-list").popover({
 		placement: "top",
@@ -222,14 +217,30 @@ $(document).ready(function () {
 	});
 });
 
+function getCursorElement(data) {
+	let username = data.username;
+	let element = document.getElementById(username);
+	if (element == null) {
+		element = document.createElement("div");
+		element.id = username;
+		element.className = "mvcursor";
+		element.innerHTML = "<img src='/icons/pointer.svg'><p>" + username + "</p>";
+	}
+	return element;
+}
 
 $(document).on("mousemove", function (event) {
 	socket.emit("mouse-movement", {coords: {x: event.pageX, y: event.pageY}, username: window.username});
 });
 
 socket.on("mouse-movement", (data) => {
-	var el = getCursorElement(data);
-	el.style.left = data.coords.x + "px";
-	el.style.top = data.coords.y + "px";
-	$("body").append(el);
+	var cursorElement = getCursorElement(data);
+	cursorElement.style.left = data.coords.x + "px";
+	cursorElement.style.top = data.coords.y + "px";
+	$("body").append(cursorElement);
+});
+
+socket.on("delete-courser", username => {
+	let usernameElement = document.getElementById(username);
+	if (usernameElement !== null) usernameElement.remove();
 });
