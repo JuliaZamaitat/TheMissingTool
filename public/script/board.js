@@ -39,7 +39,6 @@ $(document).ready(function () {
 
 		$("#create-new-board").on("click", createRootBoard);
 		$("#share-board").on("click", copyToClipboard);
-		$("#folder").on("click", showOrHide);
 		$("#back-button").on("click", goToParent);
 	}
 	$("#create-board").on("click", createRootBoard);
@@ -66,16 +65,14 @@ function copyToClipboard() {
 	}, 1000);
 }
 
-function showOrHide() {
-	$("#dropdown-content").fadeToggle();
-}
-
 function goToParent() {
 	$.get("/board/" + window.windowBoardId + "/path",
 		function (path) {
 			let parentBoard = path[path.length - 1];
 			if (parentBoard !== undefined) {
 				forwardToBoard(parentBoard);
+			} else {
+				location.href = "/";
 			}
 		});
 }
