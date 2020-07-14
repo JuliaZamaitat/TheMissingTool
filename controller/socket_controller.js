@@ -372,9 +372,9 @@ module.exports = {
 
 			socket.on("typing", (data) => {
 				if (data.typing === true)
-					socket.broadcast.to(board).emit("display", data);
+					socket.broadcast.to(board).emit("display-typing-notification", data);
 				else
-					socket.broadcast.to(board).emit("display", data);
+					socket.broadcast.to(board).emit("display-typing-notification", data);
 			});
 
 		});
