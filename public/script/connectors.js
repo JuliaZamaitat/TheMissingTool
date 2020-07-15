@@ -41,7 +41,7 @@ const deleteConnectorBtn = $("#deleteConnectorBtn");
 function drawConnector(id, from, to) {
 	const card1 = document.getElementById(from);
 	const card2 = document.getElementById(to);
-	if(card1 !== null || card2 !== null) return;
+	if(card1 === null || card2 === null) return;
 	const card1Center = getCenter(card1);
 	const card2Center = getCenter(card2);
 	const connectorEl = createLine(card1Center.x, card1Center.y, card2Center.x, card2Center.y);

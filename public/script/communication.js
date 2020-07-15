@@ -159,6 +159,7 @@ socket.on("focus-in", (data) => {
 	var username = data.username;
 	document.getElementById(username).style.display = "none";
 	let card = document.getElementById(data.cardId);
+	if(card === null) return;
 	let borderType = "2px solid ";
 	if (!card.classList.contains("triangle")) {
 		card.querySelector("textarea").style.border = borderType + getFocusColor(card.style.backgroundColor);
@@ -190,6 +191,7 @@ socket.on("focus-out", (data) => {
 	var username = data.username;
 	document.getElementById(username).style.display = "block";
 	let card = document.getElementById(data.cardId);
+	if(card === null) return;
 	if (!card.classList.contains("triangle")) {
 		card.querySelector("textarea").style.border = "none";
 	} else {
