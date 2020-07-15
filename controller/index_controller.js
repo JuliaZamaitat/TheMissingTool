@@ -6,6 +6,10 @@ exports.redirectToIndex = function(req, res) {
 	res.redirect("board");
 };
 
-exports.getImprintPrivacy = function(req,res) {
-	res.render("imprint-privacy");
-}
+exports.getImprint = function(req,res) {
+	res.render("imprint");
+};
+
+exports.getPrivacyPolicy = function(req,res) {
+	res.render("privacy-policy");
+};
