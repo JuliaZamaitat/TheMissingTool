@@ -10,7 +10,7 @@ $(document).ready(function () {
 				}
 			});
 		}
-	} else {
+	} else if (visitedBoardsString.length == 0) {
 		$("lastSeen-container").hide();
 	}
 
