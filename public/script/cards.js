@@ -359,7 +359,7 @@ socket.on("pos-update", (data) => {
 socket.on("text-update", (data) => {
 	const card = JSON.parse(data);
 	const textarea = $("#" + card._id).find("textarea");
-	if(!textarea) {
+	if(textarea) {
 		textarea.val(card.text);
 	}
 });
