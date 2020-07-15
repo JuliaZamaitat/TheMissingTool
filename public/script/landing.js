@@ -10,8 +10,8 @@ $(document).ready(function () {
 				}
 			});
 		}
-	} else if (visitedBoardsString.length == 0) {
-		$("lastSeen-container").hide();
+	} else {
+		$("#lastSeen-container").hide();
 	}
 
 	function appendToCookieList(boardId) {
