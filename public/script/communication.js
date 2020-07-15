@@ -157,9 +157,10 @@ function changeUserName(text) {
 
 socket.on("focus-in", (data) => {
 	var username = data.username;
-	document.getElementById(username).style.display = "none";
+	var usernameEl = document.getElementById(username);
 	let card = document.getElementById(data.cardId);
-	if(card === null) return;
+	if(card === null || usernameEl === null) return;
+	usernameEl.style.display = "none";
 	let borderType = "2px solid ";
 	if (!card.classList.contains("triangle")) {
 		card.querySelector("textarea").style.border = borderType + getFocusColor(card.style.backgroundColor);
