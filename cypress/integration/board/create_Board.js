@@ -17,7 +17,5 @@ describe("Board", function () {
 		cy.url().should("include", "5f");
 		cy.get("#SQUARE").click();
 		cy.go(-1);
-		//cy.go(1);
-		//cy.get("input[placeholder=\"Type a name...\"]").type("My", {timeout:10000});
 	});
 });
