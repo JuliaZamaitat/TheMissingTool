@@ -11,7 +11,7 @@ $(document).ready(function () {
 			});
 		}
 	} else {
-		$("lastSeen-container").hide();
+		$("#lastSeen-container").hide();
 	}
 
 	function appendToCookieList(boardId) {
