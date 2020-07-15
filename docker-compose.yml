@@ -18,13 +18,13 @@ services:
     restart: always
     build: .
     ports:
-      - "3034:3034"
+      - "3000:3000"
     links:
       - mongodb
     depends_on:
       - mongodb
     environment:
-      - NODEPORT=3034
+      - NODEPORT=3000
       - MONGODB_URI=mongodb://mongodb:27017/board_db
     volumes:
       - .:/usr/src/app
