@@ -1,0 +1,29 @@
+version: "3"
+services:
+  mongodb:
+    image: library/mongo:4.2-bionic
+    container_name: 'themissingtool-mongo'
+    environment:
+      - MONGO_INITDB_DATABASE=
+      - MONGO_INITDB_ROOT_USERNAME=
+      - MONGO_INITDB_ROOT_PASSWORD=
+    volumes:
+      - ./mongo/data:/data/db
+      - ./mongo/seed:/data/seed
+      - ./mongo/config:/data/configdb
+  app:
+    container_name: themissingtool
+    restart: always
+    build: .
+    ports:
+      - "3000:3000"
+    links:
+      - mongodb
+    depends_on:
+      - mongodb
+    environment:
+      - NODEPORT=3000
+      - MONGODB_URI=mongodb://mongodb:27017/board_db
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
