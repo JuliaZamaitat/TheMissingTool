@@ -41,6 +41,7 @@ const deleteConnectorBtn = $("#deleteConnectorBtn");
 function drawConnector(id, from, to) {
 	const card1 = document.getElementById(from);
 	const card2 = document.getElementById(to);
+	if(card1 === null || card2 === null) return;
 	const card1Center = getCenter(card1);
 	const card2Center = getCenter(card2);
 	const connectorEl = createLine(card1Center.x, card1Center.y, card2Center.x, card2Center.y);
@@ -81,9 +82,13 @@ function getConnectorsByCardId(cardId) {
 function adjustConnectorsByCardId(cardId) {
 	getConnectorsByCardId(cardId).forEach(c => {
 		const otherCardId = c.dataset.from == cardId ? c.dataset.to : c.dataset.from;
-		const cardCenter = getCenter(document.getElementById(cardId));
-		const otherCardCenter = getCenter(document.getElementById(otherCardId));
-		c.style = calcLineStyleFromCoords(cardCenter.x, cardCenter.y, otherCardCenter.x, otherCardCenter.y);
+		const card = document.getElementById(cardId);
+		const otherCard = document.getElementById(otherCardId);
+		if(card !== null && otherCard !== null) {
+			const cardCenter = getCenter(card);
+			const otherCardCenter = getCenter(otherCard);
+			c.style = calcLineStyleFromCoords(cardCenter.x, cardCenter.y, otherCardCenter.x, otherCardCenter.y);
+		}
 	});
 }
 
