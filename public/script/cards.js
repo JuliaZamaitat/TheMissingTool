@@ -350,6 +350,7 @@ socket.on("new-card", (data) => {
 socket.on("pos-update", (data) => {
 	const card = JSON.parse(data);
 	let cardById = document.getElementById(card._id);
+	if(cardById === null) return;
 	cardById.style.left = card.position.left + "px";
 	cardById.style.top = card.position.top + "px";
 	adjustConnectorsByCardId(card._id);
@@ -357,18 +358,21 @@ socket.on("pos-update", (data) => {
 
 socket.on("text-update", (data) => {
 	const card = JSON.parse(data);
-	$("#" + card._id).find("textarea").val(card.text);
+	const textarea = $("#" + card._id).find("textarea");
+	if(!textarea) {
+		textarea.val(card.text);
+	}
 });
 
 socket.on("color-update", (data) => {
 	const card = JSON.parse(data);
 	let elementById = document.getElementById(card._id);
+	if(elementById === null) return;
 	if (!elementById.classList.contains("triangle")) {
 		elementById.style.backgroundColor = card.backgroundColor;
 	} else {
 		elementById.style.color = card.backgroundColor;
 	}
-
 });
 
 socket.on("delete-card", (data) => {
@@ -379,6 +383,7 @@ socket.on("delete-card", (data) => {
 
 socket.on("card-to-link", (data) => {
 	const card = document.getElementById(data);
+	if(card === null) return;
 	convertToLink(card);
 });
 

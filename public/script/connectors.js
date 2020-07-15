@@ -82,9 +82,13 @@ function getConnectorsByCardId(cardId) {
 function adjustConnectorsByCardId(cardId) {
 	getConnectorsByCardId(cardId).forEach(c => {
 		const otherCardId = c.dataset.from == cardId ? c.dataset.to : c.dataset.from;
-		const cardCenter = getCenter(document.getElementById(cardId));
-		const otherCardCenter = getCenter(document.getElementById(otherCardId));
-		c.style = calcLineStyleFromCoords(cardCenter.x, cardCenter.y, otherCardCenter.x, otherCardCenter.y);
+		const card = document.getElementById(cardId);
+		const otherCard = document.getElementById(otherCardId);
+		if(card !== null && otherCard !== null) {
+			const cardCenter = getCenter(card);
+			const otherCardCenter = getCenter(otherCard);
+			c.style = calcLineStyleFromCoords(cardCenter.x, cardCenter.y, otherCardCenter.x, otherCardCenter.y);
+		}
 	});
 }
 
