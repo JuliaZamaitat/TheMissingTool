@@ -68,6 +68,7 @@ function toggleChatWindow() {
 	}
 
 	function closeChat() {
+		$("#messageCount").text((messageCount = 0).toString());
 		$("#open-chat").fadeIn();
 		$("#chatWindow").removeClass("opened");
 		$("#chatWindow").addClass("closed");
