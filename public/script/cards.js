@@ -305,22 +305,23 @@ function createCard(data) {
 		querySelector.addEventListener("mousedown", function () {
 			const name = card.querySelector("textarea").value;
 			if (name.length === 0) {
-				document.onmouseup = null;
-				document.onmousemove = null;
 				alert("Please enter a name for the new board on the card.");
-			} else if (name.length >= 30) {
 				document.onmouseup = null;
 				document.onmousemove = null;
+			} else if (name.length >= 30) {
 				alert("Board name cannot be longer than 30 characters.");
+				document.onmouseup = null;
+				document.onmousemove = null;
+			} else {
+				$.ajax({
+					type: "POST",
+					url: "/board/" + window.windowBoardId,
+					data: {"name": name},
+					success: function (boardId) {
+						socket.emit("add-link", {linkId: boardId, cardId: card.id});
+					}
+				});
 			}
-			$.ajax({
-				type: "POST",
-				url: "/board/" + window.windowBoardId,
-				data: {"name": name},
-				success: function (boardId) {
-					socket.emit("add-link", {linkId: boardId, cardId: card.id});
-				}
-			});
 		});
 	}
 }
@@ -350,7 +351,7 @@ socket.on("new-card", (data) => {
 socket.on("pos-update", (data) => {
 	const card = JSON.parse(data);
 	let cardById = document.getElementById(card._id);
-	if(cardById === null) return;
+	if (cardById === null) return;
 	cardById.style.left = card.position.left + "px";
 	cardById.style.top = card.position.top + "px";
 	adjustConnectorsByCardId(card._id);
@@ -359,7 +360,7 @@ socket.on("pos-update", (data) => {
 socket.on("text-update", (data) => {
 	const card = JSON.parse(data);
 	const textarea = $("#" + card._id).find("textarea");
-	if(textarea) {
+	if (textarea) {
 		textarea.val(card.text);
 	}
 });
@@ -367,7 +368,7 @@ socket.on("text-update", (data) => {
 socket.on("color-update", (data) => {
 	const card = JSON.parse(data);
 	let elementById = document.getElementById(card._id);
-	if(elementById === null) return;
+	if (elementById === null) return;
 	if (!elementById.classList.contains("triangle")) {
 		elementById.style.backgroundColor = card.backgroundColor;
 	} else {
@@ -383,7 +384,7 @@ socket.on("delete-card", (data) => {
 
 socket.on("card-to-link", (data) => {
 	const card = document.getElementById(data);
-	if(card === null) return;
+	if (card === null) return;
 	convertToLink(card);
 });
 
