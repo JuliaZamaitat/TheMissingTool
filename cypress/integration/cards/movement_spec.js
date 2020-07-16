@@ -12,7 +12,7 @@ describe("The Card Movement", () => {
 		moveCard("#32cb31bde3464f14678934ca", -20, -500);
 
 		cy.get("#32cb31bde3464f14678934ca").should("have.css", "left", "120px")
-			.should("have.css", "top", "320px");
+			.should("not.have.css", "top", "230px");
 	});
 
 	function moveCard(id, x, y) {

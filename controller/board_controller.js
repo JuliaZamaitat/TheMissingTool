@@ -43,14 +43,18 @@ exports.createChildBoard = function (req, res) {
 exports.getPath = function (req, res) {
 	const filter = {_id: mongoose.Types.ObjectId(req.params.boardId)};
 	Board.findOne(filter, (err, savedBoard) => {
-		res.send(savedBoard.path);
+		if (err) {
+			console.log("Error finding board");
+		} else {
+			res.send(savedBoard.path);
+		}
 	});
 };
 
 exports.getBoard = function (req, res) {
 	const filter = {_id: mongoose.Types.ObjectId(req.params.boardId)};
 	Board.findOne(filter, (err, savedBoard) => {
-		if (savedBoard == null) {
+		if (err || savedBoard == null) {
 			res.render("error.ejs");
 		} else {
 			res.render("boards/index", {board: savedBoard});
@@ -61,21 +65,33 @@ exports.getBoard = function (req, res) {
 exports.getBoardData = function (req, res) {
 	const filter = {_id: mongoose.Types.ObjectId(req.params.boardId)};
 	Board.findOne(filter, (err, savedBoard) => {
-		res.send(savedBoard);
+		if (err) {
+			console.log("Error finding board");
+		} else {
+			res.send(savedBoard);
+		}
 	});
 };
 
 exports.getMessages = function (req, res) {
 	const filter = {_id: mongoose.Types.ObjectId(req.params.boardId)};
 	Board.findById(filter, (err, board) => {
-		res.send(board.messages);
+		if (err) {
+			console.log("Error finding board");
+		} else {
+			res.send(board.messages);
+		}
 	});
 };
 
 exports.getConnectors = function (req, res) {
 	const filter = {_id: mongoose.Types.ObjectId(req.params.boardId)};
 	Board.findById(filter, (err, board) => {
-		res.send(board.connectors);
+		if (err) {
+			console.log("Error finding board");
+		} else {
+			res.send(board.connectors);
+		}
 	});
 };
 
@@ -83,13 +99,21 @@ exports.getConnectors = function (req, res) {
 exports.getLinkedBoard = function (req, res) {
 	const filter = {_id: mongoose.Types.ObjectId(req.params.cardId)};
 	Card.findOne(filter, (err, savedCard) => {
-		res.send(savedCard.linkId);
+		if (err) {
+			console.log("Error finding board");
+		} else {
+			res.send(savedCard.linkId);
+		}
 	});
 };
 
 exports.getCards = function (req, res) {
 	const filter = {boardId: mongoose.Types.ObjectId(req.params.boardId)};
 	Card.find(filter, (err, cards) => {
-		res.send(cards);
+		if (err) {
+			console.log("Error finding board");
+		} else {
+			res.send(cards);
+		}
 	});
 };

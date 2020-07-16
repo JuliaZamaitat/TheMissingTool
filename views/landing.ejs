@@ -1,17 +1,35 @@
 <body>
-<div class="centered">
-    <button type="button" class="neu-button gradient" id="create-board">
-        <i class="fa fa-plus-circle"></i>
-        <span>Create a new board</span>
-    </button>
-   <div id="lastSeen-container">
-       <p class="neu-title">Last seen boards</p>
-       <ul id="visitedBoards">
-       </ul>
-   </div>
-</div>
-<script src="/socket.io/socket.io.js"></script>
-<script type="text/javascript" src="/script/common.js"></script>
-<script type="text/javascript" src="/script/landing.js"></script>
-<script type="text/javascript" src="/script/board.js"></script>
+    <div class="centered">
+        <h1 id="header">The Missing Tool</h1>
+        <div id="landing-content">
+            <button type="button" class="neu-button gradient" id="create-board">
+                <i class="fa fa-plus-circle"></i>
+                <span>Create a new board</span>
+            </button>
+            <div id="lastSeen-container">
+                <p class="neu-title">Last seen boards</p>
+                <ul id="visitedBoards">
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="bottom">
+        <p style="margin-bottom: 1.5rem"><a href="/imprint">Imprint</a> &amp; <a href="/privacy-policy">Privacy Policy</a></p>
+        <div id="cookieFooter" class="cookieFooter">
+            <h1 style="margin-top: 5px ">The Missing Tool verwendet Cookies</h1>
+            <p>Mit der Verwendung dieser Website stimmen Sie zu, dass Cookies zum Speichern des Benutzernamens und der besuchten Boards benutzt werden.</p>
+            <div style="padding-top: 10px">
+                <a href="https://www.wikipedia.de/">
+                    <button type="button" class="btn btn-secondary">Ablehnen</button>
+                </a>
+                <div class="buttonDivider"></div>
+                <button id="acceptBtn" type="button" class="btn btn-success">Ausblenden</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="/script/common.js"></script>
+    <script type="text/javascript" src="/script/landing.js"></script>
+    <script type="text/javascript" src="/script/board.js"></script>
 </body>
