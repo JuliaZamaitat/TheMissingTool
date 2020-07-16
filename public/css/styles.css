@@ -177,6 +177,12 @@ ul {
 #create-board span {
 	margin-left: .4rem;
 }
+#header {
+	margin: 18% 25px 25px;
+	text-align: center;
+	font-weight: 300;
+}
+
 #legal-notice {
 	margin: 50px 200px 50px;
 	font-size: 1.2rem;
