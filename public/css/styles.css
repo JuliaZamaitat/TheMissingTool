@@ -437,6 +437,7 @@ body.modal-open {
 }
 
 .toolbar-btn:hover .color-options {
+	padding-left: 0.7em;
 	opacity: 1;
 	display: block;
 }
@@ -448,12 +449,11 @@ body.modal-open {
 	width: 10rem;
 	transition: ease-in-out .5s;
 	opacity: 0;
-	top: .5rem;
 	display: none;
 }
 
 .color-btn, .color-change-btn {
-	margin: 0 .3rem;
+	margin: 0.3rem;
 	padding: 0.75rem !important;
 	width: 1.5rem;
 	height: 1.5rem;
