@@ -221,10 +221,8 @@ ul {
 	display: block;
 }
 
-.buttonDivider {
-	width: 20px;
-	height: auto;
-	display: inline-block;
+.cookieFooter h1{
+	font-size: medium;
 }
 
 /* BOARD-INPUT */
