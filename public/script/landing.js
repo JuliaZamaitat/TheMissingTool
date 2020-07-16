@@ -29,5 +29,14 @@ $(document).ready(function () {
 			}
 		});
 	}
+
+	$("#acceptBtn").on("click", function(){
+		let x = document.getElementById("cookieFooter");
+		if (x.style.display === "none") {
+			x.style.display = "block";
+		} else {
+			x.style.display = "none";
+		}
+	});
 });
 
