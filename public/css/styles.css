@@ -177,6 +177,12 @@ ul {
 #create-board span {
 	margin-left: .4rem;
 }
+#header {
+	margin: 18% 25px 25px;
+	text-align: center;
+	font-weight: 300;
+}
+
 #legal-notice {
 	margin: 50px 200px 50px;
 	font-size: 1.2rem;
@@ -992,10 +998,4 @@ textarea:hover {
 	text-align: center;
 	height: 50%;
 	margin: 25% auto;
-}
-
-#header {
-	font-weight: lighter;
-	margin: 25px;
-	font-size: large;
 }
