@@ -8,4 +8,4 @@ exports.redirectToIndex = function(req, res) {
 
 exports.getImprintPrivacy = function(req,res) {
 	res.render("imprint-privacy");
-}
+};
