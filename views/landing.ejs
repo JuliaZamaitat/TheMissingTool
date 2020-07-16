@@ -1,4 +1,11 @@
 <body>
+
+<div class="centered">
+    <button type="button" class="neu-button gradient" id="create-board">
+        <i class="fa fa-plus-circle"></i>
+        <span>Create a new board</span>
+    </button>
+    
     <h1 id="header">The Missing Tool</h1>
     <div class="centered">
         <button type="button" class="neu-button gradient" id="create-board">
@@ -10,9 +17,26 @@
         <ul id="visitedBoards">
         </ul>
     </div>
+
+</div>
+
+<div id="cookieFooter" class="cookieFooter">
+    <h1 style="margin-top: 5px ">The Missing Tool verwendet Cookies</h1>
+    <p>Um deinen Nutzernamen und die von dir zuletzt besuchten Boards anzuseigen, speichert diese Webseite Cookies.</p>
+    <div style="margin: 10px">
+        <a href="https://www.wikipedia.de/">
+            <button type="button" class="btn btn-secondary">Ablehnen</button>
+        </a>
+        <div class="buttonDivider"></div>
+        <button id="acceptBtn" type="button" class="btn btn-success">Akzeptieren</button>
     </div>
-    <script src="/socket.io/socket.io.js"></script>
-    <script type="text/javascript" src="/script/common.js"></script>
-    <script type="text/javascript" src="/script/landing.js"></script>
-    <script type="text/javascript" src="/script/board.js"></script>
+
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script type="text/javascript" src="/script/common.js"></script>
+<script type="text/javascript" src="/script/landing.js"></script>
+<script type="text/javascript" src="/script/board.js"></script>
+
+
 </body>
