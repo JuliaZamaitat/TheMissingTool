@@ -2,9 +2,18 @@
 
 # TheMissingTool
 
+This is a project of the International Media and Computing Course of Studies at the HTW Berlin in the SoSe20. The official link to the website: 
+https://showtime.f4.htw-berlin.de
+
+Link to The Missing Tool:
+https://onboard.f4.htw-berlin.de/board
+
+
+### How to start developing on The Missing Tool:
+
 start docker container:
 
-`docker-compose up`
+`docker-compose up` || `make start`
 
 stop docker container:
 
@@ -12,7 +21,7 @@ stop docker container:
 
 run with nodemon:
 
-`npm start`
+`npm run start-dev`
 
 seed the Database with:
 
