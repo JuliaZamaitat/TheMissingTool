@@ -50,7 +50,11 @@ exports.getPath = function (req, res) {
 exports.getBoard = function (req, res) {
 	const filter = {_id: mongoose.Types.ObjectId(req.params.boardId)};
 	Board.findOne(filter, (err, savedBoard) => {
-		res.render("boards/index", {board: savedBoard});
+		if (savedBoard == null) {
+			res.render("error.ejs");
+		} else {
+			res.render("boards/index", {board: savedBoard});
+		}
 	});
 };
 
