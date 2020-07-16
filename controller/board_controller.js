@@ -100,7 +100,7 @@ exports.getLinkedBoard = function (req, res) {
 	const filter = {_id: mongoose.Types.ObjectId(req.params.cardId)};
 	Card.findOne(filter, (err, savedCard) => {
 		if (err) {
-			console.log("Error finding board");
+			console.log("Error finding card");
 		} else {
 			res.send(savedCard.linkId);
 		}
@@ -111,7 +111,7 @@ exports.getCards = function (req, res) {
 	const filter = {boardId: mongoose.Types.ObjectId(req.params.boardId)};
 	Card.find(filter, (err, cards) => {
 		if (err) {
-			console.log("Error finding board");
+			console.log("Error finding cards");
 		} else {
 			res.send(cards);
 		}
