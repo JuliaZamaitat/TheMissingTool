@@ -30,7 +30,6 @@ p {
 .container-fluid {
 	margin: 0;
 	padding: 0;
-	text-align: center;
 }
 /* NEUMORPHISM */
 .flex-container {
@@ -998,5 +997,5 @@ textarea:hover {
 #header {
 	font-weight: lighter;
 	margin: 25px;
-	font-size: medium;
+	font-size: large;
 }
