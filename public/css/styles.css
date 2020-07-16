@@ -993,3 +993,22 @@ textarea:hover {
 	height: 50%;
 	margin: 25% auto;
 }
+
+.cookieFooter {
+	position: fixed;
+	left: 10%;
+	bottom: 0;
+	width: 80%;
+	height: 120px;
+	background-color: #404040;
+	color: white;
+	text-align: center;
+	border-radius: 15px 15px 0px 0px;
+	display: block;
+}
+
+.buttonDivider {
+	width: 20px;
+	height: auto;
+	display: inline-block;
+}
