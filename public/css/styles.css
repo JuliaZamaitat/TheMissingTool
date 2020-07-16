@@ -161,8 +161,14 @@ ul {
 	left: 50%;
 	transform: translate(-50%, -50%);
 }
+#landing-content {
+	width: 15em;
+	margin: auto;
+	text-align: center;
+}
 #lastSeen-container {
 	margin-top: 3rem;
+	width: 15em;
 }
 #visitedBoards {
 	margin-top: 1rem;
@@ -191,9 +197,9 @@ ul {
 	margin: 0;
 }
 #header {
-	margin: 18% 25px 25px;
 	text-align: center;
 	font-weight: 300;
+	margin-bottom: 1em;
 }
 .document h1 {
 	text-align: center;
